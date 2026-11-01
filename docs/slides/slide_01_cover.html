@@ -1,0 +1,260 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background-color: #FFFDF9;
+  background-image: 
+    radial-gradient(#E8D8C8 1px, transparent 1px),
+    linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
+  background-size: 24px 24px, 100% 100%;
+  color: #3D312A;
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.slide-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EFE6D8;
+  padding-bottom: 20px;
+}
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #E76F51;
+  background: #FFE8E0;
+  padding: 6px 20px;
+  border-radius: 9999px;
+  border: 1.5px solid #F8B5A5;
+}
+.slide-counter {
+  font-size: 18px;
+  font-weight: 700;
+  color: #A89F91;
+  font-family: ui-monospace, monospace;
+}
+.washi-tape {
+  position: absolute;
+  height: 32px;
+  opacity: 0.88;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.tape-matcha { background-color: #A8C3A0; width: 140px; top: -16px; left: 40px; }
+.tape-sakura { background-color: #F8CAD4; width: 140px; top: -16px; right: 40px; }
+.tape-coral { background-color: #F4A261; width: 140px; top: -16px; left: 40px; }
+.card {
+  background: #FFFFFF;
+  border: 2px solid #EFE6D8;
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 8px 30px rgba(74, 52, 37, 0.05);
+  position: relative;
+}
+.slide-footer {
+  border-top: 2px solid #EFE6D8;
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  color: #A89F91;
+  font-weight: 600;
+}
+
+        .cover-container {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 40px 20px;
+          gap: 60px;
+        }
+        .hero-left {
+          flex: 1.2;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+        .main-title {
+          font-size: 68px;
+          font-weight: 900;
+          line-height: 1.15;
+          color: #2E2018;
+          letter-spacing: -1px;
+        }
+        .main-title span {
+          color: #E76F51;
+        }
+        .sub-title {
+          font-size: 28px;
+          font-weight: 600;
+          color: #7D6E66;
+          line-height: 1.4;
+        }
+        .pitch-box {
+          background: #FFF5F2;
+          border-left: 6px solid #E76F51;
+          padding: 20px 28px;
+          border-radius: 0 20px 20px 0;
+          font-size: 22px;
+          font-weight: 700;
+          color: #A03D26;
+        }
+        .hero-meta {
+          display: flex;
+          gap: 16px;
+          margin-top: 10px;
+        }
+        .meta-chip {
+          background: #FAF6EF;
+          border: 1.5px solid #E5DACD;
+          padding: 10px 22px;
+          border-radius: 16px;
+          font-size: 18px;
+          font-weight: 700;
+          color: #5C4B40;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .hero-right {
+          flex: 0.9;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+        }
+        .shiba-circle {
+          width: 440px;
+          height: 440px;
+          background: radial-gradient(circle, #FFEAD9 0%, #FFF8F0 70%);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 4px dashed #F4A261;
+          padding: 30px;
+          box-shadow: 0 20px 50px rgba(244, 162, 97, 0.25);
+        }
+        .floating-badge {
+          position: absolute;
+          background: #FFFFFF;
+          border: 2px solid #E76F51;
+          padding: 12px 24px;
+          border-radius: 20px;
+          font-size: 18px;
+          font-weight: 800;
+          color: #E76F51;
+          box-shadow: 0 8px 24px rgba(231, 111, 81, 0.2);
+        }
+        .fb-1 { top: 20px; right: 20px; }
+        .fb-2 { bottom: 30px; left: 10px; }
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">🐾 Money Buddy</div>
+            <div class="slide-counter">01 / 05</div>
+          </div>
+
+          <div class="cover-container">
+            <div class="hero-left">
+              <div class="main-title">
+                Money Buddy<br>
+                <span>大學生的可愛理財手帳管家</span>
+              </div>
+              <div class="sub-title">
+                讓記帳變得溫暖簡單，讓友情催款不再尷尬！
+              </div>
+              <div class="pitch-box">
+                「一個陪伴大學生度過財務危機的可愛理財管家。<br>
+                有時溫柔療癒，有時嘴賤北爛，但永遠不會放棄你。」
+              </div>
+              <div class="hero-meta">
+                <div class="meta-chip">⏱️ 90 秒快閃展示</div>
+                <div class="meta-chip">🔒 Local-First 零個資</div>
+                <div class="meta-chip">🧪 34 項自動化測試</div>
+              </div>
+            </div>
+
+            <div class="hero-right">
+              <div class="shiba-circle">
+                <svg viewBox="0 0 120 108" class="w-full h-full drop-shadow-sm transition-all duration-300 overflow-visible">
+      <!-- 尾巴 (右側向上捲曲的柴柴尾巴) -->
+      <path d="M 85 68 C 96 60 107 58 108 68 C 109 78 98 84 89 79 Z" fill="#E89E53" stroke="#4A3425" stroke-width="2.5" stroke-linejoin="round" />
+      <path d="M 97 64 C 102 62 105 66 103 71" fill="none" stroke="#FFF7ED" stroke-width="3" stroke-linecap="round" />
+
+      <!-- 身體 (圍巾下方的小小身軀) -->
+      <path d="M 38 74 L 36 94 L 84 94 L 82 74 Z" fill="#E89E53" stroke="#4A3425" stroke-width="2.5" />
+      <rect x="44" y="76" width="32" height="18" rx="8" fill="#FFFDF8" stroke="#4A3425" stroke-width="1.5" />
+      <!-- 前腳細節 -->
+      <line x1="53" y1="84" x2="53" y2="94" stroke="#4A3425" stroke-width="2" stroke-linecap="round" />
+      <line x1="67" y1="84" x2="67" y2="94" stroke="#4A3425" stroke-width="2" stroke-linecap="round" />
+
+      <!-- 圍巾 (米杏色溫暖針織圍巾，厚厚包裹) -->
+      <g id="scarf-group">
+        <path d="M 30 62 C 30 55 42 52 60 52 C 78 52 90 55 90 62 C 90 71 78 74 60 74 C 42 74 30 71 30 62 Z" fill="#D9C3A5" stroke="#4A3425" stroke-width="2.5" />
+        <!-- 圍巾針織紋理線 -->
+        <path d="M 40 58 Q 60 56 80 58" fill="none" stroke="#B8A082" stroke-width="1.5" stroke-linecap="round" />
+        <path d="M 38 66 Q 60 68 82 66" fill="none" stroke="#B8A082" stroke-width="1.5" stroke-linecap="round" />
+        <!-- 圍巾垂墜打結部分 (右側) -->
+        <path d="M 72 64 L 76 82 L 86 80 L 82 62 Z" fill="#CBB292" stroke="#4A3425" stroke-width="2.2" />
+        <line x1="77" y1="82" x2="85" y2="80" stroke="#4A3425" stroke-width="2" stroke-dasharray="1.5 1.5" />
+      </g>
+
+      <!-- 柴犬耳朵 (左耳與右耳) -->
+      <path d="M 32 28 L 44 6 L 54 24 Z" fill="#E89E53" stroke="#4A3425" stroke-width="2.5" stroke-linejoin="round" />
+      <path d="M 36 24 L 44 12 L 50 22 Z" fill="#FFFDF8" />
+      <path d="M 88 28 L 76 6 L 66 24 Z" fill="#E89E53" stroke="#4A3425" stroke-width="2.5" stroke-linejoin="round" />
+      <path d="M 84 24 L 76 12 L 70 22 Z" fill="#FFFDF8" />
+
+      <!-- 柴犬大圓頭 -->
+      <ellipse cx="60" cy="36" rx="30" ry="26" fill="#E89E53" stroke="#4A3425" stroke-width="2.5" />
+
+      <!-- 臉頰兩側白色毛斑 -->
+      <path d="M 35 38 C 35 52 48 58 60 58 C 72 58 85 52 85 38 C 80 44 72 45 60 45 C 48 45 40 44 35 38 Z" fill="#FFFDF8" stroke="#4A3425" stroke-width="1.5" />
+
+      <!-- 兩顆超大亮晶晶水汪汪眼睛 (完全還原參考圖) -->
+      <ellipse cx="48" cy="34" rx="5.5" ry="6.5" fill="#2E2018" />
+      <circle cx="46.5" cy="32" r="2.2" fill="#FFFFFF" />
+      <circle cx="50" cy="36" r="1.2" fill="#FFFFFF" />
+
+      <ellipse cx="72" cy="34" rx="5.5" ry="6.5" fill="#2E2018" />
+      <circle cx="70.5" cy="32" r="2.2" fill="#FFFFFF" />
+      <circle cx="74" cy="36" r="1.2" fill="#FFFFFF" />
+
+      <!-- 眉毛 (溫柔小短弧) -->
+      <path d="M 44 24 Q 48 22 52 24" fill="none" stroke="#B87333" stroke-width="2" stroke-linecap="round" />
+      <path d="M 68 24 Q 72 22 76 24" fill="none" stroke="#B87333" stroke-width="2" stroke-linecap="round" />
+
+      <!-- 圓滾滾粉紅腮紅 (兩頰) -->
+      <ellipse cx="38" cy="42" rx="5.5" ry="3.5" fill="#F8B5A5" opacity="0.85" />
+      <ellipse cx="82" cy="42" rx="5.5" ry="3.5" fill="#F8B5A5" opacity="0.85" />
+
+      <!-- 小巧可愛黑鼻子與微笑嘴型 -->
+      <ellipse cx="60" cy="41" rx="2.5" ry="2" fill="#2E2018" />
+      <path d="M 56 44 Q 60 47 64 44" fill="none" stroke="#2E2018" stroke-width="2" stroke-linecap="round" />
+      <path d="M 57 45 Q 60 50 63 45" fill="#E26D5C" stroke="#2E2018" stroke-width="1.2" />
+    </svg>
+              </div>
+              <div class="floating-badge fb-1">🐶 圍巾萌柴柴助手</div>
+              <div class="floating-badge fb-2">✨ 日系手帳美學</div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>期中專題成果發表 │ 2026</span>
+            <span>現場即時 Demo 準備就緒 👉</span>
+          </div>
+        </body></html>

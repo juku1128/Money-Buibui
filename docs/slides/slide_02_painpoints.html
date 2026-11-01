@@ -1,0 +1,197 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background-color: #FFFDF9;
+  background-image: 
+    radial-gradient(#E8D8C8 1px, transparent 1px),
+    linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
+  background-size: 24px 24px, 100% 100%;
+  color: #3D312A;
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.slide-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EFE6D8;
+  padding-bottom: 20px;
+}
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #E76F51;
+  background: #FFE8E0;
+  padding: 6px 20px;
+  border-radius: 9999px;
+  border: 1.5px solid #F8B5A5;
+}
+.slide-counter {
+  font-size: 18px;
+  font-weight: 700;
+  color: #A89F91;
+  font-family: ui-monospace, monospace;
+}
+.washi-tape {
+  position: absolute;
+  height: 32px;
+  opacity: 0.88;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.tape-matcha { background-color: #A8C3A0; width: 140px; top: -16px; left: 40px; }
+.tape-sakura { background-color: #F8CAD4; width: 140px; top: -16px; right: 40px; }
+.tape-coral { background-color: #F4A261; width: 140px; top: -16px; left: 40px; }
+.card {
+  background: #FFFFFF;
+  border: 2px solid #EFE6D8;
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 8px 30px rgba(74, 52, 37, 0.05);
+  position: relative;
+}
+.slide-footer {
+  border-top: 2px solid #EFE6D8;
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  color: #A89F91;
+  font-weight: 600;
+}
+
+        .header-title {
+          font-size: 44px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 10px 0 30px 0;
+        }
+        .header-title span { color: #E76F51; }
+        .cards-grid {
+          flex: 1;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 36px;
+          align-items: stretch;
+          margin-bottom: 20px;
+        }
+        .pain-card {
+          background: #FFFFFF;
+          border: 2px solid #EFE6D8;
+          border-radius: 28px;
+          padding: 40px 32px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          position: relative;
+          box-shadow: 0 10px 30px rgba(74, 52, 37, 0.05);
+        }
+        .pain-icon {
+          font-size: 56px;
+          margin-bottom: 16px;
+        }
+        .pain-title {
+          font-size: 26px;
+          font-weight: 800;
+          color: #2E2018;
+          margin-bottom: 14px;
+        }
+        .pain-desc {
+          font-size: 19px;
+          line-height: 1.6;
+          color: #7D6E66;
+          flex: 1;
+        }
+        .pain-pill {
+          margin-top: 24px;
+          padding: 10px 16px;
+          border-radius: 14px;
+          font-size: 16px;
+          font-weight: 700;
+        }
+        .card-1 .pain-pill { background: #FFE8E8; color: #D90429; }
+        .card-2 .pain-pill { background: #EBF4FF; color: #1D4ED8; }
+        .card-3 .pain-pill { background: #FEF3C7; color: #B45309; }
+        .bottom-banner {
+          background: linear-gradient(135deg, #FFF5F2 0%, #FAF0E4 100%);
+          border: 2px dashed #E76F51;
+          border-radius: 20px;
+          padding: 18px 30px;
+          font-size: 20px;
+          font-weight: 800;
+          color: #E76F51;
+          text-align: center;
+        }
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">🎯 目標使用者與痛點</div>
+            <div class="slide-counter">02 / 05</div>
+          </div>
+
+          <div class="header-title">
+            大學生生活費有限，市面記帳 App 總是讓人<span>「堅持不下去」</span>
+          </div>
+
+          <div class="cards-grid">
+            <!-- 痛點 1 -->
+            <div class="pain-card card-1">
+              <div class="washi-tape tape-sakura"></div>
+              <div>
+                <div class="pain-icon">💔</div>
+                <div class="pain-title">痛點一：記帳冰冷且說教</div>
+                <div class="pain-desc">
+                  介面生硬、冷冰冰報表滿滿說教感，缺乏陪伴與成就感，往往記了兩天就放棄。
+                </div>
+              </div>
+              <div class="pain-pill">❌ 傳統 App：缺乏溫度與持續動力</div>
+            </div>
+
+            <!-- 痛點 2 -->
+            <div class="pain-card card-2">
+              <div class="washi-tape tape-matcha"></div>
+              <div>
+                <div class="pain-icon">🔒</div>
+                <div class="pain-title">痛點二：個資疑慮與門檻</div>
+                <div class="pain-desc">
+                  強迫綁定手機號碼、Email 甚至連動銀行帳號，對於大學生產生沉重心理與個資隱私負擔。
+                </div>
+              </div>
+              <div class="pain-pill">❌ 傳統 App：個資雲端儲存有外洩風險</div>
+            </div>
+
+            <!-- 痛點 3 -->
+            <div class="pain-card card-3">
+              <div class="washi-tape tape-coral"></div>
+              <div>
+                <div class="pain-icon">💸</div>
+                <div class="pain-title">痛點三：聚餐催款超尷尬</div>
+                <div class="pain-desc">
+                  同學吃火鍋飲料常代墊，朋友忘記還錢又礙於友情難以開口，催款太兇翻船、不催自己吃土！
+                </div>
+              </div>
+              <div class="pain-pill">❌ 傳統 App：完全沒有借貸社交話術支援</div>
+            </div>
+          </div>
+
+          <div class="bottom-banner">
+            💡 Money Buddy 解法：溫暖手帳美學 ＋ Local-First 零個資 ＋ 獨創 180 款情境催款神器！
+          </div>
+
+          <div class="slide-footer">
+            <span>目標受眾：預算有限、課業人際壓力大、需要管理日常支出的大學生</span>
+            <span>核心定位：陪伴型可愛理財管家</span>
+          </div>
+        </body></html>

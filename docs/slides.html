@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>Money Buddy — 16:9 橫向簡報展示</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1A1A1A;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      color: white;
+    }
+    .slides-container {
+      width: 100vw;
+      height: 100vh;
+      max-width: 177.78vh; /* 16:9 */
+      max-height: 56.25vw;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      background: #000;
+    }
+    .slide-wrap {
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+    .slide-wrap.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    .slide-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.99); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .controls {
+      position: fixed;
+      bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(0,0,0,0.7);
+      padding: 10px 24px;
+      border-radius: 9999px;
+      backdrop-blur: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      z-index: 99;
+    }
+    .btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #E76F51;
+    }
+    .page-info {
+      font-size: 14px;
+      font-weight: bold;
+      font-family: monospace;
+    }
+    .hint {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="hint">按鍵盤 ⬅️ / ➡️ 或點擊按鈕切換 │ 按 F11 全螢幕</div>
+  <div class="slides-container">
+    <div class="slide-wrap active"><img src="slides/slide_01_cover.png" alt="封面"></div>
+<div class="slide-wrap "><img src="slides/slide_02_painpoints.png" alt="三大痛點與客群"></div>
+<div class="slide-wrap "><img src="slides/slide_03_features.png" alt="核心功能與手帳美學"></div>
+<div class="slide-wrap "><img src="slides/slide_04_hellmode.png" alt="殺手功能：地獄催款模式"></div>
+<div class="slide-wrap "><img src="slides/slide_05_summary.png" alt="架構、測試與總結"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" onclick="prevSlide()">◀ 上一張</button>
+    <span class="page-info" id="page-num">1 / 5</span>
+    <button class="btn" onclick="nextSlide()">下一張 ▶</button>
+    <a href="../" class="btn" style="text-decoration:none; background:#E76F51;">🚀 開始 Demo</a>
+  </div>
+
+  <script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide-wrap');
+    const pageNum = document.getElementById('page-num');
+
+    function showSlide(index) {
+      slides.forEach(s => s.classList.remove('active'));
+      current = (index + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      pageNum.innerText = (current + 1) + ' / ' + slides.length;
+    }
+
+    function prevSlide() { showSlide(current - 1); }
+    function nextSlide() { showSlide(current + 1); }
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+  </script>
+</body>
+</html>

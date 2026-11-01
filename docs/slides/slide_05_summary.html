@@ -1,0 +1,237 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background-color: #FFFDF9;
+  background-image: 
+    radial-gradient(#E8D8C8 1px, transparent 1px),
+    linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
+  background-size: 24px 24px, 100% 100%;
+  color: #3D312A;
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.slide-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EFE6D8;
+  padding-bottom: 20px;
+}
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #E76F51;
+  background: #FFE8E0;
+  padding: 6px 20px;
+  border-radius: 9999px;
+  border: 1.5px solid #F8B5A5;
+}
+.slide-counter {
+  font-size: 18px;
+  font-weight: 700;
+  color: #A89F91;
+  font-family: ui-monospace, monospace;
+}
+.washi-tape {
+  position: absolute;
+  height: 32px;
+  opacity: 0.88;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.tape-matcha { background-color: #A8C3A0; width: 140px; top: -16px; left: 40px; }
+.tape-sakura { background-color: #F8CAD4; width: 140px; top: -16px; right: 40px; }
+.tape-coral { background-color: #F4A261; width: 140px; top: -16px; left: 40px; }
+.card {
+  background: #FFFFFF;
+  border: 2px solid #EFE6D8;
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 8px 30px rgba(74, 52, 37, 0.05);
+  position: relative;
+}
+.slide-footer {
+  border-top: 2px solid #EFE6D8;
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  color: #A89F91;
+  font-weight: 600;
+}
+
+        .header-title {
+          font-size: 40px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 10px 0 24px 0;
+        }
+        .header-title span { color: #2E7D32; }
+        .summary-grid {
+          flex: 1;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 32px;
+          margin-bottom: 20px;
+        }
+        .sum-card {
+          background: #FFFFFF;
+          border: 2px solid #EFE6D8;
+          border-radius: 28px;
+          padding: 36px 28px;
+          display: flex;
+          flex-direction: column;
+          box-shadow: 0 10px 30px rgba(74, 52, 37, 0.05);
+          position: relative;
+        }
+        .sum-header {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          margin-bottom: 16px;
+        }
+        .sum-icon {
+          font-size: 36px;
+          background: #FAF6EF;
+          width: 64px;
+          height: 64px;
+          border-radius: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1.5px solid #E5DACD;
+        }
+        .sum-title {
+          font-size: 24px;
+          font-weight: 800;
+          color: #2E2018;
+        }
+        .sum-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          font-size: 16px;
+          color: #5C4B40;
+          line-height: 1.5;
+        }
+        .test-badge-box {
+          background: #ECFDF5;
+          border: 2px solid #10B981;
+          border-radius: 18px;
+          padding: 16px;
+          text-align: center;
+          margin-top: auto;
+        }
+        .test-badge-num {
+          font-size: 32px;
+          font-weight: 900;
+          color: #047857;
+        }
+        .bottom-demo-bar {
+          background: linear-gradient(135deg, #E76F51 0%, #C1121F 100%);
+          border-radius: 20px;
+          padding: 20px 36px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: #FFFFFF;
+          box-shadow: 0 10px 30px rgba(231, 111, 81, 0.3);
+        }
+        .demo-text {
+          font-size: 22px;
+          font-weight: 800;
+        }
+        .repo-link {
+          background: rgba(255,255,255,0.2);
+          border: 1.5px solid rgba(255,255,255,0.4);
+          padding: 8px 20px;
+          border-radius: 12px;
+          font-size: 17px;
+          font-family: ui-monospace, monospace;
+          font-weight: 700;
+        }
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">🧪 技術驗收與結語</div>
+            <div class="slide-counter">05 / 05</div>
+          </div>
+
+          <div class="header-title">
+            技術架構、<span>34 項自動化測試 100% 通過</span> 與未來展望
+          </div>
+
+          <div class="summary-grid">
+            <!-- 1. 系統架構 -->
+            <div class="sum-card">
+              <div class="washi-tape tape-matcha"></div>
+              <div class="sum-header">
+                <div class="sum-icon">🛡️</div>
+                <div class="sum-title">Local-First 零個資</div>
+              </div>
+              <div class="sum-list">
+                <div>• <strong>零依賴原生架構</strong>：HTML5 + CSS3 + ES6+ JS，跨瀏覽器即開即用。</div>
+                <div>• <strong>純本地存儲</strong>：所有帳目 100% 留存在使用者本地端，絕不上傳。</div>
+                <div>• <strong>多手帳身分隔離</strong>：同裝置多使用者各自獨立，支援 JSON/CSV 備份。</div>
+              </div>
+            </div>
+
+            <!-- 2. 品質驗收 -->
+            <div class="sum-card">
+              <div class="washi-tape tape-sakura"></div>
+              <div class="sum-header">
+                <div class="sum-icon">🧪</div>
+                <div class="sum-title">測試驅動開發 (TDD)</div>
+              </div>
+              <div class="sum-list">
+                <div>• <strong>理財演算校驗</strong>：50/30/20 與六個罐子無浮點數誤差。</div>
+                <div>• <strong>借貸狀態機扣抵</strong>：未還 ➔ 部分還款 ➔ 結清無痛狀態轉移。</div>
+                <div>• <strong>預算 80%/100% 警戒</strong>：動態警示色與超額計算。</div>
+              </div>
+              <div class="test-badge-box">
+                <div class="test-badge-num">34 / 34 PASS</div>
+                <div style="font-size: 13px; font-weight:700; color:#065F46;">python3 test_app.py 全數通過 (0.029s)</div>
+              </div>
+            </div>
+
+            <!-- 3. 未來展望 -->
+            <div class="sum-card">
+              <div class="washi-tape tape-coral"></div>
+              <div class="sum-header">
+                <div class="sum-icon">🚀</div>
+                <div class="sum-title">下一步 (Next Steps)</div>
+              </div>
+              <div class="sum-list">
+                <div>• <strong>PWA 手機桌面免安裝</strong>：加入離線快取，體驗如原生 App。</div>
+                <div>• <strong>同儕出遊分帳計算機</strong>：自動算帳並串接個人化催款話術。</div>
+                <div>• <strong>發票載具 OCR 辨識</strong>：拍照自動分類記帳，更省時省力。</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-demo-bar">
+            <div class="demo-text">
+              ✨ 感謝聆聽！請看 Money Buddy 實體動態 Demo 成果展示 👉
+            </div>
+            <div class="repo-link">
+              GitHub: juku1128/Money-Buibui
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>Money Buddy — 大學生的可愛理財管家 © 2026</span>
+            <span>期中專題發表完畢，進入 90 秒實機演示！</span>
+          </div>
+        </body></html>
