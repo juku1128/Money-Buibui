@@ -162,6 +162,46 @@ body {
   }
 }
 
+/* 垃圾話型（北爛白痴風格）專屬卡片與塗鴉樣式 */
+.trash-mode-card {
+  background: linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 100%);
+  border: 2px dashed #9333EA;
+  box-shadow: 0 4px 18px rgba(147, 51, 234, 0.15);
+  color: #3B0764;
+  position: relative;
+}
+
+.trash-mode-btn {
+  background: linear-gradient(135deg, #9333EA 0%, #6B21A8 100%);
+  color: white;
+  box-shadow: 0 4px 14px rgba(147, 51, 234, 0.3);
+  transition: all 0.2s ease;
+}
+
+.trash-mode-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(147, 51, 234, 0.45);
+}
+
+.doodle-formula {
+  font-family: "Courier New", Courier, monospace;
+  background: rgba(147, 51, 234, 0.08);
+  border: 1px solid rgba(147, 51, 234, 0.2);
+  border-radius: 8px;
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+/* AI 生成中光暈脈衝動畫 */
+@keyframes aiPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.98); }
+}
+
+.ai-generating {
+  animation: aiPulse 1.2s infinite ease-in-out;
+}
+
 /* 自訂可愛滾動條 */
 ::-webkit-scrollbar {
   width: 6px;

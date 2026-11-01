@@ -634,80 +634,151 @@
         </div>
       </div>
 
-      <!-- ================= 還錢話術產生器 (核心特色功能) ================= -->
+      <!-- ================= AI 情境式催款訊息生成器 (核心特色功能) ================= -->
       <div class="journal-card p-5 sm:p-6 bg-gradient-to-br from-cream-50 via-cream-100 to-sakura-100/40">
         
-        <div class="flex items-center space-x-2 mb-2">
-          <span class="text-xs font-bold text-coral-500 bg-coral-500/10 px-2.5 py-0.5 rounded-full">
-            🎪 催款神器
-          </span>
-          <h3 class="font-bold text-stone-800 text-base">還錢話術產生器</h3>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold text-coral-500 bg-coral-500/10 px-2.5 py-0.5 rounded-full">
+              🎪 AI 催款神器
+            </span>
+            <h3 class="font-bold text-stone-800 text-base">AI 情境式催款訊息生成器</h3>
+          </div>
+          <div class="flex items-center space-x-2 self-start sm:self-auto">
+            <span id="ai-engine-badge" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-cream-200/80 text-stone-700 flex items-center gap-1 border border-cream-300">
+              🧠 本機智慧情境核心
+            </span>
+            <button onclick="app.openAiSettingsModal()" class="text-xs px-2.5 py-1 rounded-xl bg-white hover:bg-cream-100 border border-cream-300 text-stone-700 font-semibold flex items-center gap-1 shadow-xs transition">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-600"></i> AI 設定
+            </button>
+          </div>
         </div>
         <p class="text-xs text-stone-500 mb-6">
-          遇到欠錢不還好尷尬？選擇借款對象或情境，一秒生成不同風格催款簡訊，複製即送！
+          遇到欠錢不還好尷尬？結合 9 大催款風格與 AI 智能分析，根據借貸關係、拖欠天數與近況情境，即時產生 3 種不同角度的個人化催款訊息！
         </p>
 
-        <!-- 話術產生條件輸入 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-          <!-- 借款對象 -->
-          <div>
-            <label class="block text-xs font-semibold text-stone-600 mb-1">借款對象 (稱呼/暱稱)</label>
-            <input type="text" id="script-param-name" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none" placeholder="阿豪、小明、室友" oninput="app.generateScripts()">
+        <!-- 步驟 1：借貸情境詳細條件設定 (8 大維度) -->
+        <div class="mb-5 bg-white/80 p-4 rounded-2xl border border-cream-200/80 shadow-xs">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-xs font-bold text-stone-700 flex items-center gap-1.5">
+              <span>📌 步驟一：輸入借貸情境資訊</span>
+              <span class="text-[10px] text-stone-400 font-normal">（可從上方借款紀錄點擊「催款」一鍵帶入）</span>
+            </h4>
           </div>
 
-          <!-- 欠款金額 -->
-          <div>
-            <label class="block text-xs font-semibold text-stone-600 mb-1">欠款金額 (NT$)</label>
-            <input type="number" id="script-param-amount" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 font-mono outline-none" placeholder="800" oninput="app.generateScripts()">
-          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <!-- 1. 借款對象 -->
+            <div>
+              <label class="block text-xs font-semibold text-stone-600 mb-1">借款對象 (稱呼/暱稱)</label>
+              <input type="text" id="script-param-name" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none focus:border-coral-400" placeholder="例如：阿豪、室友、小明" value="阿豪">
+            </div>
 
-          <!-- 欠款天數 -->
-          <div>
-            <label class="block text-xs font-semibold text-stone-600 mb-1">借款/逾期天數</label>
-            <input type="number" id="script-param-days" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 font-mono outline-none" placeholder="14" oninput="app.generateScripts()">
-          </div>
+            <!-- 2. 欠款金額 -->
+            <div>
+              <label class="block text-xs font-semibold text-stone-600 mb-1">欠款金額 (NT$)</label>
+              <input type="number" id="script-param-amount" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 font-mono outline-none focus:border-coral-400" placeholder="800" value="800">
+            </div>
 
-          <!-- 與自己的關係 -->
-          <div>
-            <label class="block text-xs font-semibold text-stone-600 mb-1">與對象的關係</label>
-            <select id="script-param-relationship" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none" onchange="app.generateScripts()">
-              <option value="朋友">朋友 / 死黨</option>
-              <option value="同學">分組同學 / 班代</option>
-              <option value="室友">大學室友</option>
-              <option value="學弟妹">學弟 / 學妹</option>
-              <option value="不熟的人">不熟的朋友 / 其他</option>
-            </select>
+            <!-- 3. 借款日期 -->
+            <div>
+              <label class="block text-xs font-semibold text-stone-600 mb-1">借款日期</label>
+              <input type="date" id="script-param-borrow-date" onchange="app.recalcScriptDaysFromDate()" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none focus:border-coral-400">
+            </div>
+
+            <!-- 4. 借款/拖欠天數 -->
+            <div>
+              <label class="block text-xs font-semibold text-stone-600 mb-1">借款/拖欠天數</label>
+              <input type="number" id="script-param-days" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 font-mono outline-none focus:border-coral-400" placeholder="14" value="14">
+            </div>
+
+            <!-- 5. 與自己的關係 -->
+            <div>
+              <label class="block text-xs font-semibold text-stone-600 mb-1">與對象的關係</label>
+              <select id="script-param-relationship" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none focus:border-coral-400">
+                <option value="朋友">朋友 / 死黨</option>
+                <option value="同學">分組同學 / 班代</option>
+                <option value="室友">大學室友</option>
+                <option value="學弟妹">學弟 / 學妹</option>
+                <option value="不熟的人">不熟的朋友 / 其他</option>
+              </select>
+            </div>
+
+            <!-- 6. 預計還款日 (選填) -->
+            <div>
+              <label class="block text-xs font-semibold text-stone-600 mb-1">約定還款日 (選填)</label>
+              <input type="date" id="script-param-due-date" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none focus:border-coral-400">
+            </div>
+
+            <!-- 7. 借款原因 -->
+            <div>
+              <label class="block text-xs font-semibold text-stone-600 mb-1">借款原因 / 事由</label>
+              <input type="text" id="script-param-reason" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none focus:border-coral-400" placeholder="例如：代墊聚餐火鍋、買球鞋、演唱會門票" value="代墊聚餐火鍋">
+            </div>
+
+            <!-- 8. 目前近況情境 -->
+            <div>
+              <label class="block text-xs font-semibold text-stone-600 mb-1">目前近況 / 情境</label>
+              <input type="text" id="script-param-situation" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none focus:border-coral-400" placeholder="例如：月底吃土、要繳房租、看到他發吃大餐限動" value="月底吃土了">
+            </div>
           </div>
         </div>
 
-        <!-- 8 大風格選擇按鈕 -->
-        <div class="mb-4">
-          <label class="block text-xs font-bold text-stone-700 mb-2">選擇話術風格：</label>
+        <!-- 步驟 2：選擇催款風格 (9 大風格) -->
+        <div class="mb-5">
+          <label class="block text-xs font-bold text-stone-700 mb-2">📌 步驟二：選擇催款風格（9 大風格，含垃圾話與地獄模式）</label>
           
           <!-- 一般 6 大風格 -->
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-3">
-            <button onclick="app.selectScriptStyle('gentle')" id="btn-style-gentle" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+            <button onclick="app.selectScriptStyle('gentle')" id="btn-style-gentle" class="script-style-btn py-2 px-3 rounded-xl text-xs font-bold border-2 border-stone-800 bg-stone-800 text-white shadow-sm transition">
               🌱 溫柔提醒
             </button>
-            <button onclick="app.selectScriptStyle('cute')" id="btn-style-cute" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+            <button onclick="app.selectScriptStyle('cute')" id="btn-style-cute" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 hover:bg-cream-100 transition">
               🐾 可愛撒嬌
             </button>
-            <button onclick="app.selectScriptStyle('humorous')" id="btn-style-humorous" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+            <button onclick="app.selectScriptStyle('humorous')" id="btn-style-humorous" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 hover:bg-cream-100 transition">
               🎪 幽默搞笑
             </button>
-            <button onclick="app.selectScriptStyle('formal')" id="btn-style-formal" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+            <button onclick="app.selectScriptStyle('formal')" id="btn-style-formal" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 hover:bg-cream-100 transition">
               👔 正式禮貌
             </button>
-            <button onclick="app.selectScriptStyle('firm_polite')" id="btn-style-firm_polite" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+            <button onclick="app.selectScriptStyle('firm_polite')" id="btn-style-firm_polite" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 hover:bg-cream-100 transition">
               🎯 委婉堅定
             </button>
-            <button onclick="app.selectScriptStyle('strong_polite')" id="btn-style-strong_polite" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+            <button onclick="app.selectScriptStyle('strong_polite')" id="btn-style-strong_polite" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 hover:bg-cream-100 transition">
               ⚡ 強硬禮貌
             </button>
           </div>
 
+          <!-- 🤓 垃圾話型卡片 (含 12 大經濟學公式塗鴉與高階胡言亂語) -->
+          <div class="trash-mode-card p-3.5 rounded-2xl mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-black text-amber-900 bg-amber-400 px-2 py-0.5 rounded-md font-mono tracking-wide">
+                  NEW STYLE
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-amber-950 flex items-center gap-1.5">
+                  🤓 垃圾話型（12 大經濟學原理胡言亂語爆擊）
+                </h4>
+              </div>
+              <p class="text-[11px] text-amber-900/80 leading-relaxed">
+                結合機會成本、賽局理論、囚徒困境、沉沒成本、跨期效用等經濟學公式，用頂規荒謬學理讓對方瞬間破防！
+              </p>
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <span class="doodle-formula text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-mono">MC=MR</span>
+                <span class="doodle-formula text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-mono">Pareto 改善</span>
+                <span class="doodle-formula text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-mono">Nash Equilibrium</span>
+                <span class="doodle-formula text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-mono">Sunk Cost</span>
+                <span class="doodle-formula text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-mono">囚徒困境</span>
+              </div>
+            </div>
+
+            <button onclick="app.selectScriptStyle('trash_talk')" id="btn-style-trash_talk" class="trash-mode-btn shrink-0 text-xs font-black px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition">
+              <span>🤓 啟動經濟學垃圾話</span>
+            </button>
+          </div>
+
           <!-- 🔥 地獄催款模式專區 (高對比震撼按鈕) -->
-          <div class="p-3 rounded-2xl bg-gradient-to-r from-red-950 via-red-900 to-orange-950 border-2 border-red-500/40 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+          <div class="p-3.5 rounded-2xl bg-gradient-to-r from-red-950 via-red-900 to-orange-950 border-2 border-red-500/40 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
             <div class="flex items-center space-x-3">
               <span class="text-2xl animate-bounce">🔥</span>
               <div>
@@ -715,15 +786,15 @@
                   地獄催款模式
                   <span class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded-full font-mono uppercase tracking-wider">High Risk</span>
                 </h4>
-                <p class="text-[11px] text-red-200">友情小船可能翻覆！特殊娛樂風格，請謹慎啟動</p>
+                <p class="text-[11px] text-red-200">友情小船可能翻覆！超強攻擊性與法務恐嚇，請謹慎啟動</p>
               </div>
             </div>
 
             <div class="flex items-center space-x-2">
-              <button onclick="app.requestHellMode('hell_furious')" class="hell-fire-btn text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
+              <button onclick="app.requestHellMode('hell_furious')" id="btn-style-hell_furious" class="hell-fire-btn text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
                 🤬 粗口暴躁型
               </button>
-              <button onclick="app.requestHellMode('hell_legal')" class="hell-legal-btn text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
+              <button onclick="app.requestHellMode('hell_legal')" id="btn-style-hell_legal" class="hell-legal-btn text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
                 ⚖️ 法律威嚇型
               </button>
             </div>
@@ -731,9 +802,17 @@
 
         </div>
 
-        <!-- 話術產生結果展示 (至少 2 個版本 + 一鍵複製) -->
-        <div id="script-results-container" class="space-y-3 mt-6">
-          <!-- 動態載入話術卡片 -->
+        <!-- 步驟 3：生成觸發按鈕 -->
+        <div class="mb-6">
+          <button id="btn-generate-ai-scripts" onclick="app.generateScripts()" class="w-full py-3.5 px-4 bg-gradient-to-r from-coral-500 via-coral-600 to-purple-600 hover:from-coral-600 hover:to-purple-700 text-white font-black text-sm rounded-2xl shadow-md transition flex items-center justify-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>幫我生成 3 種個人化催款說法！</span>
+          </button>
+        </div>
+
+        <!-- 步驟 4：話術產生結果展示 (3 個不同角度切入版本 + 一鍵複製 + 獨立換說法) -->
+        <div id="script-results-container" class="space-y-4">
+          <!-- 動態載入 3 組話術卡片 -->
         </div>
 
       </div>
@@ -1040,6 +1119,66 @@
           <label class="block text-xs font-bold text-stone-700 mb-1">還原 / 匯入手帳備份：</label>
           <input type="file" id="backup-file-input" accept=".json" onchange="app.importFromJSON(event)" class="text-xs text-stone-500 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cream-200 file:text-stone-700 hover:file:bg-cream-300 cursor-pointer">
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. AI 催款金鑰設定 Modal -->
+  <div id="modal-ai-settings" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+    <div class="journal-card max-w-md w-full p-6 bg-white relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="app.closeAiSettingsModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center space-x-2 mb-2">
+        <span class="text-lg">🤖</span>
+        <h3 class="text-base font-bold text-stone-800">Google Gemini AI 金鑰設定</h3>
+      </div>
+      <p class="text-xs text-stone-500 mb-4">
+        串接 Google Gemini 生成式 AI，依據欠款情境與對象即時創作 3 種高變化度的精準催款訊息！
+      </p>
+
+      <div class="p-3 rounded-xl bg-purple-50 border border-purple-200/80 mb-4 text-xs text-purple-900 space-y-1.5">
+        <div class="font-bold flex items-center gap-1">
+          <span>🔒 零個資與本地優先承諾</span>
+        </div>
+        <p class="text-[11px] leading-relaxed text-purple-800">
+          您的 API Key 僅儲存於您本地瀏覽器的 LocalStorage，絕不上傳分享。未設定時，系統會自動無縫切換為<strong>「本機智慧情境核心」</strong>，離線亦可生成 3 組不同角度話術！
+        </p>
+      </div>
+
+      <!-- 目前狀態 -->
+      <div class="mb-4 flex items-center justify-between p-2.5 rounded-xl bg-cream-50 border border-cream-200 text-xs">
+        <span class="text-stone-600 font-medium">目前 AI 核心狀態：</span>
+        <span id="ai-settings-current-status" class="font-bold text-stone-800">檢測中...</span>
+      </div>
+
+      <!-- 金鑰輸入 -->
+      <div class="mb-4">
+        <label class="block text-xs font-bold text-stone-700 mb-1">
+          Gemini API Key：
+        </label>
+        <div class="relative">
+          <input type="password" id="ai-settings-key-input" class="w-full bg-cream-50 px-3 py-2 pr-10 rounded-xl border border-cream-300 text-xs text-stone-800 font-mono outline-none focus:border-purple-500" placeholder="AIzaSy...">
+          <button type="button" onclick="app.toggleApiKeyVisibility()" class="absolute right-2.5 top-2.5 text-stone-400 hover:text-stone-600">
+            <i id="ai-key-eye-icon" data-lucide="eye" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div class="mt-1.5 flex items-center justify-between text-[11px]">
+          <span class="text-stone-400">留空並儲存即清除金鑰</span>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:underline flex items-center gap-0.5">
+            取得免費 Gemini API Key <i data-lucide="external-link" class="w-3 h-3"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 mt-5">
+        <button onclick="app.clearAiSettings()" class="py-2.5 px-3 bg-cream-100 hover:bg-cream-200 text-stone-600 text-xs font-bold rounded-xl transition">
+          清除金鑰
+        </button>
+        <button onclick="app.saveAiSettings()" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i> 儲存設定
+        </button>
       </div>
     </div>
   </div>

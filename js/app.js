@@ -11,6 +11,11 @@ class MoneyBuddyApp {
     this.charts = {};
     this.mascot = new ShibaBuddy(mbStorage);
 
+    // AI 催款話術狀態
+    this.currentGeneratedScripts = [];
+    this.scriptGenerationSource = 'local_engine';
+    this.isAiGenerating = false;
+
     // 取得當前月份 (YYYY-MM)
     const now = new Date();
     this.currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -38,6 +43,7 @@ class MoneyBuddyApp {
     this.setupDateInputs();
     this.switchView('dashboard');
     this.initLucideIcons();
+    this.checkAiStatus();
   }
 
   initLucideIcons() {
@@ -85,6 +91,12 @@ class MoneyBuddyApp {
 
     const debtBorrowDate = document.getElementById('debt-input-borrow-date');
     if (debtBorrowDate) debtBorrowDate.value = todayStr;
+
+    const scriptBorrowDate = document.getElementById('script-param-borrow-date');
+    if (scriptBorrowDate && !scriptBorrowDate.value) {
+      const fourteenDaysAgo = new Date(Date.now() - 14 * 24 * 3600 * 1000);
+      scriptBorrowDate.value = typeof getLocalDateString === 'function' ? getLocalDateString(fourteenDaysAgo) : fourteenDaysAgo.toISOString().split('T')[0];
+    }
   }
 
   updateProfileDisplay() {
@@ -1496,27 +1508,49 @@ class MoneyBuddyApp {
     const debt = mbStorage.getDebts().find(d => d.id === debtId);
     if (!debt) return;
 
-    document.getElementById('script-param-name').value = debt.name;
-    document.getElementById('script-param-amount').value = debt.remainingAmount;
+    const nameInput = document.getElementById('script-param-name');
+    const amountInput = document.getElementById('script-param-amount');
+    const borrowDateInput = document.getElementById('script-param-borrow-date');
+    const dueDateInput = document.getElementById('script-param-due-date');
+    const daysInput = document.getElementById('script-param-days');
+    const relInput = document.getElementById('script-param-relationship');
+    const reasonInput = document.getElementById('script-param-reason');
+    const situationInput = document.getElementById('script-param-situation');
+
+    if (nameInput) nameInput.value = debt.name;
+    if (amountInput) amountInput.value = debt.remainingAmount;
+    if (borrowDateInput) borrowDateInput.value = debt.borrowDate || '';
+    if (dueDateInput) dueDateInput.value = debt.dueDate || '';
 
     // 計算借款至今幾天
     const diffDays = Math.max(1, Math.floor((Date.now() - new Date(debt.borrowDate).getTime()) / (1000 * 3600 * 24)));
-    document.getElementById('script-param-days').value = diffDays;
-
-    document.getElementById('script-param-relationship').value = debt.relationship || '朋友';
+    if (daysInput) daysInput.value = diffDays;
+    if (relInput) relInput.value = debt.relationship || '朋友';
+    if (reasonInput) reasonInput.value = debt.note || '聚餐代墊款項';
+    if (situationInput) situationInput.value = '想把帳目結清';
 
     this.generateScripts();
 
     // 平滑滾動至話術產生器
-    const generatorCard = document.querySelector('#script-param-name');
-    if (generatorCard) {
-      generatorCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (nameInput) {
+      nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     this.showToast(`已將 ${debt.name} 的欠款資訊帶入話術產生器！`);
   }
 
-  // --- 還錢話術產生核心演算法 (8 大風格) ---
+  recalcScriptDaysFromDate() {
+    const dateInput = document.getElementById('script-param-borrow-date');
+    const daysInput = document.getElementById('script-param-days');
+    if (!dateInput || !daysInput || !dateInput.value) return;
+    const borrowTime = new Date(dateInput.value).getTime();
+    if (isNaN(borrowTime)) return;
+    const now = Date.now();
+    const diffDays = Math.max(1, Math.floor((now - borrowTime) / (1000 * 3600 * 24)));
+    daysInput.value = diffDays;
+  }
+
+  // --- 還錢話術產生核心演算法 (9 大風格 + AI 引擎整合) ---
 
   selectScriptStyle(styleKey) {
     this.activeStyle = styleKey;
@@ -1533,6 +1567,32 @@ class MoneyBuddyApp {
       }
     });
 
+    const trashBtn = document.getElementById('btn-style-trash_talk');
+    if (trashBtn) {
+      if (styleKey === 'trash_talk') {
+        trashBtn.className = 'trash-mode-btn shrink-0 text-xs font-black px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-md ring-2 ring-amber-500 bg-amber-500 text-stone-900 transition scale-105';
+      } else {
+        trashBtn.className = 'trash-mode-btn shrink-0 text-xs font-black px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition';
+      }
+    }
+
+    const hellFuriousBtn = document.getElementById('btn-style-hell_furious');
+    const hellLegalBtn = document.getElementById('btn-style-hell_legal');
+    if (hellFuriousBtn) {
+      if (styleKey === 'hell_furious') {
+        hellFuriousBtn.classList.add('ring-2', 'ring-red-400', 'scale-105');
+      } else {
+        hellFuriousBtn.classList.remove('ring-2', 'ring-red-400', 'scale-105');
+      }
+    }
+    if (hellLegalBtn) {
+      if (styleKey === 'hell_legal') {
+        hellLegalBtn.classList.add('ring-2', 'ring-red-400', 'scale-105');
+      } else {
+        hellLegalBtn.classList.remove('ring-2', 'ring-red-400', 'scale-105');
+      }
+    }
+
     this.generateScripts();
   }
 
@@ -1548,60 +1608,179 @@ class MoneyBuddyApp {
 
   confirmHellMode() {
     if (this.pendingHellStyle) {
-      this.activeStyle = this.pendingHellStyle;
+      const chosen = this.pendingHellStyle;
       this.closeHellModal();
-      this.generateScripts();
+      this.selectScriptStyle(chosen);
       this.showToast('🔥 地獄催款模式已啟動！友情小船搖晃中～');
     }
   }
 
-  generateScripts() {
-    const styleData = REMINDER_SCRIPTS[this.activeStyle] || REMINDER_SCRIPTS.gentle;
-
+  getScriptContext() {
     const name = (document.getElementById('script-param-name')?.value || '朋友').trim();
     const amount = Number(document.getElementById('script-param-amount')?.value || 800);
+    const borrowDate = document.getElementById('script-param-borrow-date')?.value || '';
     const days = Number(document.getElementById('script-param-days')?.value || 14);
     const relationship = document.getElementById('script-param-relationship')?.value || '朋友';
+    const dueDate = document.getElementById('script-param-due-date')?.value || '';
+    const reason = (document.getElementById('script-param-reason')?.value || '').trim() || '日常代墊';
+    const situation = (document.getElementById('script-param-situation')?.value || '').trim() || '月底手頭吃緊';
 
+    return {
+      name,
+      amount,
+      borrowDate,
+      days,
+      relationship,
+      dueDate,
+      reason,
+      situation,
+      style: this.activeStyle || 'gentle'
+    };
+  }
+
+  async generateScripts() {
     const container = document.getElementById('script-results-container');
     if (!container) return;
 
-    // 將參數代入話術模板
-    const generated = styleData.templates.map((tpl, idx) => {
-      let text = tpl
-        .replace(/\{name\}/g, name)
-        .replace(/\{amount\}/g, amount.toLocaleString())
-        .replace(/\{days\}/g, days)
-        .replace(/\{relationship\}/g, relationship);
-      return { version: idx + 1, text };
-    });
+    const context = this.getScriptContext();
+    const styleKey = this.activeStyle || 'gentle';
+    const styleData = REMINDER_SCRIPTS[styleKey] || REMINDER_SCRIPTS.gentle;
 
-    const isHell = styleData.isHell;
-    const cardBg = isHell ? 'hell-mode-card' : 'bg-white border border-cream-200';
-    const tagBg = isHell ? 'bg-red-700 text-white font-black' : 'bg-coral-500/10 text-coral-500';
+    // 顯示載入動畫
+    this.isAiGenerating = true;
+    container.innerHTML = `
+      <div class="p-8 rounded-2xl bg-white border border-cream-200 text-center ai-generating shadow-sm">
+        <div class="inline-block p-3 rounded-full bg-cream-100 text-purple-600 mb-3 animate-spin">
+          <i data-lucide="loader-2" class="w-6 h-6"></i>
+        </div>
+        <h4 class="text-sm font-bold text-stone-800 mb-1">正在根據情境為您調製 3 種催款說法...</h4>
+        <p class="text-xs text-stone-500">正在分析「${context.relationship}」關係、拖欠 ${context.days} 天與「${context.situation}」情境</p>
+      </div>
+    `;
+    this.initLucideIcons();
+
+    const localKey = localStorage.getItem('mb_gemini_api_key') || '';
+    let scripts = null;
+    let source = 'local_engine';
+
+    // 嘗試向後端請求 AI 生成
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 9000);
+      const res = await fetch('/api/generate-scripts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          context,
+          apiKey: localKey
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.scripts) && data.scripts.length === 3) {
+          scripts = data.scripts;
+          source = data.source || 'gemini_ai';
+        }
+      }
+    } catch (err) {
+      // 網路超時或本機靜態檔案模式，平滑切換至本機情境引擎
+    }
+
+    // 若 AI 生成不可用或無回應，使用本地智慧情境引擎
+    if (!scripts || scripts.length < 3) {
+      scripts = contextualEngine.generateThreeVersions(context, styleKey);
+      source = 'local_engine';
+    }
+
+    this.currentGeneratedScripts = scripts;
+    this.scriptGenerationSource = source;
+    this.isAiGenerating = false;
+
+    this.renderScriptResults();
+  }
+
+  regenerateSingleScript(versionIndex) {
+    if (versionIndex < 0 || versionIndex > 2) return;
+    const context = this.getScriptContext();
+    const styleKey = this.activeStyle || 'gentle';
+
+    const newVersion = contextualEngine.generateSingleVersion(context, styleKey, versionIndex);
+    this.currentGeneratedScripts[versionIndex] = newVersion;
+    this.renderScriptResults();
+    this.showToast(`已重新生成第 ${versionIndex + 1} 種催款說法！`);
+  }
+
+  renderScriptResults() {
+    const container = document.getElementById('script-results-container');
+    if (!container) return;
+
+    const styleKey = this.activeStyle || 'gentle';
+    const styleData = REMINDER_SCRIPTS[styleKey] || REMINDER_SCRIPTS.gentle;
+    const isHell = Boolean(styleData.isHell);
+    const isTrash = styleKey === 'trash_talk';
+
+    const isGeminiAi = this.scriptGenerationSource === 'gemini_ai';
+    const sourceBadge = isGeminiAi
+      ? `<span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 border border-purple-200 flex items-center gap-1 shadow-xs"><i data-lucide="sparkles" class="w-3 h-3"></i> ✨ Google Gemini AI 智能生成</span>`
+      : `<span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-cream-200 text-stone-700 border border-cream-300 flex items-center gap-1"><i data-lucide="cpu" class="w-3 h-3"></i> 🧠 本機智慧情境核心演算法</span>`;
+
+    const tagBg = isHell
+      ? 'bg-red-700 text-white font-black'
+      : (isTrash ? 'bg-amber-400 text-amber-950 font-black' : 'bg-coral-500/10 text-coral-600 font-bold');
+
+    const cardBg = isHell
+      ? 'hell-mode-card shadow-md'
+      : (isTrash ? 'bg-amber-50/70 border-2 border-amber-200/90 shadow-sm' : 'bg-white border border-cream-200/90 shadow-xs');
+
+    const angleTitles = [
+      '💡 視角一：日常情境切入',
+      '🎯 視角二：拖欠行為直球對決',
+      '🎪 視角三：荒謬哲理／比喻'
+    ];
 
     container.innerHTML = `
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-xs px-2.5 py-0.5 rounded-full ${tagBg}">
-          ${styleData.name} (${styleData.badge})
-        </span>
-        <span class="text-xs text-stone-400">${styleData.description}</span>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 rounded-2xl bg-white/80 border border-cream-200">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs px-2.5 py-0.5 rounded-full ${tagBg}">
+            ${styleData.name} (${styleData.badge})
+          </span>
+          <span class="text-xs text-stone-500">${styleData.description}</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          ${sourceBadge}
+          <button onclick="app.generateScripts()" class="text-xs px-3 py-1 rounded-xl bg-cream-100 hover:bg-cream-200 text-stone-700 font-bold flex items-center gap-1 transition">
+            <i data-lucide="refresh-cw" class="w-3 h-3"></i> 全部換一批
+          </button>
+        </div>
       </div>
 
       <div class="space-y-3">
-        ${generated.map(g => `
-          <div class="p-4 rounded-2xl ${cardBg} shadow-sm relative group">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[11px] font-bold ${isHell ? 'text-red-300' : 'text-stone-400'}">版本 ${g.version}</span>
-              <button onclick="app.copyToClipboard('${this.escapeHtml(g.text)}')" class="px-3 py-1 rounded-xl text-xs font-semibold ${isHell ? 'bg-red-600 hover:bg-red-500 text-white' : 'bg-cream-100 hover:bg-cream-200 text-stone-700'} transition flex items-center gap-1">
-                <i data-lucide="copy" class="w-3.5 h-3.5"></i> 一鍵複製
-              </button>
+        ${this.currentGeneratedScripts.map((g, idx) => {
+          const angleTitle = angleTitles[idx] || `說法 ${idx + 1}`;
+          const escapedText = this.escapeHtml(g.text);
+          return `
+            <div class="p-4 rounded-2xl ${cardBg} relative transition-all duration-200 hover:shadow-md">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <span class="text-xs font-bold ${isHell ? 'text-red-300' : (isTrash ? 'text-amber-900' : 'text-stone-600')} flex items-center gap-1">
+                  ${angleTitle}
+                </span>
+                <div class="flex items-center space-x-2">
+                  <button onclick="app.regenerateSingleScript(${idx})" class="px-2.5 py-1 rounded-xl text-xs font-medium ${isHell ? 'bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/60' : 'bg-cream-100 hover:bg-cream-200 text-stone-600 border border-cream-200'} transition flex items-center gap-1">
+                    <i data-lucide="refresh-cw" class="w-3 h-3"></i> 換一種說法
+                  </button>
+                  <button onclick="app.copyToClipboard('${escapedText}')" class="px-3 py-1 rounded-xl text-xs font-bold ${isHell ? 'bg-red-600 hover:bg-red-500 text-white' : (isTrash ? 'bg-amber-400 hover:bg-amber-500 text-amber-950' : 'bg-coral-500 hover:bg-coral-600 text-white')} transition flex items-center gap-1 shadow-xs">
+                    <i data-lucide="copy" class="w-3 h-3"></i> 一鍵複製
+                  </button>
+                </div>
+              </div>
+              <p class="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap ${isHell ? 'text-red-100 font-medium' : (isTrash ? 'text-stone-800 font-medium font-sans' : 'text-stone-700 font-medium')}">
+${g.text}
+              </p>
             </div>
-            <p class="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap font-medium ${isHell ? 'text-red-100 font-semibold' : 'text-stone-700'}">
-              ${g.text}
-            </p>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
     `;
 
@@ -1609,6 +1788,7 @@ class MoneyBuddyApp {
   }
 
   escapeHtml(str) {
+    if (!str) return '';
     return str
       .replace(/&/g, '&amp;')
       .replace(/'/g, "\\'")
@@ -1630,6 +1810,114 @@ class MoneyBuddyApp {
       document.body.removeChild(ta);
       this.showToast('📋 話術已複製到剪貼簿！');
     });
+  }
+
+  // --- AI 金鑰管理方法 ---
+
+  async checkAiStatus() {
+    const badge = document.getElementById('ai-engine-badge');
+    if (!badge) return;
+
+    const localKey = localStorage.getItem('mb_gemini_api_key');
+    let serverConfigured = false;
+
+    try {
+      const res = await fetch('/api/ai-status');
+      if (res.ok) {
+        const data = await res.json();
+        serverConfigured = Boolean(data.configured);
+      }
+    } catch (e) {
+      // offline
+    }
+
+    if (serverConfigured) {
+      badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-green-500"></span> ✨ Google Gemini AI (伺服器端)`;
+      badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 flex items-center gap-1.5 shadow-xs';
+    } else if (localKey) {
+      badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-purple-500"></span> ✨ Google Gemini AI (已連線)`;
+      badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 flex items-center gap-1.5 shadow-xs';
+    } else {
+      badge.innerHTML = `🧠 本機智慧情境核心`;
+      badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-full bg-cream-200/80 text-stone-700 flex items-center gap-1 border border-cream-300';
+    }
+  }
+
+  openAiSettingsModal() {
+    const modal = document.getElementById('modal-ai-settings');
+    if (!modal) return;
+    const keyInput = document.getElementById('ai-settings-key-input');
+    if (keyInput) {
+      keyInput.value = localStorage.getItem('mb_gemini_api_key') || '';
+    }
+    this.updateAiSettingsStatus();
+    modal.classList.remove('hidden');
+    this.initLucideIcons();
+  }
+
+  closeAiSettingsModal() {
+    const modal = document.getElementById('modal-ai-settings');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  toggleApiKeyVisibility() {
+    const input = document.getElementById('ai-settings-key-input');
+    const icon = document.getElementById('ai-key-eye-icon');
+    if (!input) return;
+    if (input.type === 'password') {
+      input.type = 'text';
+      if (icon) icon.setAttribute('data-lucide', 'eye-off');
+    } else {
+      input.type = 'password';
+      if (icon) icon.setAttribute('data-lucide', 'eye');
+    }
+    this.initLucideIcons();
+  }
+
+  saveAiSettings() {
+    const keyInput = document.getElementById('ai-settings-key-input');
+    const val = (keyInput ? keyInput.value : '').trim();
+    if (val) {
+      localStorage.setItem('mb_gemini_api_key', val);
+      this.showToast('✨ Gemini API 金鑰已儲存！');
+    } else {
+      localStorage.removeItem('mb_gemini_api_key');
+      this.showToast('已清除金鑰，切換至本機情境引擎');
+    }
+    this.closeAiSettingsModal();
+    this.checkAiStatus();
+  }
+
+  clearAiSettings() {
+    localStorage.removeItem('mb_gemini_api_key');
+    const keyInput = document.getElementById('ai-settings-key-input');
+    if (keyInput) keyInput.value = '';
+    this.showToast('已清除 Gemini API 金鑰');
+    this.updateAiSettingsStatus();
+    this.checkAiStatus();
+  }
+
+  async updateAiSettingsStatus() {
+    const statusEl = document.getElementById('ai-settings-current-status');
+    if (!statusEl) return;
+    const localKey = localStorage.getItem('mb_gemini_api_key');
+    try {
+      const res = await fetch('/api/ai-status');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.configured) {
+          statusEl.innerHTML = '<span class="text-green-600 font-bold">● 伺服器端環境變數已啟用</span>';
+          return;
+        }
+      }
+    } catch (e) {
+      // offline
+    }
+    if (localKey) {
+      statusEl.innerHTML = '<span class="text-purple-600 font-bold">● 瀏覽器端 API Key 已啟用</span>';
+    } else {
+      statusEl.innerHTML = '<span class="text-stone-500 font-medium">○ 未啟用 (目前使用本機智慧引擎)</span>';
+    }
   }
 
   // ================= 手帳身分 / 備份管理 (Zero-PII Profile Modal) =================

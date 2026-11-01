@@ -295,6 +295,101 @@ class TestMoneyBuddyCore(unittest.TestCase):
         self.assertEqual(shift_month('2026-01', -1), '2025-12')
         self.assertEqual(shift_month('2026-12', 1), '2027-01')
 
+    def test_17_nine_reminder_styles_presence(self):
+        """驗證 9 大催款風格齊備 (含 trash_talk, 2 種地獄模式, 6 種一般風格)"""
+        js_file = os.path.join(BASE_DIR, 'js', 'scripts_data.js')
+        with open(js_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        required_9_styles = [
+            'gentle',
+            'cute',
+            'humorous',
+            'formal',
+            'firm_polite',
+            'strong_polite',
+            'trash_talk',
+            'hell_furious',
+            'hell_legal'
+        ]
+
+        for s in required_9_styles:
+            self.assertIn(f"{s}:", content, f"話術字典缺少核心風格：{s}")
+
+        self.assertIn("isTrash: true", content)
+        self.assertIn("isHell: true", content)
+
+    def test_18_trash_talk_twelve_economics_theories(self):
+        """驗證垃圾話風格融入 12 大經濟學公式與理論"""
+        js_file = os.path.join(BASE_DIR, 'js', 'scripts_data.js')
+        with open(js_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        economics_terms = [
+            '機會成本',
+            '邊際效用',
+            '效用最大化',
+            '賽局理論',
+            '囚徒困境',
+            '沉沒成本',
+            '理性行為者',
+            '資訊不對稱',
+            'Goodhart',
+            '跨期效用',
+            '供需法則',
+            '帕累托'
+        ]
+
+        for term in economics_terms:
+            self.assertIn(term, content, f"垃圾話庫缺少經濟學術語：{term}")
+
+    def test_19_contextual_script_engine_three_versions_jsc(self):
+        """以 JSC 執行 ContextualScriptEngine，驗證 9 大風格均能即時生成 3 種角度切入的催款說法"""
+        import subprocess
+        jsc_bin = '/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc'
+        if not os.path.isfile(jsc_bin):
+            self.skipTest("JSC binary not available on this environment")
+
+        js_code = """
+        load('js/scripts_data.js');
+        var ctx = {
+            name: '阿豪',
+            amount: 1200,
+            days: 20,
+            relationship: '朋友',
+            dueDate: '2026-10-15',
+            reason: '聚餐火鍋',
+            situation: '月底吃土',
+            style: 'trash_talk'
+        };
+
+        var styles = ['gentle', 'cute', 'humorous', 'formal', 'firm_polite', 'strong_polite', 'trash_talk', 'hell_furious', 'hell_legal'];
+        var successCount = 0;
+        styles.forEach(function(s) {
+            var res = contextualEngine.generateThreeVersions(ctx, s);
+            if (Array.isArray(res) && res.length === 3) {
+                if (res[0].text && res[1].text && res[2].text) {
+                    successCount++;
+                }
+            }
+        });
+        print('SUCCESS_STYLES:' + successCount);
+        """
+        proc = subprocess.run([jsc_bin, '-e', js_code], cwd=BASE_DIR, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, f"JSC execution error: {proc.stderr}")
+        self.assertIn("SUCCESS_STYLES:9", proc.stdout)
+
+    def test_20_server_api_status(self):
+        """驗證 server.py 定義了 /api/ai-status 與 /api/generate-scripts 路由"""
+        server_file = os.path.join(BASE_DIR, 'server.py')
+        with open(server_file, 'r', encoding='utf-8') as f:
+            code = f.read()
+
+        self.assertIn("/api/ai-status", code)
+        self.assertIn("/api/generate-scripts", code)
+        self.assertIn("generate_ai_scripts", code)
+        self.assertIn("urllib.request", code)
+
 if __name__ == '__main__':
     unittest.main()
 
