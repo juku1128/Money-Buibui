@@ -3,6 +3,18 @@
  * 串接 Local-first Storage、Chart.js、柴柴小助手與 8 大催款話術產生器
  */
 
+if (typeof escapeHtml !== 'function') {
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+}
+
 class MoneyBuddyApp {
   constructor() {
     this.currentView = 'dashboard';
@@ -1132,14 +1144,25 @@ class MoneyBuddyApp {
       all.map(c => `<option value="${c}" ${c === currentVal ? 'selected' : ''}>${c}</option>`).join('');
   }
 
-  openTransactionModal(type = 'expense', editId = null) {
+  openTransactionModal(type = 'expense', editIdOrDate = null) {
     const modal = document.getElementById('modal-transaction');
     const form = document.getElementById('tx-form');
     form.reset();
 
     const todayStr = typeof getLocalDateString === 'function' ? getLocalDateString() : new Date().toISOString().split('T')[0];
+    let editId = null;
+    let initialDate = todayStr;
+
+    if (editIdOrDate) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(editIdOrDate)) {
+        initialDate = editIdOrDate;
+      } else {
+        editId = editIdOrDate;
+      }
+    }
+
     document.getElementById('tx-edit-id').value = editId || '';
-    document.getElementById('tx-input-date').value = todayStr;
+    document.getElementById('tx-input-date').value = initialDate;
 
     if (editId) {
       document.getElementById('tx-modal-title').innerHTML = '<i data-lucide="edit-3" class="w-4 h-4 text-coral-500"></i> 編輯記帳紀錄';

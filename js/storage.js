@@ -38,6 +38,16 @@ const CATEGORY_ICONS = {
   '其他收入': '💰'
 };
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function getLocalDateString(d = new Date()) {
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -967,5 +977,5 @@ class MoneyBuddyStorage {
 const mbStorage = new MoneyBuddyStorage();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { MoneyBuddyStorage, mbStorage, DEFAULT_CATEGORIES, DEFAULT_PLAN_CONFIG, CATEGORY_ICONS };
+  module.exports = { MoneyBuddyStorage, mbStorage, DEFAULT_CATEGORIES, DEFAULT_PLAN_CONFIG, CATEGORY_ICONS, escapeHtml };
 }

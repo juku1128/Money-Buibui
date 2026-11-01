@@ -1256,6 +1256,7 @@ def refresh_ui_screenshots():
             CHROME_BIN,
             "--headless",
             "--disable-gpu",
+            "--virtual-time-budget=2000",
             f"--user-data-dir={temp_dir}",
             "--window-size=1200,800",
             f"--screenshot={dest}",
