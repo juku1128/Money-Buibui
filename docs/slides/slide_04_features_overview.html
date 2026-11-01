@@ -1,0 +1,216 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background-color: #FFFDF9;
+  background-image: 
+    radial-gradient(#E8D8C8 1.2px, transparent 1.2px),
+    linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
+  background-size: 24px 24px, 100% 100%;
+  color: #3D312A;
+  padding: 50px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.slide-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EFE6D8;
+  padding-bottom: 16px;
+}
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #E76F51;
+  background: #FFE8E0;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  border: 1.5px solid #F8B5A5;
+}
+.beginner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2E7D32;
+  background: #E8F5E9;
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: 1px solid #C8E6C9;
+}
+.slide-counter {
+  font-size: 18px;
+  font-weight: 700;
+  color: #A89F91;
+  font-family: ui-monospace, monospace;
+}
+.washi-tape {
+  position: absolute;
+  height: 28px;
+  opacity: 0.9;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.tape-matcha { background-color: #A8C3A0; width: 130px; top: -14px; left: 30px; }
+.tape-sakura { background-color: #F8CAD4; width: 130px; top: -14px; right: 30px; }
+.tape-coral { background-color: #F4A261; width: 130px; top: -14px; left: 30px; }
+.card {
+  background: #FFFFFF;
+  border: 2px solid #EFE6D8;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
+  position: relative;
+}
+.slide-footer {
+  border-top: 2px solid #EFE6D8;
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 17px;
+  color: #A89F91;
+  font-weight: 600;
+}
+.tag-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+        .main-heading {
+          font-size: 38px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 6px 0 20px 0;
+        }
+        .main-heading span { color: #E76F51; }
+        .overview-grid {
+          flex: 1;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: repeat(2, 1fr);
+          gap: 24px;
+          margin-bottom: 16px;
+        }
+        .feat-box {
+          background: #FFFFFF;
+          border: 2px solid #EFE6D8;
+          border-radius: 20px;
+          padding: 24px;
+          display: flex;
+          gap: 16px;
+          box-shadow: 0 6px 20px rgba(74, 52, 37, 0.04);
+        }
+        .feat-icon-box {
+          width: 56px;
+          height: 56px;
+          background: #FAF6EF;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 28px;
+          flex-shrink: 0;
+          border: 1.5px solid #E5DACD;
+        }
+        .feat-info {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .feat-name {
+          font-size: 19px;
+          font-weight: 800;
+          color: #2E2018;
+        }
+        .feat-text {
+          font-size: 14.5px;
+          color: #6B5E55;
+          line-height: 1.45;
+        }
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">📋 功能架構總覽</div>
+            <div class="slide-counter">04 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            全站六大核心功能模組<span>「粗略總覽：麻雀雖小，五臟俱全」</span>
+          </div>
+
+          <div class="overview-grid">
+            <!-- 1. 本機紀錄特色 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">🛡️</div>
+              <div class="feat-info">
+                <div class="feat-name">1. 本機紀錄特色 (Local-First)</div>
+                <div class="feat-text">完全免註冊！資料 100% 保存在個人電腦瀏覽器，支援多手帳切換與一鍵 JSON/CSV 備份。</div>
+              </div>
+            </div>
+
+            <!-- 2. 畫面首頁 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">🏠</div>
+              <div class="feat-info">
+                <div class="feat-name">2. 畫面首頁 (Dashboard)</div>
+                <div class="feat-text">日系手帳 Bento 便當盒佈局，圍巾萌柴柴助手根據真實財務數據給予溫暖金句建議。</div>
+              </div>
+            </div>
+
+            <!-- 3. 理財規劃 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">📊</div>
+              <div class="feat-info">
+                <div class="feat-name">3. 理財規劃 (Planning)</div>
+                <div class="feat-text">內建 50/30/20 法則、六個罐子理財法與自訂比例即時試算，整數分配零浮點誤差。</div>
+              </div>
+            </div>
+
+            <!-- 4. 記帳視圖 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">📝</div>
+              <div class="feat-info">
+                <div class="feat-name">4. 記帳視圖 (Transactions)</div>
+                <div class="feat-text">三層級動線：置頂每日流水帳、清楚標註【每日收支】、下方整合每月收支與預算扣抵。</div>
+              </div>
+            </div>
+
+            <!-- 5. 消費分析 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">📈</div>
+              <div class="feat-info">
+                <div class="feat-name">5. 消費分析 (Analysis)</div>
+                <div class="feat-text">直觀的收支長條圖、支出分類圓餅圖、近半年開銷趨勢，以及 80%/100% 預算警示燈號。</div>
+              </div>
+            </div>
+
+            <!-- 6. 借貸與話術 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">💸</div>
+              <div class="feat-info">
+                <div class="feat-name">6. 借貸與話術 (Debts)</div>
+                <div class="feat-text">借款扣抵狀態機、9 大風格 180 款情境催款話術、經濟學垃圾話，以及極限地獄催款模式！</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>接下來讓我們看實測畫面，一一印證這六大功能的具體表現！👉</span>
+            <span>實測展示：看得到、用得到、跑得動</span>
+          </div>
+        </body></html>

@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Money Buddy — 橫向 16:9 簡報投影片高解析圖片生成器
-使用 Google Chrome Headless 渲染 1920x1080 高解析 PNG 簡報圖片
+Money Buddy — 16:9 橫向高解析度簡報投影片圖片生成器（程式新手視角版）
+嚴格依據使用者指定的五大架構與實測展示頁面：
+1. 封面（程式新手的期中專題初體驗）
+2. 專題做什麼、給誰用
+3. 開發過程（簡易摘要：新手如何與 AI 協同開發）
+4. 功能介紹（粗略總覽：本機紀錄、首頁、理財規劃、記帳、消費分析、借貸與話術）
+5. 展示功能（實測展示：首頁本機紀錄、三層記帳、理財規劃、借貸話術、極限地獄模式）
+6. 怎麼測、下一步會走到哪裡與新手心得
 """
 
 import os
@@ -21,7 +27,6 @@ with open(os.path.join(BASE_DIR, 'js', 'mascot.js'), 'r', encoding='utf-8') as f
     mascot_code = f.read()
 
 def get_avatar_svg(name):
-    """從 mascot.js 提取特定頭像 SVG"""
     import re
     match = re.search(rf"{name}:\s*`([^`]+)`", mascot_code)
     if match:
@@ -43,11 +48,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
   background-color: #FFFDF9;
   background-image: 
-    radial-gradient(#E8D8C8 1px, transparent 1px),
+    radial-gradient(#E8D8C8 1.2px, transparent 1.2px),
     linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
   background-size: 24px 24px, 100% 100%;
   color: #3D312A;
-  padding: 60px 80px;
+  padding: 50px 70px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -58,19 +63,31 @@ body {
   align-items: center;
   justify-content: space-between;
   border-bottom: 2px solid #EFE6D8;
-  padding-bottom: 20px;
+  padding-bottom: 16px;
 }
 .brand-badge {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
   color: #E76F51;
   background: #FFE8E0;
-  padding: 6px 20px;
+  padding: 6px 18px;
   border-radius: 9999px;
   border: 1.5px solid #F8B5A5;
+}
+.beginner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2E7D32;
+  background: #E8F5E9;
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: 1px solid #C8E6C9;
 }
 .slide-counter {
   font-size: 18px;
@@ -80,101 +97,102 @@ body {
 }
 .washi-tape {
   position: absolute;
-  height: 32px;
-  opacity: 0.88;
+  height: 28px;
+  opacity: 0.9;
   transform: rotate(-2deg);
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
-.tape-matcha { background-color: #A8C3A0; width: 140px; top: -16px; left: 40px; }
-.tape-sakura { background-color: #F8CAD4; width: 140px; top: -16px; right: 40px; }
-.tape-coral { background-color: #F4A261; width: 140px; top: -16px; left: 40px; }
+.tape-matcha { background-color: #A8C3A0; width: 130px; top: -14px; left: 30px; }
+.tape-sakura { background-color: #F8CAD4; width: 130px; top: -14px; right: 30px; }
+.tape-coral { background-color: #F4A261; width: 130px; top: -14px; left: 30px; }
 .card {
   background: #FFFFFF;
   border: 2px solid #EFE6D8;
-  border-radius: 28px;
-  padding: 36px;
-  box-shadow: 0 8px 30px rgba(74, 52, 37, 0.05);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
   position: relative;
 }
 .slide-footer {
   border-top: 2px solid #EFE6D8;
-  padding-top: 20px;
+  padding-top: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 18px;
+  font-size: 17px;
   color: #A89F91;
   font-weight: 600;
+}
+.tag-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
 }
 """
 
 SLIDES_DATA = [
-    # Slide 1: 封面
+    # 1. 封面
     {
         "id": "slide_01_cover",
         "title": "封面",
         "html": f"""
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
-        .cover-container {{
+        .cover-box {{
           flex: 1;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 40px 20px;
-          gap: 60px;
+          padding: 30px 10px;
+          gap: 50px;
         }}
-        .hero-left {{
-          flex: 1.2;
+        .cover-left {{
+          flex: 1.25;
           display: flex;
           flex-direction: column;
-          gap: 24px;
+          gap: 20px;
         }}
         .main-title {{
-          font-size: 68px;
+          font-size: 64px;
           font-weight: 900;
-          line-height: 1.15;
           color: #2E2018;
-          letter-spacing: -1px;
+          line-height: 1.15;
         }}
-        .main-title span {{
-          color: #E76F51;
-        }}
+        .main-title span {{ color: #E76F51; }}
         .sub-title {{
-          font-size: 28px;
-          font-weight: 600;
+          font-size: 26px;
+          font-weight: 700;
           color: #7D6E66;
-          line-height: 1.4;
         }}
-        .pitch-box {{
+        .beginner-callout {{
           background: #FFF5F2;
           border-left: 6px solid #E76F51;
-          padding: 20px 28px;
-          border-radius: 0 20px 20px 0;
-          font-size: 22px;
-          font-weight: 700;
-          color: #A03D26;
+          padding: 18px 24px;
+          border-radius: 0 16px 16px 0;
+          font-size: 20px;
+          font-weight: 600;
+          color: #5C4B40;
+          line-height: 1.5;
         }}
-        .hero-meta {{
+        .chips-row {{
           display: flex;
-          gap: 16px;
-          margin-top: 10px;
+          gap: 14px;
+          margin-top: 6px;
         }}
-        .meta-chip {{
+        .chip {{
           background: #FAF6EF;
           border: 1.5px solid #E5DACD;
-          padding: 10px 22px;
-          border-radius: 16px;
-          font-size: 18px;
+          padding: 8px 18px;
+          border-radius: 12px;
+          font-size: 16px;
           font-weight: 700;
           color: #5C4B40;
-          display: flex;
-          align-items: center;
-          gap: 8px;
         }}
-        .hero-right {{
-          flex: 0.9;
+        .cover-right {{
+          flex: 0.85;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -182,8 +200,8 @@ SLIDES_DATA = [
           position: relative;
         }}
         .shiba-circle {{
-          width: 440px;
-          height: 440px;
+          width: 400px;
+          height: 400px;
           background: radial-gradient(circle, #FFEAD9 0%, #FFF8F0 70%);
           border-radius: 50%;
           display: flex;
@@ -193,729 +211,1027 @@ SLIDES_DATA = [
           padding: 30px;
           box-shadow: 0 20px 50px rgba(244, 162, 97, 0.25);
         }}
-        .floating-badge {{
-          position: absolute;
-          background: #FFFFFF;
-          border: 2px solid #E76F51;
-          padding: 12px 24px;
-          border-radius: 20px;
-          font-size: 18px;
-          font-weight: 800;
-          color: #E76F51;
-          box-shadow: 0 8px 24px rgba(231, 111, 81, 0.2);
-        }}
-        .fb-1 {{ top: 20px; right: 20px; }}
-        .fb-2 {{ bottom: 30px; left: 10px; }}
         </style></head><body>
           <div class="slide-top-bar">
             <div class="brand-badge">🐾 Money Buddy</div>
-            <div class="slide-counter">01 / 05</div>
+            <div class="beginner-badge">🌱 程式新手的專題初體驗</div>
+            <div class="slide-counter">01 / 10</div>
           </div>
 
-          <div class="cover-container">
-            <div class="hero-left">
+          <div class="cover-box">
+            <div class="cover-left">
               <div class="main-title">
                 Money Buddy<br>
                 <span>大學生的可愛理財手帳管家</span>
               </div>
               <div class="sub-title">
-                讓記帳變得溫暖簡單，讓友情催款不再尷尬！
+                一位程式新手的冒險：如何用 AI 打造解決自己生活痛點的真實專題
               </div>
-              <div class="pitch-box">
-                「一個陪伴大學生度過財務危機的可愛理財管家。<br>
-                有時溫柔療癒，有時嘴賤北爛，但永遠不會放棄你。」
+              <div class="beginner-callout">
+                「身為初學者，我常覺得傳統記帳軟體好冰冷，借錢給朋友又超難開口。<br>
+                於是我決定跟 AI 一起做一個兼具溫暖陪伴與地獄催款樂趣的可愛手帳！」
               </div>
-              <div class="hero-meta">
-                <div class="meta-chip">⏱️ 90 秒快閃展示</div>
-                <div class="meta-chip">🔒 Local-First 零個資</div>
-                <div class="meta-chip">🧪 34 項自動化測試</div>
+              <div class="chips-row">
+                <div class="chip">⏱️ 90 秒重點展示</div>
+                <div class="chip">🛡️ Local-First 零個資</div>
+                <div class="chip">🧪 34 項自動化測試保證</div>
               </div>
             </div>
 
-            <div class="hero-right">
+            <div class="cover-right">
               <div class="shiba-circle">
                 {scarf_shiba}
               </div>
-              <div class="floating-badge fb-1">🐶 圍巾萌柴柴助手</div>
-              <div class="floating-badge fb-2">✨ 日系手帳美學</div>
+              <div style="margin-top: 16px; font-size: 18px; font-weight: 800; color: #E76F51;">
+                🐶 陪你度過財務危機的柴柴助手
+              </div>
             </div>
           </div>
 
           <div class="slide-footer">
             <span>期中專題成果發表 │ 2026</span>
-            <span>現場即時 Demo 準備就緒 👉</span>
+            <span>報告細節：做什麼、給誰用、怎麼做、怎麼測、下一步 👉</span>
           </div>
         </body></html>
         """
     },
 
-    # Slide 2: 大學生三大財務痛點
+    # 2. 專題做什麼、給誰用
     {
-        "id": "slide_02_painpoints",
-        "title": "三大痛點與客群",
+        "id": "slide_02_what_who",
+        "title": "做什麼、給誰用",
         "html": f"""
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
-        .header-title {{
-          font-size: 44px;
+        .main-heading {{
+          font-size: 38px;
           font-weight: 900;
           color: #2E2018;
-          margin: 10px 0 30px 0;
+          margin: 6px 0 20px 0;
         }}
-        .header-title span {{ color: #E76F51; }}
-        .cards-grid {{
+        .main-heading span {{ color: #E76F51; }}
+        .split-grid {{
           flex: 1;
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: 1fr 1fr;
           gap: 36px;
-          align-items: stretch;
-          margin-bottom: 20px;
+          margin-bottom: 16px;
         }}
-        .pain-card {{
+        .column-card {{
           background: #FFFFFF;
           border: 2px solid #EFE6D8;
-          border-radius: 28px;
-          padding: 40px 32px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          position: relative;
-          box-shadow: 0 10px 30px rgba(74, 52, 37, 0.05);
-        }}
-        .pain-icon {{
-          font-size: 56px;
-          margin-bottom: 16px;
-        }}
-        .pain-title {{
-          font-size: 26px;
-          font-weight: 800;
-          color: #2E2018;
-          margin-bottom: 14px;
-        }}
-        .pain-desc {{
-          font-size: 19px;
-          line-height: 1.6;
-          color: #7D6E66;
-          flex: 1;
-        }}
-        .pain-pill {{
-          margin-top: 24px;
-          padding: 10px 16px;
-          border-radius: 14px;
-          font-size: 16px;
-          font-weight: 700;
-        }}
-        .card-1 .pain-pill {{ background: #FFE8E8; color: #D90429; }}
-        .card-2 .pain-pill {{ background: #EBF4FF; color: #1D4ED8; }}
-        .card-3 .pain-pill {{ background: #FEF3C7; color: #B45309; }}
-        .bottom-banner {{
-          background: linear-gradient(135deg, #FFF5F2 0%, #FAF0E4 100%);
-          border: 2px dashed #E76F51;
-          border-radius: 20px;
-          padding: 18px 30px;
-          font-size: 20px;
-          font-weight: 800;
-          color: #E76F51;
-          text-align: center;
-        }}
-        </style></head><body>
-          <div class="slide-top-bar">
-            <div class="brand-badge">🎯 目標使用者與痛點</div>
-            <div class="slide-counter">02 / 05</div>
-          </div>
-
-          <div class="header-title">
-            大學生生活費有限，市面記帳 App 總是讓人<span>「堅持不下去」</span>
-          </div>
-
-          <div class="cards-grid">
-            <!-- 痛點 1 -->
-            <div class="pain-card card-1">
-              <div class="washi-tape tape-sakura"></div>
-              <div>
-                <div class="pain-icon">💔</div>
-                <div class="pain-title">痛點一：記帳冰冷且說教</div>
-                <div class="pain-desc">
-                  介面生硬、冷冰冰報表滿滿說教感，缺乏陪伴與成就感，往往記了兩天就放棄。
-                </div>
-              </div>
-              <div class="pain-pill">❌ 傳統 App：缺乏溫度與持續動力</div>
-            </div>
-
-            <!-- 痛點 2 -->
-            <div class="pain-card card-2">
-              <div class="washi-tape tape-matcha"></div>
-              <div>
-                <div class="pain-icon">🔒</div>
-                <div class="pain-title">痛點二：個資疑慮與門檻</div>
-                <div class="pain-desc">
-                  強迫綁定手機號碼、Email 甚至連動銀行帳號，對於大學生產生沉重心理與個資隱私負擔。
-                </div>
-              </div>
-              <div class="pain-pill">❌ 傳統 App：個資雲端儲存有外洩風險</div>
-            </div>
-
-            <!-- 痛點 3 -->
-            <div class="pain-card card-3">
-              <div class="washi-tape tape-coral"></div>
-              <div>
-                <div class="pain-icon">💸</div>
-                <div class="pain-title">痛點三：聚餐催款超尷尬</div>
-                <div class="pain-desc">
-                  同學吃火鍋飲料常代墊，朋友忘記還錢又礙於友情難以開口，催款太兇翻船、不催自己吃土！
-                </div>
-              </div>
-              <div class="pain-pill">❌ 傳統 App：完全沒有借貸社交話術支援</div>
-            </div>
-          </div>
-
-          <div class="bottom-banner">
-            💡 Money Buddy 解法：溫暖手帳美學 ＋ Local-First 零個資 ＋ 獨創 180 款情境催款神器！
-          </div>
-
-          <div class="slide-footer">
-            <span>目標受眾：預算有限、課業人際壓力大、需要管理日常支出的大學生</span>
-            <span>核心定位：陪伴型可愛理財管家</span>
-          </div>
-        </body></html>
-        """
-    },
-
-    # Slide 3: 核心功能與手帳美學
-    {
-        "id": "slide_03_features",
-        "title": "核心功能與手帳美學",
-        "html": f"""
-        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-        {COMMON_CSS}
-        .header-title {{
-          font-size: 40px;
-          font-weight: 900;
-          color: #2E2018;
-          margin: 10px 0 24px 0;
-        }}
-        .header-title span {{ color: #E76F51; }}
-        .features-grid {{
-          flex: 1;
-          display: grid;
-          grid-template-columns: 1.1fr 0.9fr;
-          gap: 36px;
-          margin-bottom: 20px;
-        }}
-        .feat-card {{
-          background: #FFFFFF;
-          border: 2px solid #EFE6D8;
-          border-radius: 28px;
-          padding: 36px;
-          display: flex;
-          flex-direction: column;
-          box-shadow: 0 10px 30px rgba(74, 52, 37, 0.05);
-          position: relative;
-        }}
-        .feat-badge {{
-          font-size: 16px;
-          font-weight: 800;
-          padding: 6px 16px;
-          border-radius: 12px;
-          display: inline-block;
-          margin-bottom: 16px;
-          width: fit-content;
-        }}
-        .badge-1 {{ background: #E8F5E9; color: #2E7D32; }}
-        .badge-2 {{ background: #FFF3E0; color: #E65100; }}
-        .feat-title {{
-          font-size: 28px;
-          font-weight: 800;
-          color: #2E2018;
-          margin-bottom: 16px;
-        }}
-        .tier-list {{
+          border-radius: 24px;
+          padding: 32px;
           display: flex;
           flex-direction: column;
           gap: 16px;
-          flex: 1;
-        }}
-        .tier-item {{
-          background: #FAF6EF;
-          border: 1.5px solid #EAE0D2;
-          padding: 16px 20px;
-          border-radius: 18px;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }}
-        .tier-tag {{
-          font-size: 15px;
-          font-weight: 800;
-          padding: 4px 12px;
-          border-radius: 8px;
-          white-space: nowrap;
-        }}
-        .tag-top {{ background: #A8C3A0; color: #1E3A1A; }}
-        .tag-mid {{ background: #F8CAD4; color: #5C1D2A; }}
-        .tag-bot {{ background: #F4A261; color: #5C2D0C; }}
-        .tier-text {{
-          font-size: 17px;
-          font-weight: 600;
-          color: #4A3E37;
-        }}
-        .side-mascot-box {{
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          background: #FFFDF9;
-          border: 2px dashed #E5DACD;
-          border-radius: 20px;
-          padding: 20px;
-          margin-bottom: 20px;
-        }}
-        .mascot-avatar {{
-          width: 130px;
-          height: 130px;
-          flex-shrink: 0;
-        }}
-        .speech-bubble {{
-          background: #FFF5F2;
-          border: 1.5px solid #F8B5A5;
-          padding: 14px 18px;
-          border-radius: 16px;
-          font-size: 16px;
-          font-weight: 700;
-          color: #8C2E1A;
-          line-height: 1.5;
-        }}
-        .planning-chips {{
-          display: flex;
-          gap: 12px;
-          margin-top: 10px;
-        }}
-        .p-chip {{
-          background: #FAF6EF;
-          border: 1.5px solid #E5DACD;
-          padding: 10px 16px;
-          border-radius: 14px;
-          font-size: 15px;
-          font-weight: 700;
-          color: #5C4B40;
-          flex: 1;
-          text-align: center;
-        }}
-        </style></head><body>
-          <div class="slide-top-bar">
-            <div class="brand-badge">📖 清晰記帳與理財架構</div>
-            <div class="slide-counter">03 / 05</div>
-          </div>
-
-          <div class="header-title">
-            專為大學生設計的<span>「三層級清晰記帳」</span>與三大理財法則
-          </div>
-
-          <div class="features-grid">
-            <!-- 左欄：三層記帳 -->
-            <div class="feat-card">
-              <div class="washi-tape tape-matcha"></div>
-              <div class="feat-badge badge-1">清晰動線設計</div>
-              <div class="feat-title">記帳頁三層級視圖重構</div>
-              
-              <div class="tier-list">
-                <div class="tier-item">
-                  <span class="tier-tag tag-top">最上方置頂</span>
-                  <div class="tier-text">
-                    <strong>【檢視每日記帳項目】</strong>：逐日時間軸流水帳，搭配右上角快速記帳按鈕，開銷一眼全掌握。
-                  </div>
-                </div>
-                <div class="tier-item">
-                  <span class="tier-tag tag-mid">每日標註</span>
-                  <div class="tier-text">
-                    <strong>【每日收支】統計徽章</strong>：每張日期卡片清楚顯示「支出 NT$ 120 │ 收入 +NT$ 100」，不再混淆。
-                  </div>
-                </div>
-                <div class="tier-item">
-                  <span class="tier-tag tag-bot">下方整合</span>
-                  <div class="tier-text">
-                    <strong>【檢視每月收支】與分類預算</strong>：月份切換、三大收支指標、各類別預算額度扣抵膠囊。
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 右欄：柴柴與理財架構 -->
-            <div class="feat-card">
-              <div class="washi-tape tape-coral"></div>
-              <div class="feat-badge badge-2">溫暖陪伴管家</div>
-              <div class="feat-title">圍巾柴柴與三大理財規劃</div>
-
-              <div class="side-mascot-box">
-                <div class="mascot-avatar">
-                  {scarf_shiba}
-                </div>
-                <div class="speech-bubble">
-                  「汪！柴柴筆記本顯示：這個月飲食預算還剩 42%，今天宵夜喝奶茶完全沒問題喔！🐾」
-                </div>
-              </div>
-
-              <div style="font-size: 16px; font-weight: 700; color: #5C4B40; margin-bottom: 8px;">
-                📐 三大經典理財架構即時試算（零浮點數誤差）：
-              </div>
-              <div class="planning-chips">
-                <div class="p-chip">50/30/20 法則<br><small style="color:#8C7B70;">50%需 30%想 20%存</small></div>
-                <div class="p-chip">六個罐子理財<br><small style="color:#8C7B70;">財務自由與教育分配</small></div>
-                <div class="p-chip">自訂比例調整<br><small style="color:#8C7B70;">防呆 100% 總和校驗</small></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="slide-footer">
-            <span>即時聯動：每筆記帳即時自預算扣抵，達 80% 溫柔提醒、100% 醒目通知</span>
-            <span>大學生最需要的日常財務儀表</span>
-          </div>
-        </body></html>
-        """
-    },
-
-    # Slide 4: 殺手功能：催款神器與地獄模式
-    {
-        "id": "slide_04_hellmode",
-        "title": "殺手功能：地獄催款模式",
-        "html": f"""
-        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-        {COMMON_CSS}
-        .header-title {{
-          font-size: 40px;
-          font-weight: 900;
-          color: #2E2018;
-          margin: 10px 0 24px 0;
-        }}
-        .header-title span {{ color: #D90429; }}
-        .hell-split {{
-          flex: 1;
-          display: grid;
-          grid-template-columns: 1fr 1.15fr;
-          gap: 36px;
-          margin-bottom: 20px;
-        }}
-        .normal-side {{
-          background: #FFFFFF;
-          border: 2px solid #EFE6D8;
-          border-radius: 28px;
-          padding: 36px;
-          display: flex;
-          flex-direction: column;
-          box-shadow: 0 10px 30px rgba(74, 52, 37, 0.05);
-        }}
-        .hell-side {{
-          background: radial-gradient(circle at 50% 30%, #350505 0%, #170002 60%, #0d0001 100%);
-          border: 3px solid #EF4444;
-          border-radius: 28px;
-          padding: 36px;
-          display: flex;
-          flex-direction: column;
-          color: #FFF5EB;
-          box-shadow: 0 0 50px rgba(239, 68, 68, 0.45);
+          box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
           position: relative;
-          overflow: hidden;
         }}
-        .side-tag {{
+        .col-badge {{
           font-size: 15px;
           font-weight: 800;
           padding: 6px 14px;
           border-radius: 10px;
-          display: inline-block;
-          margin-bottom: 14px;
           width: fit-content;
         }}
-        .tag-peace {{ background: #FFE8E0; color: #E76F51; }}
-        .tag-hell {{ background: #D90429; color: #FFFFFF; letter-spacing: 1px; }}
-        .styles-grid {{
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-          margin: 16px 0;
+        .col-title {{
+          font-size: 26px;
+          font-weight: 900;
+          color: #2E2018;
         }}
-        .style-pill {{
+        .point-item {{
           background: #FAF6EF;
-          border: 1px solid #E5DACD;
-          padding: 10px 14px;
-          border-radius: 12px;
-          font-size: 15px;
-          font-weight: 700;
-          color: #4A3E37;
-        }}
-        .trash-box {{
-          background: #FFFBEB;
-          border: 2px dashed #F59E0B;
-          border-radius: 16px;
+          border: 1px solid #EAE0D2;
           padding: 14px 18px;
-          font-size: 15px;
-          color: #92400E;
-          font-weight: 700;
-          margin-top: 10px;
-        }}
-        .hell-visual-list {{
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          margin-top: 14px;
-          z-index: 2;
-        }}
-        .hell-item {{
-          background: rgba(80, 5, 8, 0.7);
-          border: 1.5px solid rgba(239, 68, 68, 0.6);
-          padding: 12px 18px;
           border-radius: 14px;
-          font-size: 16px;
-          font-weight: 700;
-          color: #FFE4E6;
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 12px;
         }}
-        .hell-devil-mascot-box {{
-          position: absolute;
-          right: 20px;
-          bottom: 20px;
-          width: 170px;
-          height: 170px;
-          filter: drop-shadow(0 0 25px rgba(255, 30, 0, 0.8));
-          z-index: 1;
-        }}
+        .point-icon {{ font-size: 24px; flex-shrink: 0; }}
+        .point-text {{ font-size: 17px; font-weight: 600; color: #4A3E37; line-height: 1.45; }}
+        .point-text strong {{ color: #2E2018; font-weight: 800; }}
         </style></head><body>
           <div class="slide-top-bar">
-            <div class="brand-badge" style="background:#FFE4E6; border-color:#FDA4AF; color:#E11D48;">🔥 核心殺手功能</div>
-            <div class="slide-counter">04 / 05</div>
+            <div class="brand-badge">🎯 專題核心定位</div>
+            <div class="slide-counter">02 / 10</div>
           </div>
 
-          <div class="header-title">
-            告別開口尷尬！<span>9 大風格 180 款催款話術</span> ＋ 極致地獄模式
+          <div class="main-heading">
+            做什麼？給誰用？<span>從身邊最真實的困擾出發</span>
           </div>
 
-          <div class="hell-split">
-            <!-- 一般話術與經濟學垃圾話 -->
-            <div class="normal-side">
-              <div class="side-tag tag-peace">🌱 社交友善話術庫</div>
-              <h3 style="font-size: 26px; font-weight: 800; color: #2E2018; margin-bottom: 8px;">
-                個人化情境動態代入
-              </h3>
-              <p style="font-size: 16px; color: #7D6E66; line-height: 1.5;">
-                自動帶入欠款對象、金額、借款天數、代墊事由，隨機抽取不重複！
-              </p>
-
-              <div class="styles-grid">
-                <div class="style-pill">🌱 溫柔提醒型 (20款)</div>
-                <div class="style-pill">🐾 可愛撒嬌型 (20款)</div>
-                <div class="style-pill">🎪 幽默搞笑型 (20款)</div>
-                <div class="style-pill">👔 正式禮貌型 (20款)</div>
-                <div class="style-pill">🎯 委婉堅定型 (20款)</div>
-                <div class="style-pill">⚡ 強硬禮貌型 (20款)</div>
+          <div class="split-grid">
+            <!-- 做什麼 -->
+            <div class="column-card">
+              <div class="washi-tape tape-matcha"></div>
+              <div class="col-badge" style="background:#E8F5E9; color:#2E7D32;">📌 做什麼 (What)</div>
+              <div class="col-title">一本溫暖、實用、不說教的日系手帳</div>
+              
+              <div class="point-item">
+                <div class="point-icon">🌸</div>
+                <div class="point-text"><strong>溫暖陪伴記帳</strong>：拋棄冷冰冰的報表！用手帳便當盒排版與圍巾柴柴，讓記帳有成就感。</div>
               </div>
-
-              <div class="trash-box">
-                🤓 <strong>12 大經濟學公式垃圾話 (20款)</strong>：<br>
-                融入機會成本、賽局理論、沉沒成本、囚徒困境，用高階學理荒謬爆擊！
+              <div class="point-item">
+                <div class="point-icon">📊</div>
+                <div class="point-text"><strong>三大理財規劃</strong>：50/30/20、六個罐子理財法，自動算出每月合理開銷與儲蓄金額。</div>
+              </div>
+              <div class="point-item">
+                <div class="point-icon">😈</div>
+                <div class="point-text"><strong>情境催款神器</strong>：內建 180 款話術＋極限地獄模式，化解聚餐代墊借錢難開口的社交痛點！</div>
               </div>
             </div>
 
-            <!-- 地獄催款模式 -->
-            <div class="hell-side">
-              <div class="side-tag tag-hell">🔥 HELL MODE</div>
-              <h3 style="font-size: 26px; font-weight: 900; color: #FEE2E2; margin-bottom: 6px;">
-                極限地獄催款模式（非常非常地獄！）
-              </h3>
-              <p style="font-size: 15px; color: #FCA5A5;">
-                粗口暴躁型 (20款) ＋ 法律威嚇型 (20款) ｜ 友情小船即將翻覆！
-              </p>
+            <!-- 給誰用 -->
+            <div class="column-card">
+              <div class="washi-tape tape-coral"></div>
+              <div class="col-badge" style="background:#FFE8E0; color:#E76F51;">👥 給誰用 (Target Audience)</div>
+              <div class="col-title">專為預算有限的大學生量身打造</div>
 
-              <div class="hell-visual-list">
-                <div class="hell-item">⚡ <strong>啟動全螢幕震撼微晃</strong>：強烈衝擊波轉場</div>
-                <div class="hell-item">🌋 <strong>黑曜石熔岩深淵背景</strong>：熾熱紅光外發光</div>
-                <div class="hell-item">🔥 <strong>底部噴湧 28 組動態烈焰</strong>：火舌火星與飄動小惡魔</div>
-                <div class="hell-item">🔱 <strong>三叉戟惡魔柴柴現身</strong>：露出虎牙、點擊咆哮</div>
-                <div class="hell-item" style="background:rgba(20,2,4,0.85); border-color:#F87171;">
-                  🕊️ <strong>專屬滅火按鈕</strong>：點擊「撲滅地獄之火」一秒回復手帳！
-                </div>
+              <div class="point-item">
+                <div class="point-icon">🎓</div>
+                <div class="point-text"><strong>生活費有限的大學生</strong>：每月固定零用錢或打工薪水，月底總是擔心吃土、透支。</div>
               </div>
-
-              <div class="hell-devil-mascot-box">
-                {devil_shiba}
+              <div class="point-item">
+                <div class="point-icon">💸</div>
+                <div class="point-text"><strong>常被同學代墊飲料錢的人</strong>：朋友忘記還錢又不好意思開口催討，急需體面又幽默的話術支援。</div>
+              </div>
+              <div class="point-item">
+                <div class="point-icon">🔒</div>
+                <div class="point-text"><strong>討厭被綁定個資的使用者</strong>：不願透露電話信箱、不想註冊帳號，只想純粹在本機安心記帳。</div>
               </div>
             </div>
           </div>
 
           <div class="slide-footer">
-            <span>誠實設計：徹底移除令人存疑的 Gemini AI 徽章，回歸純粹實用話術生成</span>
-            <span>90 秒現場實體 Demo 震撼高潮！</span>
+            <span>核心主張：陪伴大學生度過財務危機，有時療癒、有時嘴賤，但永遠不放棄你！</span>
+            <span>簡單直覺，零學習門檻</span>
           </div>
         </body></html>
         """
     },
 
-    # Slide 5: 架構、驗證與未來展望
+    # 3. 開發過程（簡易摘要）
     {
-        "id": "slide_05_summary",
-        "title": "架構、測試與總結",
+        "id": "slide_03_process",
+        "title": "開發過程（簡易摘要）",
         "html": f"""
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
-        .header-title {{
-          font-size: 40px;
+        .main-heading {{
+          font-size: 38px;
           font-weight: 900;
           color: #2E2018;
-          margin: 10px 0 24px 0;
+          margin: 6px 0 20px 0;
         }}
-        .header-title span {{ color: #2E7D32; }}
-        .summary-grid {{
+        .main-heading span {{ color: #E76F51; }}
+        .process-steps {{
+          flex: 1;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 24px;
+          margin-bottom: 16px;
+        }}
+        .step-card {{
+          background: #FFFFFF;
+          border: 2px solid #EFE6D8;
+          border-radius: 22px;
+          padding: 26px 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
+          position: relative;
+        }}
+        .step-num {{
+          font-size: 14px;
+          font-weight: 900;
+          color: #E76F51;
+          background: #FFE8E0;
+          width: fit-content;
+          padding: 4px 12px;
+          border-radius: 8px;
+          font-family: ui-monospace, monospace;
+        }}
+        .step-title {{
+          font-size: 20px;
+          font-weight: 800;
+          color: #2E2018;
+        }}
+        .step-desc {{
+          font-size: 15px;
+          color: #6B5E55;
+          line-height: 1.5;
+        }}
+        .step-highlight {{
+          margin-top: auto;
+          background: #FAF6EF;
+          border: 1px dashed #D9CEBF;
+          padding: 10px 12px;
+          border-radius: 10px;
+          font-size: 13px;
+          font-weight: 700;
+          color: #8C4A2F;
+        }}
+        .mentor-box {{
+          background: #FFFDF8;
+          border: 2px solid #F4A261;
+          border-radius: 18px;
+          padding: 16px 24px;
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }}
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">🛠️ 怎麼做：開發歷程</div>
+            <div class="slide-counter">03 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            程式新手如何克服卡關？<span>「我定邏輯審美，AI 幫寫代碼驗收」</span>
+          </div>
+
+          <div class="process-steps">
+            <!-- 步驟 1 -->
+            <div class="step-card">
+              <div class="step-num">STEP 01</div>
+              <div class="step-title">痛點發想與定義</div>
+              <div class="step-desc">
+                不追求天花亂墜的複雜功能，專注解決自己真實遇到的痛點：記帳麻煩、朋友欠錢不知道怎麼討。
+              </div>
+              <div class="step-highlight">💡 決策：不做雲端登入，做純前端 Local-First</div>
+            </div>
+
+            <!-- 步驟 2 -->
+            <div class="step-card">
+              <div class="step-num">STEP 02</div>
+              <div class="step-title">零依賴輕量架構</div>
+              <div class="step-desc">
+                初學者常被 npm、Node 環境配置折騰。我們選擇原生 HTML5 + CSS + JS，雙擊就能跑！
+              </div>
+              <div class="step-highlight">⚡ 成果：跨平台零依賴，點開即用</div>
+            </div>
+
+            <!-- 步驟 3 -->
+            <div class="step-card">
+              <div class="step-num">STEP 03</div>
+              <div class="step-title">人機協同 Pair-Coding</div>
+              <div class="step-desc">
+                我給需求與審美修正（如：拿掉迷因回歸日系手帳、新增地獄烈焰），AI 即時重構並補齊邏輯。
+              </div>
+              <div class="step-highlight">🤖 角色：我是導演，AI 是得力助教工程師</div>
+            </div>
+
+            <!-- 步驟 4 -->
+            <div class="step-card">
+              <div class="step-num">STEP 04</div>
+              <div class="step-title">測試驅動安心交付</div>
+              <div class="step-desc">
+                新手最怕改了 A 壞了 B！我們建立了 34 項自動化測試，每次修改按下測試立即保證 0 錯誤。
+              </div>
+              <div class="step-highlight">🧪 信心：34 項單元測試 100% PASS</div>
+            </div>
+          </div>
+
+          <div class="mentor-box">
+            <div style="font-size: 36px;">🤝</div>
+            <div style="font-size: 16px; color: #4A3E37; font-weight: 600; line-height: 1.4;">
+              <strong>新手的真實體悟</strong>：不用害怕自己是初學者！只要有清楚的問題意識，善用 AI 工具結對編程，並堅持做好單元測試，新手也能獨立完成一個具備商業級完成度的好專題！
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>開發技術棧：HTML5, CSS3 Animations, 原生 ES6+ JavaScript, Python 3 輕量本機伺服器</span>
+            <span>零外部金鑰依賴</span>
+          </div>
+        </body></html>
+        """
+    },
+
+    # 4. 功能介紹（粗略總覽）
+    {
+        "id": "slide_04_features_overview",
+        "title": "功能介紹總覽",
+        "html": f"""
+        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        {COMMON_CSS}
+        .main-heading {{
+          font-size: 38px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 6px 0 20px 0;
+        }}
+        .main-heading span {{ color: #E76F51; }}
+        .overview-grid {{
           flex: 1;
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 32px;
-          margin-bottom: 20px;
+          grid-template-rows: repeat(2, 1fr);
+          gap: 24px;
+          margin-bottom: 16px;
+        }}
+        .feat-box {{
+          background: #FFFFFF;
+          border: 2px solid #EFE6D8;
+          border-radius: 20px;
+          padding: 24px;
+          display: flex;
+          gap: 16px;
+          box-shadow: 0 6px 20px rgba(74, 52, 37, 0.04);
+        }}
+        .feat-icon-box {{
+          width: 56px;
+          height: 56px;
+          background: #FAF6EF;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 28px;
+          flex-shrink: 0;
+          border: 1.5px solid #E5DACD;
+        }}
+        .feat-info {{
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }}
+        .feat-name {{
+          font-size: 19px;
+          font-weight: 800;
+          color: #2E2018;
+        }}
+        .feat-text {{
+          font-size: 14.5px;
+          color: #6B5E55;
+          line-height: 1.45;
+        }}
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">📋 功能架構總覽</div>
+            <div class="slide-counter">04 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            全站六大核心功能模組<span>「粗略總覽：麻雀雖小，五臟俱全」</span>
+          </div>
+
+          <div class="overview-grid">
+            <!-- 1. 本機紀錄特色 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">🛡️</div>
+              <div class="feat-info">
+                <div class="feat-name">1. 本機紀錄特色 (Local-First)</div>
+                <div class="feat-text">完全免註冊！資料 100% 保存在個人電腦瀏覽器，支援多手帳切換與一鍵 JSON/CSV 備份。</div>
+              </div>
+            </div>
+
+            <!-- 2. 畫面首頁 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">🏠</div>
+              <div class="feat-info">
+                <div class="feat-name">2. 畫面首頁 (Dashboard)</div>
+                <div class="feat-text">日系手帳 Bento 便當盒佈局，圍巾萌柴柴助手根據真實財務數據給予溫暖金句建議。</div>
+              </div>
+            </div>
+
+            <!-- 3. 理財規劃 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">📊</div>
+              <div class="feat-info">
+                <div class="feat-name">3. 理財規劃 (Planning)</div>
+                <div class="feat-text">內建 50/30/20 法則、六個罐子理財法與自訂比例即時試算，整數分配零浮點誤差。</div>
+              </div>
+            </div>
+
+            <!-- 4. 記帳視圖 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">📝</div>
+              <div class="feat-info">
+                <div class="feat-name">4. 記帳視圖 (Transactions)</div>
+                <div class="feat-text">三層級動線：置頂每日流水帳、清楚標註【每日收支】、下方整合每月收支與預算扣抵。</div>
+              </div>
+            </div>
+
+            <!-- 5. 消費分析 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">📈</div>
+              <div class="feat-info">
+                <div class="feat-name">5. 消費分析 (Analysis)</div>
+                <div class="feat-text">直觀的收支長條圖、支出分類圓餅圖、近半年開銷趨勢，以及 80%/100% 預算警示燈號。</div>
+              </div>
+            </div>
+
+            <!-- 6. 借貸與話術 -->
+            <div class="feat-box">
+              <div class="feat-icon-box">💸</div>
+              <div class="feat-info">
+                <div class="feat-name">6. 借貸與話術 (Debts)</div>
+                <div class="feat-text">借款扣抵狀態機、9 大風格 180 款情境催款話術、經濟學垃圾話，以及極限地獄催款模式！</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>接下來讓我們看實測畫面，一一印證這六大功能的具體表現！👉</span>
+            <span>實測展示：看得到、用得到、跑得動</span>
+          </div>
+        </body></html>
+        """
+    },
+
+    # 5. 實測展示 1：首頁與本機紀錄
+    {
+        "id": "slide_05_demo_dash",
+        "title": "實測 1：首頁與本機紀錄",
+        "html": f"""
+        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        {COMMON_CSS}
+        .main-heading {{
+          font-size: 36px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 4px 0 16px 0;
+        }}
+        .main-heading span {{ color: #E76F51; }}
+        .demo-layout {{
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 36px;
+          align-items: center;
+          margin-bottom: 12px;
+        }}
+        .screenshot-frame {{
+          background: #FFFFFF;
+          border: 3px solid #E5DACD;
+          border-radius: 20px;
+          padding: 10px;
+          box-shadow: 0 12px 35px rgba(74, 52, 37, 0.1);
+        }}
+        .screenshot-frame img {{
+          width: 100%;
+          border-radius: 12px;
+          display: block;
+        }}
+        .demo-desc {{
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }}
+        .desc-card {{
+          background: #FFFFFF;
+          border: 1.5px solid #EFE6D8;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }}
+        .desc-card h4 {{ font-size: 19px; color: #E76F51; font-weight: 800; }}
+        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">📸 實測展示 (1/5)</div>
+            <div class="slide-counter">05 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            功能實測一：<span>首頁 Bento 手帳與 Local-First 本機隱私</span>
+          </div>
+
+          <div class="demo-layout">
+            <div class="screenshot-frame">
+              <img src="ui_dash.png" alt="首頁實測畫面">
+            </div>
+
+            <div class="demo-desc">
+              <div class="desc-card">
+                <h4>🐾 溫暖圍巾萌柴柴助手</h4>
+                <p>柴柴頭頂的對話框絕不是隨機罐頭文字！它會即時讀取本月預算，超支時驚慌提醒（如上圖娛樂超支 NT$ 150），存到錢時熱烈慶祝。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🍱 手帳 Bento 便當盒佈局</h4>
+                <p>左卡呈現本月總收支概覽、中卡顯示學生主要預算分類（拉麵飲食、珍奶手搖）、右卡配置今日可用額度動態儀表與理財錦囊。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🛡️ Local-First 零個資承諾</h4>
+                <p>無需註冊、無密碼外洩風險，資料全在瀏覽器 LocalStorage。右上角支援一鍵「載入示範資料」，方便隨時展示完整圖表！</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>打開就能用，離線也能跑，最懂大學生隱私與陪伴的理財管家</span>
+            <span>下一頁：理財規劃即時試算 👉</span>
+          </div>
+        </body></html>
+        """
+    },
+
+    # 6. 實測展示 2：理財規劃即時試算
+    {
+        "id": "slide_06_demo_planning",
+        "title": "實測 2：理財規劃試算",
+        "html": f"""
+        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        {COMMON_CSS}
+        .main-heading {{
+          font-size: 36px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 4px 0 16px 0;
+        }}
+        .main-heading span {{ color: #2E7D32; }}
+        .demo-layout {{
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 36px;
+          align-items: center;
+          margin-bottom: 12px;
+        }}
+        .screenshot-frame {{
+          background: #FFFFFF;
+          border: 3px solid #E5DACD;
+          border-radius: 20px;
+          padding: 10px;
+          box-shadow: 0 12px 35px rgba(74, 52, 37, 0.1);
+        }}
+        .screenshot-frame img {{
+          width: 100%;
+          border-radius: 12px;
+          display: block;
+        }}
+        .demo-desc {{
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }}
+        .desc-card {{
+          background: #FFFFFF;
+          border: 1.5px solid #EFE6D8;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }}
+        .desc-card h4 {{ font-size: 19px; color: #2E7D32; font-weight: 800; }}
+        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">📸 實測展示 (2/5)</div>
+            <div class="slide-counter">06 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            功能實測二：<span>三大理財規劃架構即時試算（零浮點誤差）</span>
+          </div>
+
+          <div class="demo-layout">
+            <div class="screenshot-frame">
+              <img src="ui_planning.png" alt="理財規劃實測畫面">
+            </div>
+
+            <div class="demo-desc">
+              <div class="desc-card">
+                <h4>📐 50/30/20 與六個罐子理財法</h4>
+                <p>輸入每月生活費（如打工 20,000 元），系統瞬間以整數算出各項金額，圓餅圖視覺化展示（50%生活必需 10,000、30%想要 6,000、20%儲蓄 4,000）。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🎛️ 自由自訂比例調整</h4>
+                <p>支援拖拉滑桿自由調整比例，具備防呆 100% 總和校驗。超過或不足 100% 時會溫柔提醒，保證每一筆錢都有清楚的去處。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>💡 程式新手的收穫</h4>
+                <p>以前手算常有小數點誤差，我們寫了嚴謹的四捨五入校驗演算法，確保所有分配項目加總 100% 完美等於總收入！</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>科學規劃收支分配，從大學就建立一生受用的財務觀念</span>
+            <span>下一頁：三層級清晰記帳視圖 👉</span>
+          </div>
+        </body></html>
+        """
+    },
+
+    # 7. 實測展示 3：三層級清晰記帳視圖
+    {
+        "id": "slide_07_demo_transactions",
+        "title": "實測 3：三層級記帳視圖",
+        "html": f"""
+        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        {COMMON_CSS}
+        .main-heading {{
+          font-size: 36px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 4px 0 16px 0;
+        }}
+        .main-heading span {{ color: #E76F51; }}
+        .demo-layout {{
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 36px;
+          align-items: center;
+          margin-bottom: 12px;
+        }}
+        .screenshot-frame {{
+          background: #FFFFFF;
+          border: 3px solid #E5DACD;
+          border-radius: 20px;
+          padding: 10px;
+          box-shadow: 0 12px 35px rgba(74, 52, 37, 0.1);
+        }}
+        .screenshot-frame img {{
+          width: 100%;
+          border-radius: 12px;
+          display: block;
+        }}
+        .demo-desc {{
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }}
+        .desc-card {{
+          background: #FFFFFF;
+          border: 1.5px solid #EFE6D8;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }}
+        .desc-card h4 {{ font-size: 19px; color: #E76F51; font-weight: 800; }}
+        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">📸 實測展示 (3/5)</div>
+            <div class="slide-counter">07 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            功能實測三：<span>三層級清晰記帳視圖（徹底告別找不到項目）</span>
+          </div>
+
+          <div class="demo-layout">
+            <div class="screenshot-frame">
+              <img src="ui_transactions.png" alt="記帳頁實測畫面">
+            </div>
+
+            <div class="demo-desc">
+              <div class="desc-card">
+                <h4>🌿 頂部置頂【檢視每日記帳項目】</h4>
+                <p>一打開記帳頁，最上面就是當天記錄的花費明細（手搖 -30、拉麵 -180），搭配右上角顯眼的「＋記支出」「＋記收入」，隨手記錄零延遲。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🏷️ 每日卡片清楚標註【每日收支】</h4>
+                <p>日期標題旁清楚列出「【每日收支】 支出 NT$ 210 │ 收入 +NT$ 0」，一眼分出個別開銷與當天累計，對帳超輕鬆。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🍊 下方整合【檢視每月收支】與預算膠囊</h4>
+                <p>月份切換與分類膠囊置於下方，點擊「飲食」或「娛樂」可即時篩選上方明細，並看到剩餘預算百分比。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>依據使用者回饋重構動線：先看每日細項，再看全月預算，邏輯最清晰！</span>
+            <span>下一頁：借貸管理與催款話術 👉</span>
+          </div>
+        </body></html>
+        """
+    },
+
+    # 8. 實測展示 4：借貸管理與 180 款催款話術
+    {
+        "id": "slide_08_demo_debts",
+        "title": "實測 4：借貸與催款話術",
+        "html": f"""
+        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        {COMMON_CSS}
+        .main-heading {{
+          font-size: 36px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 4px 0 16px 0;
+        }}
+        .main-heading span {{ color: #E76F51; }}
+        .demo-layout {{
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 36px;
+          align-items: center;
+          margin-bottom: 12px;
+        }}
+        .screenshot-frame {{
+          background: #FFFFFF;
+          border: 3px solid #E5DACD;
+          border-radius: 20px;
+          padding: 10px;
+          box-shadow: 0 12px 35px rgba(74, 52, 37, 0.1);
+        }}
+        .screenshot-frame img {{
+          width: 100%;
+          border-radius: 12px;
+          display: block;
+        }}
+        .demo-desc {{
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }}
+        .desc-card {{
+          background: #FFFFFF;
+          border: 1.5px solid #EFE6D8;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }}
+        .desc-card h4 {{ font-size: 19px; color: #E76F51; font-weight: 800; }}
+        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">📸 實測展示 (4/5)</div>
+            <div class="slide-counter">08 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            功能實測四：<span>借貸扣抵狀態機 ＋ 180 款催款話術生成器</span>
+          </div>
+
+          <div class="demo-layout">
+            <div class="screenshot-frame">
+              <img src="ui_debts.png" alt="借貸清單實測畫面">
+            </div>
+
+            <div class="demo-desc">
+              <div class="desc-card">
+                <h4>🔄 部分還款動態狀態機</h4>
+                <p>如實測圖：阿豪借 1,200 元，還了 400 元，系統自動扣抵剩餘 800 元並標記「部分還款」；室友小陳結清自動掛上「已結清 ✨」勳章。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🎯 一鍵帶入催款話術產生器</h4>
+                <p>點擊「產生催款話術」，系統自動將欠款人暱稱、金額、拖欠天數代入下方產生器，完全省去重複輸入的麻煩。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🤓 12 大經濟學公式垃圾話</h4>
+                <p>內建「機會成本、賽局理論、沉沒成本、囚徒困境」搞笑話術，用高階學理荒謬爆擊對方，化解催款尷尬！</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>人際關係不尷尬，欠款清清楚楚</span>
+            <span>下一頁：震撼全場的地獄催款模式！ 👉</span>
+          </div>
+        </body></html>
+        """
+    },
+
+    # 9. 實測展示 5：極限地獄催款模式
+    {
+        "id": "slide_09_demo_hell",
+        "title": "實測 5：極限地獄催款模式",
+        "html": f"""
+        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        {COMMON_CSS}
+        .main-heading {{
+          font-size: 36px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 4px 0 16px 0;
+        }}
+        .main-heading span {{ color: #D90429; }}
+        .demo-layout {{
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 36px;
+          align-items: center;
+          margin-bottom: 12px;
+        }}
+        .screenshot-frame {{
+          background: #1A0103;
+          border: 3px solid #EF4444;
+          border-radius: 20px;
+          padding: 10px;
+          box-shadow: 0 0 40px rgba(239, 68, 68, 0.4);
+        }}
+        .screenshot-frame img {{
+          width: 100%;
+          border-radius: 12px;
+          display: block;
+        }}
+        .demo-desc {{
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }}
+        .desc-card {{
+          background: #FFFFFF;
+          border: 1.5px solid #EFE6D8;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }}
+        .desc-card h4 {{ font-size: 19px; color: #D90429; font-weight: 800; }}
+        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge" style="background:#FFE4E6; border-color:#FDA4AF; color:#E11D48;">🔥 實測展示 (5/5)</div>
+            <div class="slide-counter">09 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            功能實測五：<span>極限地獄催款模式（火與惡魔冒出來！）</span>
+          </div>
+
+          <div class="demo-layout">
+            <div class="screenshot-frame">
+              <img src="ui_hell.png" alt="地獄模式實測畫面">
+            </div>
+
+            <div class="demo-desc">
+              <div class="desc-card" style="border-left: 5px solid #EF4444;">
+                <h4>⚡ 啟動全螢幕微震與熔岩深淵</h4>
+                <p>點擊「確定啟動」瞬間全畫面震撼微晃 0.5 秒！全站切換為黑曜石熔岩深淵暗紅漸層，紅光外發光拉滿。</p>
+              </div>
+
+              <div class="desc-card" style="border-left: 5px solid #F59E0B;">
+                <h4>🔥 底部噴湧烈焰與浮動小惡魔</h4>
+                <p>28 組多層次 SVG 燃燒火舌動態噴湧，浮動火星與小惡魔靈魂冉冉升起，帶來身臨其境的地獄追債震撼！</p>
+              </div>
+
+              <div class="desc-card" style="border-left: 5px solid #7C3AED;">
+                <h4>🔱 惡魔柴柴現身 ＋ 一鍵滅火</h4>
+                <p>右下角冒出戴惡魔角、拍打翅膀、手持黃金三叉戟的惡魔柴柴，點它會生氣咆哮！隨時點「撲滅地獄之火」一秒回復手帳！</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>直球對決拖欠不還！粗口暴躁型 20 款 ＋ 法律威嚇型 20 款</span>
+            <span>下一頁：怎麼測、下一步走到哪裡 👉</span>
+          </div>
+        </body></html>
+        """
+    },
+
+    # 10. 怎麼測、下一步與新手總結
+    {
+        "id": "slide_10_testing_next_summary",
+        "title": "怎麼測與下一步",
+        "html": f"""
+        <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        {COMMON_CSS}
+        .main-heading {{
+          font-size: 38px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 6px 0 20px 0;
+        }}
+        .main-heading span {{ color: #2E7D32; }}
+        .summary-grid {{
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 36px;
+          margin-bottom: 16px;
         }}
         .sum-card {{
           background: #FFFFFF;
           border: 2px solid #EFE6D8;
-          border-radius: 28px;
-          padding: 36px 28px;
+          border-radius: 24px;
+          padding: 30px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 10px 30px rgba(74, 52, 37, 0.05);
+          gap: 16px;
+          box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
           position: relative;
         }}
-        .sum-header {{
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          margin-bottom: 16px;
-        }}
-        .sum-icon {{
-          font-size: 36px;
-          background: #FAF6EF;
-          width: 64px;
-          height: 64px;
-          border-radius: 18px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 1.5px solid #E5DACD;
-        }}
-        .sum-title {{
-          font-size: 24px;
+        .sum-badge {{
+          font-size: 15px;
           font-weight: 800;
-          color: #2E2018;
+          padding: 6px 14px;
+          border-radius: 10px;
+          width: fit-content;
         }}
-        .sum-list {{
+        .test-banner {{
+          background: #ECFDF5;
+          border: 2px solid #10B981;
+          border-radius: 16px;
+          padding: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }}
+        .test-num {{
+          font-size: 36px;
+          font-weight: 900;
+          color: #047857;
+          font-family: ui-monospace, monospace;
+        }}
+        .next-list {{
           display: flex;
           flex-direction: column;
           gap: 12px;
           font-size: 16px;
-          color: #5C4B40;
-          line-height: 1.5;
+          color: #4A3E37;
+          line-height: 1.45;
         }}
-        .test-badge-box {{
-          background: #ECFDF5;
-          border: 2px solid #10B981;
-          border-radius: 18px;
-          padding: 16px;
-          text-align: center;
-          margin-top: auto;
+        .next-item {{
+          background: #FAF6EF;
+          border: 1px solid #EAE0D2;
+          padding: 12px 16px;
+          border-radius: 12px;
         }}
-        .test-badge-num {{
-          font-size: 32px;
-          font-weight: 900;
-          color: #047857;
-        }}
-        .bottom-demo-bar {{
+        .bottom-thanks-bar {{
           background: linear-gradient(135deg, #E76F51 0%, #C1121F 100%);
-          border-radius: 20px;
-          padding: 20px 36px;
+          border-radius: 18px;
+          padding: 18px 30px;
           display: flex;
           align-items: center;
           justify-content: space-between;
           color: #FFFFFF;
-          box-shadow: 0 10px 30px rgba(231, 111, 81, 0.3);
-        }}
-        .demo-text {{
-          font-size: 22px;
-          font-weight: 800;
-        }}
-        .repo-link {{
-          background: rgba(255,255,255,0.2);
-          border: 1.5px solid rgba(255,255,255,0.4);
-          padding: 8px 20px;
-          border-radius: 12px;
-          font-size: 17px;
-          font-family: ui-monospace, monospace;
-          font-weight: 700;
         }}
         </style></head><body>
           <div class="slide-top-bar">
-            <div class="brand-badge">🧪 技術驗收與結語</div>
-            <div class="slide-counter">05 / 05</div>
+            <div class="brand-badge">🧪 品質保證與未來</div>
+            <div class="slide-counter">10 / 10</div>
           </div>
 
-          <div class="header-title">
-            技術架構、<span>34 項自動化測試 100% 通過</span> 與未來展望
+          <div class="main-heading">
+            怎麼測？下一步走到哪裡？<span>「新手的成果結語」</span>
           </div>
 
           <div class="summary-grid">
-            <!-- 1. 系統架構 -->
+            <!-- 怎麼測 -->
             <div class="sum-card">
               <div class="washi-tape tape-matcha"></div>
-              <div class="sum-header">
-                <div class="sum-icon">🛡️</div>
-                <div class="sum-title">Local-First 零個資</div>
+              <div class="sum-badge" style="background:#E8F5E9; color:#2E7D32;">🧪 怎麼測 (Verification)</div>
+              <div style="font-size: 22px; font-weight:800; color:#2E2018;">34 項自動化單元測試全覆蓋</div>
+
+              <div class="test-banner">
+                <div>
+                  <div style="font-size:14px; font-weight:700; color:#065F46;">python3 test_app.py</div>
+                  <div style="font-size:13px; color:#047857;">耗時僅 0.029s，100% 全數通過</div>
+                </div>
+                <div class="test-num">34 / 34 PASS</div>
               </div>
-              <div class="sum-list">
-                <div>• <strong>零依賴原生架構</strong>：HTML5 + CSS3 + ES6+ JS，跨瀏覽器即開即用。</div>
-                <div>• <strong>純本地存儲</strong>：所有帳目 100% 留存在使用者本地端，絕不上傳。</div>
-                <div>• <strong>多手帳身分隔離</strong>：同裝置多使用者各自獨立，支援 JSON/CSV 備份。</div>
+
+              <div style="font-size: 15px; color:#5C4B40; line-height: 1.5;">
+                • <strong>演算法無浮點誤差</strong>：50/30/20 與六個罐子加總完美等於 100%。<br>
+                • <strong>借貸狀態機完整性</strong>：未還 ➔ 部分還款 ➔ 已結清扣抵無誤。<br>
+                • <strong>視覺規範測試</strong>：驗證動線置頂、火焰惡魔動畫、零殘留金鑰。
               </div>
             </div>
 
-            <!-- 2. 品質驗收 -->
-            <div class="sum-card">
-              <div class="washi-tape tape-sakura"></div>
-              <div class="sum-header">
-                <div class="sum-icon">🧪</div>
-                <div class="sum-title">測試驅動開發 (TDD)</div>
-              </div>
-              <div class="sum-list">
-                <div>• <strong>理財演算校驗</strong>：50/30/20 與六個罐子無浮點數誤差。</div>
-                <div>• <strong>借貸狀態機扣抵</strong>：未還 ➔ 部分還款 ➔ 結清無痛狀態轉移。</div>
-                <div>• <strong>預算 80%/100% 警戒</strong>：動態警示色與超額計算。</div>
-              </div>
-              <div class="test-badge-box">
-                <div class="test-badge-num">34 / 34 PASS</div>
-                <div style="font-size: 13px; font-weight:700; color:#065F46;">python3 test_app.py 全數通過 (0.029s)</div>
-              </div>
-            </div>
-
-            <!-- 3. 未來展望 -->
+            <!-- 下一步 -->
             <div class="sum-card">
               <div class="washi-tape tape-coral"></div>
-              <div class="sum-header">
-                <div class="sum-icon">🚀</div>
-                <div class="sum-title">下一步 (Next Steps)</div>
-              </div>
-              <div class="sum-list">
-                <div>• <strong>PWA 手機桌面免安裝</strong>：加入離線快取，體驗如原生 App。</div>
-                <div>• <strong>同儕出遊分帳計算機</strong>：自動算帳並串接個人化催款話術。</div>
-                <div>• <strong>發票載具 OCR 辨識</strong>：拍照自動分類記帳，更省時省力。</div>
+              <div class="sum-badge" style="background:#FFE8E0; color:#E76F51;">🚀 下一步會走到哪裡 (Next Steps)</div>
+              <div style="font-size: 22px; font-weight:800; color:#2E2018;">未來擴充功能規劃</div>
+
+              <div class="next-list">
+                <div class="next-item">📱 <strong>PWA 手機桌面免安裝</strong>：加入離線快取，點開就像原生 App 一樣順暢記帳。</div>
+                <div class="next-item">🍕 <strong>同儕出遊分帳計算機</strong>：多人聚餐一鍵算好誰該付誰多少錢，並串接催款話術。</div>
+                <div class="next-item">🧾 <strong>電子發票掃描 OCR</strong>：拍下紙本發票自動辨識品項與金額，記帳更省力。</div>
               </div>
             </div>
           </div>
 
-          <div class="bottom-demo-bar">
-            <div class="demo-text">
-              ✨ 感謝聆聽！請看 Money Buddy 實體動態 Demo 成果展示 👉
+          <div class="bottom-thanks-bar">
+            <div style="font-size: 20px; font-weight: 800;">
+              ✨ 感謝老師與同學聆聽！Money Buddy 已隨時準備好為大家現場 Demo！🐾
             </div>
-            <div class="repo-link">
+            <div style="background:rgba(255,255,255,0.2); padding:6px 16px; border-radius:10px; font-family:monospace; font-weight:bold;">
               GitHub: juku1128/Money-Buibui
             </div>
           </div>
 
           <div class="slide-footer">
-            <span>Money Buddy — 大學生的可愛理財管家 © 2026</span>
-            <span>期中專題發表完畢，進入 90 秒實機演示！</span>
+            <span>Money Buddy — 大學生的可愛理財手帳管家 © 2026</span>
+            <span>報告完畢，進入實機展示！</span>
           </div>
         </body></html>
         """
@@ -923,9 +1239,7 @@ SLIDES_DATA = [
 ]
 
 def main():
-    print("🎨 開始生成 16:9 橫向高解析投影片圖片...\n")
-
-    generated_pngs = []
+    print("🎨 開始生成 10 張 16:9 橫向高解析度投影片圖片（程式新手視角版）...\n")
 
     for idx, slide in enumerate(SLIDES_DATA):
         slide_id = slide["id"]
@@ -953,25 +1267,24 @@ def main():
         result = subprocess.run(cmd, capture_output=True, text=True)
         if os.path.isfile(png_file) and os.path.getsize(png_file) > 0:
             size_kb = os.path.getsize(png_file) // 1024
-            print(f"  🎉 投影片 {idx + 1}/5 生成成功：docs/slides/{slide_id}.png ({size_kb} KB)")
-            generated_pngs.append(png_file)
+            print(f"  🎉 投影片 {idx + 1}/10 生成成功：docs/slides/{slide_id}.png ({size_kb} KB)")
 
             # 同步複製一份至 Artifacts 目錄以利聊天視窗即時檢視
             if os.path.isdir(ARTIFACTS_DIR):
                 artifact_dest = os.path.join(ARTIFACTS_DIR, f"{slide_id}.png")
                 shutil.copyfile(png_file, artifact_dest)
         else:
-            print(f"  ❌ 投影片 {idx + 1}/5 失敗：{result.stderr}")
+            print(f"  ❌ 投影片 {idx + 1}/10 失敗：{result.stderr}")
 
     # 清除暫存目錄
     temp_dir = os.path.join(SLIDES_DIR, '.chrome-temp')
     if os.path.isdir(temp_dir):
         shutil.rmtree(temp_dir, ignore_errors=True)
 
-    # 製作一份可全螢幕播放的互動簡報網頁 docs/slides.html
+    # 建立全螢幕放映網頁
     build_interactive_slides_viewer()
 
-    print(f"\n✨ 5 張 16:9 投影片高畫質圖片全部產出完畢！")
+    print(f"\n✨ 10 張 16:9 投影片高畫質圖片全部產出完畢！")
 
 def build_interactive_slides_viewer():
     """產生可用鍵盤左右鍵全螢幕放映的 slides.html"""
@@ -985,11 +1298,11 @@ def build_interactive_slides_viewer():
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>Money Buddy — 16:9 橫向簡報展示</title>
+  <title>Money Buddy — 16:9 橫向簡報放映 (程式新手版)</title>
   <style>
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{
-      background: #1A1A1A;
+      background: #141414;
       width: 100vw;
       height: 100vh;
       overflow: hidden;
@@ -1016,7 +1329,7 @@ def build_interactive_slides_viewer():
     }}
     .slide-wrap.active {{
       display: block;
-      animation: fadeIn 0.3s ease;
+      animation: fadeIn 0.25s ease;
     }}
     .slide-wrap img {{
       width: 100%;
@@ -1025,17 +1338,17 @@ def build_interactive_slides_viewer():
       display: block;
     }}
     @keyframes fadeIn {{
-      from {{ opacity: 0; transform: scale(0.99); }}
+      from {{ opacity: 0; transform: scale(0.995); }}
       to {{ opacity: 1; transform: scale(1); }}
     }}
     .controls {{
       position: fixed;
-      bottom: 24px;
+      bottom: 20px;
       display: flex;
       align-items: center;
       gap: 16px;
-      background: rgba(0,0,0,0.7);
-      padding: 10px 24px;
+      background: rgba(0,0,0,0.75);
+      padding: 8px 24px;
       border-radius: 9999px;
       backdrop-blur: 8px;
       border: 1px solid rgba(255,255,255,0.2);
@@ -1062,7 +1375,7 @@ def build_interactive_slides_viewer():
     }}
     .hint {{
       position: fixed;
-      top: 16px;
+      top: 14px;
       right: 20px;
       font-size: 12px;
       color: rgba(255,255,255,0.5);
@@ -1070,16 +1383,16 @@ def build_interactive_slides_viewer():
   </style>
 </head>
 <body>
-  <div class="hint">按鍵盤 ⬅️ / ➡️ 或點擊按鈕切換 │ 按 F11 全螢幕</div>
+  <div class="hint">按鍵盤 ⬅️ / ➡️ 或點擊按鈕切換 │ 按 F11 全螢幕放映</div>
   <div class="slides-container">
     {slides_img_tags}
   </div>
 
   <div class="controls">
     <button class="btn" onclick="prevSlide()">◀ 上一張</button>
-    <span class="page-info" id="page-num">1 / 5</span>
+    <span class="page-info" id="page-num">1 / 10</span>
     <button class="btn" onclick="nextSlide()">下一張 ▶</button>
-    <a href="../" class="btn" style="text-decoration:none; background:#E76F51;">🚀 開始 Demo</a>
+    <a href="../" class="btn" style="text-decoration:none; background:#E76F51;">🚀 切換到現場 Demo</a>
   </div>
 
   <script>

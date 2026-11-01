@@ -1,0 +1,175 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background-color: #FFFDF9;
+  background-image: 
+    radial-gradient(#E8D8C8 1.2px, transparent 1.2px),
+    linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
+  background-size: 24px 24px, 100% 100%;
+  color: #3D312A;
+  padding: 50px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.slide-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EFE6D8;
+  padding-bottom: 16px;
+}
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #E76F51;
+  background: #FFE8E0;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  border: 1.5px solid #F8B5A5;
+}
+.beginner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2E7D32;
+  background: #E8F5E9;
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: 1px solid #C8E6C9;
+}
+.slide-counter {
+  font-size: 18px;
+  font-weight: 700;
+  color: #A89F91;
+  font-family: ui-monospace, monospace;
+}
+.washi-tape {
+  position: absolute;
+  height: 28px;
+  opacity: 0.9;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.tape-matcha { background-color: #A8C3A0; width: 130px; top: -14px; left: 30px; }
+.tape-sakura { background-color: #F8CAD4; width: 130px; top: -14px; right: 30px; }
+.tape-coral { background-color: #F4A261; width: 130px; top: -14px; left: 30px; }
+.card {
+  background: #FFFFFF;
+  border: 2px solid #EFE6D8;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
+  position: relative;
+}
+.slide-footer {
+  border-top: 2px solid #EFE6D8;
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 17px;
+  color: #A89F91;
+  font-weight: 600;
+}
+.tag-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+        .main-heading {
+          font-size: 36px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 4px 0 16px 0;
+        }
+        .main-heading span { color: #E76F51; }
+        .demo-layout {
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 36px;
+          align-items: center;
+          margin-bottom: 12px;
+        }
+        .screenshot-frame {
+          background: #FFFFFF;
+          border: 3px solid #E5DACD;
+          border-radius: 20px;
+          padding: 10px;
+          box-shadow: 0 12px 35px rgba(74, 52, 37, 0.1);
+        }
+        .screenshot-frame img {
+          width: 100%;
+          border-radius: 12px;
+          display: block;
+        }
+        .demo-desc {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .desc-card {
+          background: #FFFFFF;
+          border: 1.5px solid #EFE6D8;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .desc-card h4 { font-size: 19px; color: #E76F51; font-weight: 800; }
+        .desc-card p { font-size: 15px; color: #5C4B40; line-height: 1.45; }
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">📸 實測展示 (1/5)</div>
+            <div class="slide-counter">05 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            功能實測一：<span>首頁 Bento 手帳與 Local-First 本機隱私</span>
+          </div>
+
+          <div class="demo-layout">
+            <div class="screenshot-frame">
+              <img src="ui_dash.png" alt="首頁實測畫面">
+            </div>
+
+            <div class="demo-desc">
+              <div class="desc-card">
+                <h4>🐾 溫暖圍巾萌柴柴助手</h4>
+                <p>柴柴頭頂的對話框絕不是隨機罐頭文字！它會即時讀取本月預算，超支時驚慌提醒（如上圖娛樂超支 NT$ 150），存到錢時熱烈慶祝。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🍱 手帳 Bento 便當盒佈局</h4>
+                <p>左卡呈現本月總收支概覽、中卡顯示學生主要預算分類（拉麵飲食、珍奶手搖）、右卡配置今日可用額度動態儀表與理財錦囊。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🛡️ Local-First 零個資承諾</h4>
+                <p>無需註冊、無密碼外洩風險，資料全在瀏覽器 LocalStorage。右上角支援一鍵「載入示範資料」，方便隨時展示完整圖表！</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>打開就能用，離線也能跑，最懂大學生隱私與陪伴的理財管家</span>
+            <span>下一頁：理財規劃即時試算 👉</span>
+          </div>
+        </body></html>

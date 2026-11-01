@@ -1,0 +1,175 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background-color: #FFFDF9;
+  background-image: 
+    radial-gradient(#E8D8C8 1.2px, transparent 1.2px),
+    linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
+  background-size: 24px 24px, 100% 100%;
+  color: #3D312A;
+  padding: 50px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.slide-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EFE6D8;
+  padding-bottom: 16px;
+}
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #E76F51;
+  background: #FFE8E0;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  border: 1.5px solid #F8B5A5;
+}
+.beginner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2E7D32;
+  background: #E8F5E9;
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: 1px solid #C8E6C9;
+}
+.slide-counter {
+  font-size: 18px;
+  font-weight: 700;
+  color: #A89F91;
+  font-family: ui-monospace, monospace;
+}
+.washi-tape {
+  position: absolute;
+  height: 28px;
+  opacity: 0.9;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.tape-matcha { background-color: #A8C3A0; width: 130px; top: -14px; left: 30px; }
+.tape-sakura { background-color: #F8CAD4; width: 130px; top: -14px; right: 30px; }
+.tape-coral { background-color: #F4A261; width: 130px; top: -14px; left: 30px; }
+.card {
+  background: #FFFFFF;
+  border: 2px solid #EFE6D8;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
+  position: relative;
+}
+.slide-footer {
+  border-top: 2px solid #EFE6D8;
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 17px;
+  color: #A89F91;
+  font-weight: 600;
+}
+.tag-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+        .main-heading {
+          font-size: 36px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 4px 0 16px 0;
+        }
+        .main-heading span { color: #D90429; }
+        .demo-layout {
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 36px;
+          align-items: center;
+          margin-bottom: 12px;
+        }
+        .screenshot-frame {
+          background: #1A0103;
+          border: 3px solid #EF4444;
+          border-radius: 20px;
+          padding: 10px;
+          box-shadow: 0 0 40px rgba(239, 68, 68, 0.4);
+        }
+        .screenshot-frame img {
+          width: 100%;
+          border-radius: 12px;
+          display: block;
+        }
+        .demo-desc {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .desc-card {
+          background: #FFFFFF;
+          border: 1.5px solid #EFE6D8;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .desc-card h4 { font-size: 19px; color: #D90429; font-weight: 800; }
+        .desc-card p { font-size: 15px; color: #5C4B40; line-height: 1.45; }
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge" style="background:#FFE4E6; border-color:#FDA4AF; color:#E11D48;">🔥 實測展示 (5/5)</div>
+            <div class="slide-counter">09 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            功能實測五：<span>極限地獄催款模式（火與惡魔冒出來！）</span>
+          </div>
+
+          <div class="demo-layout">
+            <div class="screenshot-frame">
+              <img src="ui_hell.png" alt="地獄模式實測畫面">
+            </div>
+
+            <div class="demo-desc">
+              <div class="desc-card" style="border-left: 5px solid #EF4444;">
+                <h4>⚡ 啟動全螢幕微震與熔岩深淵</h4>
+                <p>點擊「確定啟動」瞬間全畫面震撼微晃 0.5 秒！全站切換為黑曜石熔岩深淵暗紅漸層，紅光外發光拉滿。</p>
+              </div>
+
+              <div class="desc-card" style="border-left: 5px solid #F59E0B;">
+                <h4>🔥 底部噴湧烈焰與浮動小惡魔</h4>
+                <p>28 組多層次 SVG 燃燒火舌動態噴湧，浮動火星與小惡魔靈魂冉冉升起，帶來身臨其境的地獄追債震撼！</p>
+              </div>
+
+              <div class="desc-card" style="border-left: 5px solid #7C3AED;">
+                <h4>🔱 惡魔柴柴現身 ＋ 一鍵滅火</h4>
+                <p>右下角冒出戴惡魔角、拍打翅膀、手持黃金三叉戟的惡魔柴柴，點它會生氣咆哮！隨時點「撲滅地獄之火」一秒回復手帳！</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>直球對決拖欠不還！粗口暴躁型 20 款 ＋ 法律威嚇型 20 款</span>
+            <span>下一頁：怎麼測、下一步走到哪裡 👉</span>
+          </div>
+        </body></html>

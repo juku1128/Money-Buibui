@@ -1,0 +1,222 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background-color: #FFFDF9;
+  background-image: 
+    radial-gradient(#E8D8C8 1.2px, transparent 1.2px),
+    linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
+  background-size: 24px 24px, 100% 100%;
+  color: #3D312A;
+  padding: 50px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.slide-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EFE6D8;
+  padding-bottom: 16px;
+}
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #E76F51;
+  background: #FFE8E0;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  border: 1.5px solid #F8B5A5;
+}
+.beginner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2E7D32;
+  background: #E8F5E9;
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: 1px solid #C8E6C9;
+}
+.slide-counter {
+  font-size: 18px;
+  font-weight: 700;
+  color: #A89F91;
+  font-family: ui-monospace, monospace;
+}
+.washi-tape {
+  position: absolute;
+  height: 28px;
+  opacity: 0.9;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.tape-matcha { background-color: #A8C3A0; width: 130px; top: -14px; left: 30px; }
+.tape-sakura { background-color: #F8CAD4; width: 130px; top: -14px; right: 30px; }
+.tape-coral { background-color: #F4A261; width: 130px; top: -14px; left: 30px; }
+.card {
+  background: #FFFFFF;
+  border: 2px solid #EFE6D8;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
+  position: relative;
+}
+.slide-footer {
+  border-top: 2px solid #EFE6D8;
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 17px;
+  color: #A89F91;
+  font-weight: 600;
+}
+.tag-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+        .main-heading {
+          font-size: 38px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 6px 0 20px 0;
+        }
+        .main-heading span { color: #E76F51; }
+        .process-steps {
+          flex: 1;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 24px;
+          margin-bottom: 16px;
+        }
+        .step-card {
+          background: #FFFFFF;
+          border: 2px solid #EFE6D8;
+          border-radius: 22px;
+          padding: 26px 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
+          position: relative;
+        }
+        .step-num {
+          font-size: 14px;
+          font-weight: 900;
+          color: #E76F51;
+          background: #FFE8E0;
+          width: fit-content;
+          padding: 4px 12px;
+          border-radius: 8px;
+          font-family: ui-monospace, monospace;
+        }
+        .step-title {
+          font-size: 20px;
+          font-weight: 800;
+          color: #2E2018;
+        }
+        .step-desc {
+          font-size: 15px;
+          color: #6B5E55;
+          line-height: 1.5;
+        }
+        .step-highlight {
+          margin-top: auto;
+          background: #FAF6EF;
+          border: 1px dashed #D9CEBF;
+          padding: 10px 12px;
+          border-radius: 10px;
+          font-size: 13px;
+          font-weight: 700;
+          color: #8C4A2F;
+        }
+        .mentor-box {
+          background: #FFFDF8;
+          border: 2px solid #F4A261;
+          border-radius: 18px;
+          padding: 16px 24px;
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">🛠️ 怎麼做：開發歷程</div>
+            <div class="slide-counter">03 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            程式新手如何克服卡關？<span>「我定邏輯審美，AI 幫寫代碼驗收」</span>
+          </div>
+
+          <div class="process-steps">
+            <!-- 步驟 1 -->
+            <div class="step-card">
+              <div class="step-num">STEP 01</div>
+              <div class="step-title">痛點發想與定義</div>
+              <div class="step-desc">
+                不追求天花亂墜的複雜功能，專注解決自己真實遇到的痛點：記帳麻煩、朋友欠錢不知道怎麼討。
+              </div>
+              <div class="step-highlight">💡 決策：不做雲端登入，做純前端 Local-First</div>
+            </div>
+
+            <!-- 步驟 2 -->
+            <div class="step-card">
+              <div class="step-num">STEP 02</div>
+              <div class="step-title">零依賴輕量架構</div>
+              <div class="step-desc">
+                初學者常被 npm、Node 環境配置折騰。我們選擇原生 HTML5 + CSS + JS，雙擊就能跑！
+              </div>
+              <div class="step-highlight">⚡ 成果：跨平台零依賴，點開即用</div>
+            </div>
+
+            <!-- 步驟 3 -->
+            <div class="step-card">
+              <div class="step-num">STEP 03</div>
+              <div class="step-title">人機協同 Pair-Coding</div>
+              <div class="step-desc">
+                我給需求與審美修正（如：拿掉迷因回歸日系手帳、新增地獄烈焰），AI 即時重構並補齊邏輯。
+              </div>
+              <div class="step-highlight">🤖 角色：我是導演，AI 是得力助教工程師</div>
+            </div>
+
+            <!-- 步驟 4 -->
+            <div class="step-card">
+              <div class="step-num">STEP 04</div>
+              <div class="step-title">測試驅動安心交付</div>
+              <div class="step-desc">
+                新手最怕改了 A 壞了 B！我們建立了 34 項自動化測試，每次修改按下測試立即保證 0 錯誤。
+              </div>
+              <div class="step-highlight">🧪 信心：34 項單元測試 100% PASS</div>
+            </div>
+          </div>
+
+          <div class="mentor-box">
+            <div style="font-size: 36px;">🤝</div>
+            <div style="font-size: 16px; color: #4A3E37; font-weight: 600; line-height: 1.4;">
+              <strong>新手的真實體悟</strong>：不用害怕自己是初學者！只要有清楚的問題意識，善用 AI 工具結對編程，並堅持做好單元測試，新手也能獨立完成一個具備商業級完成度的好專題！
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>開發技術棧：HTML5, CSS3 Animations, 原生 ES6+ JavaScript, Python 3 輕量本機伺服器</span>
+            <span>零外部金鑰依賴</span>
+          </div>
+        </body></html>

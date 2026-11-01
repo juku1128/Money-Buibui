@@ -1,0 +1,175 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+        
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background-color: #FFFDF9;
+  background-image: 
+    radial-gradient(#E8D8C8 1.2px, transparent 1.2px),
+    linear-gradient(to bottom, #FFFDF9 0%, #FAF5EE 100%);
+  background-size: 24px 24px, 100% 100%;
+  color: #3D312A;
+  padding: 50px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.slide-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #EFE6D8;
+  padding-bottom: 16px;
+}
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #E76F51;
+  background: #FFE8E0;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  border: 1.5px solid #F8B5A5;
+}
+.beginner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2E7D32;
+  background: #E8F5E9;
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: 1px solid #C8E6C9;
+}
+.slide-counter {
+  font-size: 18px;
+  font-weight: 700;
+  color: #A89F91;
+  font-family: ui-monospace, monospace;
+}
+.washi-tape {
+  position: absolute;
+  height: 28px;
+  opacity: 0.9;
+  transform: rotate(-2deg);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.tape-matcha { background-color: #A8C3A0; width: 130px; top: -14px; left: 30px; }
+.tape-sakura { background-color: #F8CAD4; width: 130px; top: -14px; right: 30px; }
+.tape-coral { background-color: #F4A261; width: 130px; top: -14px; left: 30px; }
+.card {
+  background: #FFFFFF;
+  border: 2px solid #EFE6D8;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
+  position: relative;
+}
+.slide-footer {
+  border-top: 2px solid #EFE6D8;
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 17px;
+  color: #A89F91;
+  font-weight: 600;
+}
+.tag-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+        .main-heading {
+          font-size: 36px;
+          font-weight: 900;
+          color: #2E2018;
+          margin: 4px 0 16px 0;
+        }
+        .main-heading span { color: #2E7D32; }
+        .demo-layout {
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 36px;
+          align-items: center;
+          margin-bottom: 12px;
+        }
+        .screenshot-frame {
+          background: #FFFFFF;
+          border: 3px solid #E5DACD;
+          border-radius: 20px;
+          padding: 10px;
+          box-shadow: 0 12px 35px rgba(74, 52, 37, 0.1);
+        }
+        .screenshot-frame img {
+          width: 100%;
+          border-radius: 12px;
+          display: block;
+        }
+        .demo-desc {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .desc-card {
+          background: #FFFFFF;
+          border: 1.5px solid #EFE6D8;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .desc-card h4 { font-size: 19px; color: #2E7D32; font-weight: 800; }
+        .desc-card p { font-size: 15px; color: #5C4B40; line-height: 1.45; }
+        </style></head><body>
+          <div class="slide-top-bar">
+            <div class="brand-badge">📸 實測展示 (2/5)</div>
+            <div class="slide-counter">06 / 10</div>
+          </div>
+
+          <div class="main-heading">
+            功能實測二：<span>三大理財規劃架構即時試算（零浮點誤差）</span>
+          </div>
+
+          <div class="demo-layout">
+            <div class="screenshot-frame">
+              <img src="ui_planning.png" alt="理財規劃實測畫面">
+            </div>
+
+            <div class="demo-desc">
+              <div class="desc-card">
+                <h4>📐 50/30/20 與六個罐子理財法</h4>
+                <p>輸入每月生活費（如打工 20,000 元），系統瞬間以整數算出各項金額，圓餅圖視覺化展示（50%生活必需 10,000、30%想要 6,000、20%儲蓄 4,000）。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>🎛️ 自由自訂比例調整</h4>
+                <p>支援拖拉滑桿自由調整比例，具備防呆 100% 總和校驗。超過或不足 100% 時會溫柔提醒，保證每一筆錢都有清楚的去處。</p>
+              </div>
+
+              <div class="desc-card">
+                <h4>💡 程式新手的收穫</h4>
+                <p>以前手算常有小數點誤差，我們寫了嚴謹的四捨五入校驗演算法，確保所有分配項目加總 100% 完美等於總收入！</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <span>科學規劃收支分配，從大學就建立一生受用的財務觀念</span>
+            <span>下一頁：三層級清晰記帳視圖 👉</span>
+          </div>
+        </body></html>

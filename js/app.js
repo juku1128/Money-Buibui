@@ -41,7 +41,15 @@ class MoneyBuddyApp {
 
     this.updateProfileDisplay();
     this.setupDateInputs();
-    this.switchView('dashboard');
+    const hash = (window.location.hash || '').replace('#', '');
+    if (hash === 'hell') {
+      this.switchView('debts');
+      this.selectScriptStyle('hell_furious');
+    } else if (['planning', 'transactions', 'analysis', 'debts'].includes(hash)) {
+      this.switchView(hash);
+    } else {
+      this.switchView('dashboard');
+    }
     this.initLucideIcons();
     this.checkAiStatus();
   }
