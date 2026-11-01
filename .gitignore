@@ -16,3 +16,4 @@ ENV/
 .vscode/
 .idea/
 *.swp
+docs/.chrome-temp/
