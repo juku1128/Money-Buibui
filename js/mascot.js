@@ -236,7 +236,7 @@ class ShibaBuddy {
     if (summary.count === 0) {
       return {
         mood: 'calm',
-        tag: '🌱 歡迎來到 Money Buddy',
+        tag: '🌱 歡迎來到 Money-Buibui',
         text: '這本手帳目前還是全新的呢！記錄下今天的第一杯奶茶或午餐吧～如果想快速看看功能，也可以點擊右上角「載入示範資料」喔！🐾'
       };
     }

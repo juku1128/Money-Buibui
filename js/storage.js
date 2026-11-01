@@ -919,7 +919,7 @@ class MoneyBuddyStorage {
     const profile = this.getActiveProfile();
     const data = this.ensureCurrentData();
     const exportObj = {
-      app: 'Money Buddy — 大學生的可愛理財管家',
+      app: 'Money-Buibui — 大學生的可愛理財管家',
       version: '1.0.0',
       exportedAt: new Date().toISOString(),
       profile: { nickname: profile ? profile.nickname : '我的手帳' },

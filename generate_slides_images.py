@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Money Buddy — 16:9 橫向高解析度簡報投影片圖片生成器（程式新手視角版）
+Money-Buibui — 16:9 橫向高解析度簡報投影片圖片生成器（程式新手視角版）
 嚴格依據使用者指定的五大架構與實測展示頁面：
 1. 封面（程式新手的期中專題初體驗）
 2. 專題做什麼、給誰用
@@ -213,7 +213,7 @@ SLIDES_DATA = [
         }}
         </style></head><body>
           <div class="slide-top-bar">
-            <div class="brand-badge">🐾 Money Buddy</div>
+            <div class="brand-badge">🐾 Money-Buibui</div>
             <div class="beginner-badge">🌱 程式新手的專題初體驗</div>
             <div class="slide-counter">01 / 10</div>
           </div>
@@ -221,7 +221,7 @@ SLIDES_DATA = [
           <div class="cover-box">
             <div class="cover-left">
               <div class="main-title">
-                Money Buddy<br>
+                Money-Buibui<br>
                 <span>大學生的可愛理財手帳管家</span>
               </div>
               <div class="sub-title">
@@ -1222,7 +1222,7 @@ SLIDES_DATA = [
 
           <div class="bottom-thanks-bar">
             <div style="font-size: 20px; font-weight: 800;">
-              ✨ 感謝老師與同學聆聽！Money Buddy 已隨時準備好為大家現場 Demo！🐾
+              ✨ 感謝老師與同學聆聽！Money-Buibui 已隨時準備好為大家現場 Demo！🐾
             </div>
             <div style="background:rgba(255,255,255,0.2); padding:6px 16px; border-radius:10px; font-family:monospace; font-weight:bold;">
               GitHub: juku1128/Money-Buibui
@@ -1230,7 +1230,7 @@ SLIDES_DATA = [
           </div>
 
           <div class="slide-footer">
-            <span>Money Buddy — 大學生的可愛理財手帳管家 © 2026</span>
+            <span>Money-Buibui — 大學生的可愛理財手帳管家 © 2026</span>
             <span>報告完畢，進入實機展示！</span>
           </div>
         </body></html>
@@ -1238,8 +1238,38 @@ SLIDES_DATA = [
     }
 ]
 
+def refresh_ui_screenshots():
+    """從已更新 Money-Buibui 的本機伺服器擷取最新實機畫面"""
+    print("📸 正在擷取包含 Money-Buibui 品牌的新版實機截圖...")
+    targets = [
+        ("ui_dash.png", "http://localhost:8000"),
+        ("ui_planning.png", "http://localhost:8000/#planning"),
+        ("ui_transactions.png", "http://localhost:8000/#transactions"),
+        ("ui_debts.png", "http://localhost:8000/#debts"),
+        ("ui_hell.png", "http://localhost:8000/#hell")
+    ]
+    temp_dir = os.path.join(SLIDES_DIR, '.chrome-temp-ui')
+    os.makedirs(temp_dir, exist_ok=True)
+    for filename, url in targets:
+        dest = os.path.join(SLIDES_DIR, filename)
+        cmd = [
+            CHROME_BIN,
+            "--headless",
+            "--disable-gpu",
+            f"--user-data-dir={temp_dir}",
+            "--window-size=1200,800",
+            f"--screenshot={dest}",
+            url
+        ]
+        subprocess.run(cmd, capture_output=True, text=True)
+        if os.path.isfile(dest):
+            print(f"  ✅ 截圖完成：docs/slides/{filename}")
+    if os.path.isdir(temp_dir):
+        shutil.rmtree(temp_dir, ignore_errors=True)
+
 def main():
-    print("🎨 開始生成 10 張 16:9 橫向高解析度投影片圖片（程式新手視角版）...\n")
+    refresh_ui_screenshots()
+    print("\n🎨 開始生成 10 張 16:9 橫向高解析度投影片圖片（程式新手視角版）...\n")
 
     for idx, slide in enumerate(SLIDES_DATA):
         slide_id = slide["id"]
@@ -1298,7 +1328,7 @@ def build_interactive_slides_viewer():
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>Money Buddy — 16:9 橫向簡報放映 (程式新手版)</title>
+  <title>Money-Buibui — 16:9 橫向簡報放映 (程式新手版)</title>
   <style>
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{

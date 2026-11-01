@@ -1,10 +1,10 @@
-# Money Buddy — 人機協作開發歷程與 AI 對話摘要
+# Money-Buibui — 人機協作開發歷程與 AI 對話摘要
 ## AI-Assisted Development Journey & Collaboration Summary
 
 ---
 
 ### 一、人機協作基本資訊
-- **專案名稱**：Money Buddy — 大學生的可愛理財手帳管家
+- **專案名稱**：Money-Buibui — 大學生的可愛理財手帳管家
 - **協作 AI 夥伴**：Google DeepMind Antigravity Coding Assistant
 - **協作角色分工**：
   - **使用者（產品負責人 / 創意總監 / 最終決策者）**：負責產品願景定義、痛點發掘、視覺風格審美指引、核心驗收與使用者體驗回饋。

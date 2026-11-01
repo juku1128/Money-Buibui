@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Money Buddy — PDF 報告與簡報產生器
+Money-Buibui — PDF 報告與簡報產生器
 將 docs/*.md 文件轉換為精美排版的 A4 PDF 檔案
 依賴：Google Chrome Headless
 """
@@ -171,7 +171,7 @@ def inline_format(text):
     text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2" target="_blank">\1</a>', text)
     return text
 
-def build_html_document(title, body_content, doc_badge="Money Buddy 成果提交"):
+def build_html_document(title, body_content, doc_badge="Money-Buibui 成果提交"):
     return f"""<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -343,13 +343,13 @@ def build_html_document(title, body_content, doc_badge="Money Buddy 成果提交
 <body>
   <div class="document-header">
     <span class="badge">{doc_badge}</span>
-    <span class="doc-meta">Money Buddy 專題成果報告 │ 2026</span>
+    <span class="doc-meta">Money-Buibui 專題成果報告 │ 2026</span>
   </div>
 
   {body_content}
 
   <div class="footer-note">
-    Money Buddy — 大學生的可愛理財手帳管家 │ Local-First 零個資設計
+    Money-Buibui — 大學生的可愛理財手帳管家 │ Local-First 零個資設計
   </div>
 </body>
 </html>
@@ -381,21 +381,21 @@ def main():
             'md': 'PROJECT_REPORT.md',
             'html': 'PROJECT_REPORT.html',
             'pdf': 'PROJECT_REPORT.pdf',
-            'title': 'Money Buddy — 期中專題成果報告書',
+            'title': 'Money-Buibui — 期中專題成果報告書',
             'badge': '📄 期中專題報告書'
         },
         {
             'md': 'AI_COLLABORATION_SUMMARY.md',
             'html': 'AI_COLLABORATION_SUMMARY.html',
             'pdf': 'AI_COLLABORATION_SUMMARY.pdf',
-            'title': 'Money Buddy — AI 對話與人機協作歷程摘要',
+            'title': 'Money-Buibui — AI 對話與人機協作歷程摘要',
             'badge': '🤖 AI 協作開發歷程摘要'
         },
         {
             'md': 'SLIDES_AND_DEMO_SCRIPT.md',
             'html': 'SLIDES_AND_DEMO_SCRIPT.html',
             'pdf': 'SLIDES_AND_DEMO_SCRIPT.pdf',
-            'title': 'Money Buddy — 簡報大綱與 90 秒展示講稿',
+            'title': 'Money-Buibui — 簡報大綱與 90 秒展示講稿',
             'badge': '🎬 簡報大綱與展示講稿'
         }
     ]

@@ -179,7 +179,7 @@ def run_server():
         try:
             with socketserver.TCPServer(("", port), MoneyBuddyHandler) as httpd:
                 print("=" * 60)
-                print("🐾 Money Buddy — 大學生的可愛理財管家 伺服器已啟動！")
+                print("🐾 Money-Buibui — 大學生的可愛理財管家 伺服器已啟動！")
                 print(f"👉 請在瀏覽器打開： http://localhost:{port}")
                 print("💡 本系統為 Zero-PII 零個資手帳，所有資料 100% 留存在本地裝置")
                 if os.environ.get('GEMINI_API_KEY'):

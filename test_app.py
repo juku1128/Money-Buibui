@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Money Buddy — 自動化邏輯與驗收測試套件
+Money-Buibui — 自動化邏輯與驗收測試套件
 測試項目：
 1. 靜態檔案結構完整性檢驗
 2. 理財規劃核心試算邏輯 (50/30/20, 六個罐子, 自訂比例)
@@ -487,11 +487,12 @@ class TestMoneyBuddyCore(unittest.TestCase):
         self.assertNotIn('view-settings', html)
 
     def test_27_hero_handbook_banner_elements(self):
-        """驗證頂部 Hero 橫幅完整具備 Money Buddy 標題、副標題、圍巾柴柴頭像容器與對話泡泡"""
+        """驗證頂部 Hero 橫幅完整具備 Money-Buibui 標題、副標題、圍巾柴柴頭像容器與對話泡泡"""
         html_file = os.path.join(BASE_DIR, 'index.html')
         with open(html_file, 'r', encoding='utf-8') as f:
             html = f.read()
         self.assertIn('hero-handbook-banner', html)
+        self.assertIn('Money-Buibui', html)
         self.assertIn('大學生的可愛理財管家', html)
         self.assertIn('shiba-avatar-container', html)
         self.assertIn('shiba-message', html)
