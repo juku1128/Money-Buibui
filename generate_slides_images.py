@@ -68,44 +68,44 @@ body {
 .brand-badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  font-weight: 800;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 900;
   color: #E76F51;
   background: #FFE8E0;
-  padding: 6px 18px;
+  padding: 8px 22px;
   border-radius: 9999px;
-  border: 1.5px solid #F8B5A5;
+  border: 2px solid #F8B5A5;
 }
 .beginner-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 16px;
-  font-weight: 700;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
   color: #2E7D32;
   background: #E8F5E9;
-  padding: 6px 16px;
-  border-radius: 12px;
-  border: 1px solid #C8E6C9;
+  padding: 8px 20px;
+  border-radius: 14px;
+  border: 1.5px solid #C8E6C9;
 }
 .slide-counter {
-  font-size: 18px;
-  font-weight: 700;
-  color: #A89F91;
+  font-size: 22px;
+  font-weight: 800;
+  color: #8C7E72;
   font-family: ui-monospace, monospace;
 }
 .washi-tape {
   position: absolute;
-  height: 28px;
-  opacity: 0.9;
+  height: 32px;
+  opacity: 0.95;
   transform: rotate(-2deg);
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
-.tape-matcha { background-color: #A8C3A0; width: 130px; top: -14px; left: 30px; }
-.tape-sakura { background-color: #F8CAD4; width: 130px; top: -14px; right: 30px; }
-.tape-coral { background-color: #F4A261; width: 130px; top: -14px; left: 30px; }
+.tape-matcha { background-color: #A8C3A0; width: 140px; top: -16px; left: 30px; }
+.tape-sakura { background-color: #F8CAD4; width: 140px; top: -16px; right: 30px; }
+.tape-coral { background-color: #F4A261; width: 140px; top: -16px; left: 30px; }
 .card {
   background: #FFFFFF;
   border: 2px solid #EFE6D8;
@@ -120,16 +120,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 17px;
-  color: #A89F91;
-  font-weight: 600;
+  font-size: 20px;
+  color: #8C7E72;
+  font-weight: 700;
 }
 .tag-pill {
   display: inline-block;
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 800;
 }
 """
 
@@ -153,43 +153,43 @@ SLIDES_DATA = [
           flex: 1.25;
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 22px;
         }}
         .main-title {{
-          font-size: 64px;
+          font-size: 74px;
           font-weight: 900;
           color: #2E2018;
           line-height: 1.15;
         }}
         .main-title span {{ color: #E76F51; }}
         .sub-title {{
-          font-size: 26px;
+          font-size: 30px;
           font-weight: 700;
-          color: #7D6E66;
+          color: #6E5F57;
         }}
         .beginner-callout {{
           background: #FFF5F2;
-          border-left: 6px solid #E76F51;
-          padding: 18px 24px;
-          border-radius: 0 16px 16px 0;
-          font-size: 20px;
-          font-weight: 600;
-          color: #5C4B40;
-          line-height: 1.5;
+          border-left: 8px solid #E76F51;
+          padding: 20px 28px;
+          border-radius: 0 18px 18px 0;
+          font-size: 24px;
+          font-weight: 700;
+          color: #4A3A30;
+          line-height: 1.55;
         }}
         .chips-row {{
           display: flex;
-          gap: 14px;
-          margin-top: 6px;
+          gap: 16px;
+          margin-top: 8px;
         }}
         .chip {{
           background: #FAF6EF;
-          border: 1.5px solid #E5DACD;
-          padding: 8px 18px;
-          border-radius: 12px;
-          font-size: 16px;
-          font-weight: 700;
-          color: #5C4B40;
+          border: 2px solid #E5DACD;
+          padding: 10px 22px;
+          border-radius: 14px;
+          font-size: 20px;
+          font-weight: 800;
+          color: #4A3A30;
         }}
         .cover-right {{
           flex: 0.85;
@@ -264,7 +264,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 38px;
+          font-size: 46px;
           font-weight: 900;
           color: #2E2018;
           margin: 6px 0 20px 0;
@@ -281,37 +281,37 @@ SLIDES_DATA = [
           background: #FFFFFF;
           border: 2px solid #EFE6D8;
           border-radius: 24px;
-          padding: 32px;
+          padding: 28px 26px;
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
           box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
           position: relative;
         }}
         .col-badge {{
-          font-size: 15px;
+          font-size: 18px;
           font-weight: 800;
-          padding: 6px 14px;
-          border-radius: 10px;
+          padding: 8px 18px;
+          border-radius: 12px;
           width: fit-content;
         }}
         .col-title {{
-          font-size: 26px;
+          font-size: 30px;
           font-weight: 900;
           color: #2E2018;
         }}
         .point-item {{
           background: #FAF6EF;
-          border: 1px solid #EAE0D2;
-          padding: 14px 18px;
-          border-radius: 14px;
+          border: 1.5px solid #EAE0D2;
+          padding: 16px 20px;
+          border-radius: 16px;
           display: flex;
           align-items: flex-start;
-          gap: 12px;
+          gap: 14px;
         }}
-        .point-icon {{ font-size: 24px; flex-shrink: 0; }}
-        .point-text {{ font-size: 17px; font-weight: 600; color: #4A3E37; line-height: 1.45; }}
-        .point-text strong {{ color: #2E2018; font-weight: 800; }}
+        .point-icon {{ font-size: 28px; flex-shrink: 0; }}
+        .point-text {{ font-size: 20px; font-weight: 600; color: #3D312A; line-height: 1.5; }}
+        .point-text strong {{ color: #2E2018; font-weight: 900; }}
         </style></head><body>
           <div class="slide-top-bar">
             <div class="brand-badge">🎯 專題核心定位</div>
@@ -380,7 +380,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 38px;
+          font-size: 44px;
           font-weight: 900;
           color: #2E2018;
           margin: 6px 0 20px 0;
@@ -397,7 +397,7 @@ SLIDES_DATA = [
           background: #FFFFFF;
           border: 2px solid #EFE6D8;
           border-radius: 22px;
-          padding: 26px 20px;
+          padding: 24px 20px;
           display: flex;
           flex-direction: column;
           gap: 12px;
@@ -405,43 +405,43 @@ SLIDES_DATA = [
           position: relative;
         }}
         .step-num {{
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 900;
           color: #E76F51;
           background: #FFE8E0;
           width: fit-content;
-          padding: 4px 12px;
-          border-radius: 8px;
+          padding: 6px 14px;
+          border-radius: 10px;
           font-family: ui-monospace, monospace;
         }}
         .step-title {{
-          font-size: 20px;
-          font-weight: 800;
+          font-size: 23px;
+          font-weight: 900;
           color: #2E2018;
         }}
         .step-desc {{
-          font-size: 15px;
-          color: #6B5E55;
+          font-size: 18px;
+          color: #4A3A30;
           line-height: 1.5;
         }}
         .step-highlight {{
           margin-top: auto;
           background: #FAF6EF;
-          border: 1px dashed #D9CEBF;
-          padding: 10px 12px;
-          border-radius: 10px;
-          font-size: 13px;
-          font-weight: 700;
+          border: 1.5px dashed #D9CEBF;
+          padding: 12px 14px;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 800;
           color: #8C4A2F;
         }}
         .mentor-box {{
           background: #FFFDF8;
           border: 2px solid #F4A261;
-          border-radius: 18px;
-          padding: 16px 24px;
+          border-radius: 20px;
+          padding: 18px 26px;
           display: flex;
           align-items: center;
-          gap: 20px;
+          gap: 22px;
         }}
         </style></head><body>
           <div class="slide-top-bar">
@@ -518,7 +518,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 38px;
+          font-size: 46px;
           font-weight: 900;
           color: #2E2018;
           margin: 6px 0 20px 0;
@@ -536,20 +536,20 @@ SLIDES_DATA = [
           background: #FFFFFF;
           border: 2px solid #EFE6D8;
           border-radius: 20px;
-          padding: 24px;
+          padding: 24px 22px;
           display: flex;
-          gap: 16px;
+          gap: 18px;
           box-shadow: 0 6px 20px rgba(74, 52, 37, 0.04);
         }}
         .feat-icon-box {{
-          width: 56px;
-          height: 56px;
+          width: 64px;
+          height: 64px;
           background: #FAF6EF;
-          border-radius: 16px;
+          border-radius: 18px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 28px;
+          font-size: 32px;
           flex-shrink: 0;
           border: 1.5px solid #E5DACD;
         }}
@@ -559,14 +559,14 @@ SLIDES_DATA = [
           gap: 6px;
         }}
         .feat-name {{
-          font-size: 19px;
-          font-weight: 800;
+          font-size: 22px;
+          font-weight: 900;
           color: #2E2018;
         }}
         .feat-text {{
-          font-size: 14.5px;
-          color: #6B5E55;
-          line-height: 1.45;
+          font-size: 17.5px;
+          color: #4A3A30;
+          line-height: 1.5;
         }}
         </style></head><body>
           <div class="slide-top-bar">
@@ -650,7 +650,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 36px;
+          font-size: 44px;
           font-weight: 900;
           color: #2E2018;
           margin: 4px 0 16px 0;
@@ -679,19 +679,19 @@ SLIDES_DATA = [
         .demo-desc {{
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
         }}
         .desc-card {{
           background: #FFFFFF;
           border: 1.5px solid #EFE6D8;
           border-radius: 18px;
-          padding: 20px;
+          padding: 18px 22px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }}
-        .desc-card h4 {{ font-size: 19px; color: #E76F51; font-weight: 800; }}
-        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        .desc-card h4 {{ font-size: 23px; color: #E76F51; font-weight: 900; }}
+        .desc-card p {{ font-size: 18.5px; color: #3D312A; line-height: 1.5; font-weight: 600; }}
         </style></head><body>
           <div class="slide-top-bar">
             <div class="brand-badge">📸 實測展示 (1/5)</div>
@@ -741,7 +741,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 36px;
+          font-size: 44px;
           font-weight: 900;
           color: #2E2018;
           margin: 4px 0 16px 0;
@@ -770,19 +770,19 @@ SLIDES_DATA = [
         .demo-desc {{
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
         }}
         .desc-card {{
           background: #FFFFFF;
           border: 1.5px solid #EFE6D8;
           border-radius: 18px;
-          padding: 20px;
+          padding: 18px 22px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }}
-        .desc-card h4 {{ font-size: 19px; color: #2E7D32; font-weight: 800; }}
-        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        .desc-card h4 {{ font-size: 23px; color: #2E7D32; font-weight: 900; }}
+        .desc-card p {{ font-size: 18.5px; color: #3D312A; line-height: 1.5; font-weight: 600; }}
         </style></head><body>
           <div class="slide-top-bar">
             <div class="brand-badge">📸 實測展示 (2/5)</div>
@@ -832,7 +832,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 36px;
+          font-size: 44px;
           font-weight: 900;
           color: #2E2018;
           margin: 4px 0 16px 0;
@@ -861,19 +861,19 @@ SLIDES_DATA = [
         .demo-desc {{
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
         }}
         .desc-card {{
           background: #FFFFFF;
           border: 1.5px solid #EFE6D8;
           border-radius: 18px;
-          padding: 20px;
+          padding: 18px 22px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }}
-        .desc-card h4 {{ font-size: 19px; color: #E76F51; font-weight: 800; }}
-        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        .desc-card h4 {{ font-size: 23px; color: #E76F51; font-weight: 900; }}
+        .desc-card p {{ font-size: 18.5px; color: #3D312A; line-height: 1.5; font-weight: 600; }}
         </style></head><body>
           <div class="slide-top-bar">
             <div class="brand-badge">📸 實測展示 (3/5)</div>
@@ -881,7 +881,7 @@ SLIDES_DATA = [
           </div>
 
           <div class="main-heading">
-            功能實測三：<span>三層級清晰記帳視圖（徹底告別找不到項目）</span>
+            功能實測三：<span>雙重視角記帳（每日聚焦當日 ＋ 每月篩選流水帳）</span>
           </div>
 
           <div class="demo-layout">
@@ -891,18 +891,18 @@ SLIDES_DATA = [
 
             <div class="demo-desc">
               <div class="desc-card">
-                <h4>🌿 頂部置頂【檢視每日記帳項目】</h4>
-                <p>一打開記帳頁，最上面就是當天記錄的花費明細（手搖 -30、拉麵 -180），搭配右上角顯眼的「＋記支出」「＋記收入」，隨手記錄零延遲。</p>
+                <h4>🌿 頂部【檢視每日記帳項目】（聚焦當日）</h4>
+                <p>純粹只呈現所選當日（11/02）明細（學餐便當 -110、珍奶 -65），支援日曆與「◀ 前一天」「後一天 ▶」切換，乾淨俐落！</p>
               </div>
 
               <div class="desc-card">
-                <h4>🏷️ 每日卡片清楚標註【每日收支】</h4>
-                <p>日期標題旁清楚列出「【每日收支】 支出 NT$ 210 │ 收入 +NT$ 0」，一眼分出個別開銷與當天累計，對帳超輕鬆。</p>
+                <h4>🏷️ 當日收支即時小計徽章</h4>
+                <p>日期橫條右側即時彙整「當日支出 NT$ 175 │ 收入 NT$ 0 │ 結餘 -175」，每一天的錢包動態隨時一目了然。</p>
               </div>
 
               <div class="desc-card">
-                <h4>🍊 下方整合【檢視每月收支】與預算膠囊</h4>
-                <p>月份切換與分類膠囊置於下方，點擊「飲食」或「娛樂」可即時篩選上方明細，並看到剩餘預算百分比。</p>
+                <h4>🗓️ 下方【檢視每月收支】（全月可篩選帳本）</h4>
+                <p>整合月度總覽、分類預算執行進度條，並能依照「全部/支出/收入」與各分類膠囊篩選整個月的歷史流水帳！</p>
               </div>
             </div>
           </div>
@@ -923,7 +923,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 36px;
+          font-size: 44px;
           font-weight: 900;
           color: #2E2018;
           margin: 4px 0 16px 0;
@@ -952,19 +952,19 @@ SLIDES_DATA = [
         .demo-desc {{
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
         }}
         .desc-card {{
           background: #FFFFFF;
           border: 1.5px solid #EFE6D8;
           border-radius: 18px;
-          padding: 20px;
+          padding: 18px 22px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }}
-        .desc-card h4 {{ font-size: 19px; color: #E76F51; font-weight: 800; }}
-        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        .desc-card h4 {{ font-size: 23px; color: #E76F51; font-weight: 900; }}
+        .desc-card p {{ font-size: 18.5px; color: #3D312A; line-height: 1.5; font-weight: 600; }}
         </style></head><body>
           <div class="slide-top-bar">
             <div class="brand-badge">📸 實測展示 (4/5)</div>
@@ -1014,7 +1014,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 36px;
+          font-size: 44px;
           font-weight: 900;
           color: #2E2018;
           margin: 4px 0 16px 0;
@@ -1043,19 +1043,19 @@ SLIDES_DATA = [
         .demo-desc {{
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
         }}
         .desc-card {{
           background: #FFFFFF;
           border: 1.5px solid #EFE6D8;
           border-radius: 18px;
-          padding: 20px;
+          padding: 18px 22px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }}
-        .desc-card h4 {{ font-size: 19px; color: #D90429; font-weight: 800; }}
-        .desc-card p {{ font-size: 15px; color: #5C4B40; line-height: 1.45; }}
+        .desc-card h4 {{ font-size: 23px; color: #D90429; font-weight: 900; }}
+        .desc-card p {{ font-size: 18.5px; color: #3D312A; line-height: 1.5; font-weight: 600; }}
         </style></head><body>
           <div class="slide-top-bar">
             <div class="brand-badge" style="background:#FFE4E6; border-color:#FDA4AF; color:#E11D48;">🔥 實測展示 (5/5)</div>
@@ -1105,7 +1105,7 @@ SLIDES_DATA = [
         <!DOCTYPE html><html><head><meta charset="UTF-8"><style>
         {COMMON_CSS}
         .main-heading {{
-          font-size: 38px;
+          font-size: 46px;
           font-weight: 900;
           color: #2E2018;
           margin: 6px 0 20px 0;
@@ -1122,31 +1122,31 @@ SLIDES_DATA = [
           background: #FFFFFF;
           border: 2px solid #EFE6D8;
           border-radius: 24px;
-          padding: 30px;
+          padding: 26px 28px;
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
           box-shadow: 0 8px 25px rgba(74, 52, 37, 0.05);
           position: relative;
         }}
         .sum-badge {{
-          font-size: 15px;
+          font-size: 18px;
           font-weight: 800;
-          padding: 6px 14px;
-          border-radius: 10px;
+          padding: 8px 18px;
+          border-radius: 12px;
           width: fit-content;
         }}
         .test-banner {{
           background: #ECFDF5;
           border: 2px solid #10B981;
           border-radius: 16px;
-          padding: 16px;
+          padding: 16px 20px;
           display: flex;
           align-items: center;
           justify-content: space-between;
         }}
         .test-num {{
-          font-size: 36px;
+          font-size: 40px;
           font-weight: 900;
           color: #047857;
           font-family: ui-monospace, monospace;
@@ -1155,15 +1155,17 @@ SLIDES_DATA = [
           display: flex;
           flex-direction: column;
           gap: 12px;
-          font-size: 16px;
-          color: #4A3E37;
-          line-height: 1.45;
+          font-size: 19px;
+          color: #3D312A;
+          line-height: 1.5;
         }}
         .next-item {{
           background: #FAF6EF;
-          border: 1px solid #EAE0D2;
-          padding: 12px 16px;
-          border-radius: 12px;
+          border: 1.5px solid #EAE0D2;
+          padding: 14px 18px;
+          border-radius: 14px;
+          font-size: 19px;
+          font-weight: 600;
         }}
         .bottom-thanks-bar {{
           background: linear-gradient(135deg, #E76F51 0%, #C1121F 100%);
@@ -1189,17 +1191,17 @@ SLIDES_DATA = [
             <div class="sum-card">
               <div class="washi-tape tape-matcha"></div>
               <div class="sum-badge" style="background:#E8F5E9; color:#2E7D32;">🧪 怎麼測 (Verification)</div>
-              <div style="font-size: 22px; font-weight:800; color:#2E2018;">34 項自動化單元測試全覆蓋</div>
+              <div style="font-size: 26px; font-weight:900; color:#2E2018;">34 項自動化單元測試全覆蓋</div>
 
               <div class="test-banner">
                 <div>
-                  <div style="font-size:14px; font-weight:700; color:#065F46;">python3 test_app.py</div>
-                  <div style="font-size:13px; color:#047857;">耗時僅 0.029s，100% 全數通過</div>
+                  <div style="font-size:16px; font-weight:800; color:#065F46;">python3 test_app.py</div>
+                  <div style="font-size:14px; color:#047857; font-weight:600;">耗時僅 0.029s，100% 全數通過</div>
                 </div>
                 <div class="test-num">34 / 34 PASS</div>
               </div>
 
-              <div style="font-size: 15px; color:#5C4B40; line-height: 1.5;">
+              <div style="font-size: 18px; color:#3D312A; line-height: 1.6; font-weight: 600;">
                 • <strong>演算法無浮點誤差</strong>：50/30/20 與六個罐子加總完美等於 100%。<br>
                 • <strong>借貸狀態機完整性</strong>：未還 ➔ 部分還款 ➔ 已結清扣抵無誤。<br>
                 • <strong>視覺規範測試</strong>：驗證動線置頂、火焰惡魔動畫、零殘留金鑰。
@@ -1210,7 +1212,7 @@ SLIDES_DATA = [
             <div class="sum-card">
               <div class="washi-tape tape-coral"></div>
               <div class="sum-badge" style="background:#FFE8E0; color:#E76F51;">🚀 下一步會走到哪裡 (Next Steps)</div>
-              <div style="font-size: 22px; font-weight:800; color:#2E2018;">未來擴充功能規劃</div>
+              <div style="font-size: 26px; font-weight:900; color:#2E2018;">未來擴充功能規劃</div>
 
               <div class="next-list">
                 <div class="next-item">📱 <strong>PWA 手機桌面免安裝</strong>：加入離線快取，點開就像原生 App 一樣順暢記帳。</div>
@@ -1221,10 +1223,10 @@ SLIDES_DATA = [
           </div>
 
           <div class="bottom-thanks-bar">
-            <div style="font-size: 20px; font-weight: 800;">
+            <div style="font-size: 24px; font-weight: 900;">
               ✨ 感謝老師與同學聆聽！Money-Buibui 已隨時準備好為大家現場 Demo！🐾
             </div>
-            <div style="background:rgba(255,255,255,0.2); padding:6px 16px; border-radius:10px; font-family:monospace; font-weight:bold;">
+            <div style="background:rgba(255,255,255,0.2); padding:8px 18px; border-radius:12px; font-family:monospace; font-weight:bold; font-size:18px;">
               GitHub: juku1128/Money-Buibui
             </div>
           </div>
