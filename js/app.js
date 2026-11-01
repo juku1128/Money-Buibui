@@ -54,6 +54,7 @@ class MoneyBuddyApp {
 
     this.updateProfileDisplay();
     this.setupDateInputs();
+    this.setTxModalType('expense');
     const hash = (window.location.hash || '').replace('#', '');
     if (hash === 'hell') {
       this.switchView('debts');
@@ -1147,46 +1148,67 @@ class MoneyBuddyApp {
   openTransactionModal(type = 'expense', editIdOrDate = null) {
     const modal = document.getElementById('modal-transaction');
     const form = document.getElementById('tx-form');
-    form.reset();
+    if (form) form.reset();
 
     const todayStr = typeof getLocalDateString === 'function' ? getLocalDateString() : new Date().toISOString().split('T')[0];
     let editId = null;
     let initialDate = todayStr;
 
     if (editIdOrDate) {
-      if (/^\d{4}-\d{2}-\d{2}$/.test(editIdOrDate)) {
+      if (typeof editIdOrDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(editIdOrDate)) {
         initialDate = editIdOrDate;
       } else {
-        editId = editIdOrDate;
+        editId = String(editIdOrDate);
       }
     }
 
-    document.getElementById('tx-edit-id').value = editId || '';
-    document.getElementById('tx-input-date').value = initialDate;
+    let finalType = (type === 'income' || type === 'expense') ? type : 'expense';
+    let tx = null;
 
     if (editId) {
-      document.getElementById('tx-modal-title').innerHTML = '<i data-lucide="edit-3" class="w-4 h-4 text-coral-500"></i> 編輯記帳紀錄';
-      const tx = mbStorage.getTransactions().find(t => t.id === editId);
+      const allTxs = mbStorage.getTransactions() || [];
+      tx = allTxs.find(t => t.id === editId);
       if (tx) {
-        this.setTxModalType(tx.type);
-        document.getElementById('tx-input-amount').value = tx.amount;
-        document.getElementById('tx-input-category').value = tx.category;
-        document.getElementById('tx-input-date').value = tx.date;
-        document.getElementById('tx-input-note').value = tx.note || '';
+        finalType = tx.type;
+        initialDate = tx.date;
       }
-    } else {
-      document.getElementById('tx-modal-title').innerHTML = '<i data-lucide="edit-3" class="w-4 h-4 text-coral-500"></i> 新增記帳紀錄';
-      this.setTxModalType(type);
     }
 
-    modal.classList.remove('hidden');
+    // 🌟 保證一律呼叫 setTxModalType，徹底確保分類選單 100% 填滿！
+    this.setTxModalType(finalType);
+
+    const editIdEl = document.getElementById('tx-edit-id');
+    const dateEl = document.getElementById('tx-input-date');
+    const amountEl = document.getElementById('tx-input-amount');
+    const catEl = document.getElementById('tx-input-category');
+    const noteEl = document.getElementById('tx-input-note');
+    const titleEl = document.getElementById('tx-modal-title');
+
+    if (editIdEl) editIdEl.value = tx ? tx.id : '';
+    if (dateEl) dateEl.value = initialDate;
+
+    if (tx) {
+      if (titleEl) titleEl.innerHTML = '<i data-lucide="edit-3" class="w-4 h-4 text-coral-500"></i> 編輯記帳紀錄';
+      if (amountEl) amountEl.value = tx.amount;
+      if (catEl && tx.category) catEl.value = tx.category;
+      if (noteEl) noteEl.value = tx.note || '';
+    } else {
+      if (titleEl) titleEl.innerHTML = '<i data-lucide="edit-3" class="w-4 h-4 text-coral-500"></i> 新增記帳紀錄';
+      if (amountEl) amountEl.value = '';
+      if (noteEl) noteEl.value = '';
+    }
+
+    if (modal) modal.classList.remove('hidden');
     this.initLucideIcons();
     this.updateTxModalBudgetHint();
-    setTimeout(() => document.getElementById('tx-input-amount').focus(), 100);
+    setTimeout(() => {
+      if (amountEl) amountEl.focus();
+    }, 100);
   }
 
   closeTransactionModal() {
-    document.getElementById('modal-transaction').classList.add('hidden');
+    const modal = document.getElementById('modal-transaction');
+    if (modal) modal.classList.add('hidden');
     const editIdEl = document.getElementById('tx-edit-id');
     if (editIdEl) editIdEl.value = '';
   }
@@ -1237,22 +1259,35 @@ class MoneyBuddyApp {
   }
 
   setTxModalType(type) {
-    this.modalTxType = type;
+    this.modalTxType = type === 'income' ? 'income' : 'expense';
     const btnExp = document.getElementById('tx-type-btn-expense');
     const btnInc = document.getElementById('tx-type-btn-income');
 
-    if (type === 'expense') {
-      btnExp.className = 'py-1.5 rounded-lg text-xs font-bold transition bg-white text-coral-500 shadow-sm';
-      btnInc.className = 'py-1.5 rounded-lg text-xs font-bold transition text-stone-500 hover:text-stone-800';
+    if (this.modalTxType === 'expense') {
+      if (btnExp) btnExp.className = 'py-1.5 rounded-lg text-xs font-bold transition bg-white text-coral-500 shadow-sm';
+      if (btnInc) btnInc.className = 'py-1.5 rounded-lg text-xs font-bold transition text-stone-500 hover:text-stone-800';
     } else {
-      btnInc.className = 'py-1.5 rounded-lg text-xs font-bold transition bg-white text-matcha-600 shadow-sm';
-      btnExp.className = 'py-1.5 rounded-lg text-xs font-bold transition text-stone-500 hover:text-stone-800';
+      if (btnInc) btnInc.className = 'py-1.5 rounded-lg text-xs font-bold transition bg-white text-matcha-600 shadow-sm';
+      if (btnExp) btnExp.className = 'py-1.5 rounded-lg text-xs font-bold transition text-stone-500 hover:text-stone-800';
     }
 
-    // 更新分類選單
+    // 更新分類選單（保證安全回退）
     const catSelect = document.getElementById('tx-input-category');
-    const cats = mbStorage.getCategories()[type];
-    catSelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+    if (catSelect) {
+      let cats = [];
+      try {
+        const catObj = mbStorage.getCategories();
+        if (catObj && Array.isArray(catObj[this.modalTxType]) && catObj[this.modalTxType].length > 0) {
+          cats = catObj[this.modalTxType];
+        }
+      } catch (err) {
+        console.warn('Could not read categories from storage:', err);
+      }
+      if (!cats || cats.length === 0) {
+        cats = this.modalTxType === 'income' ? DEFAULT_CATEGORIES.income : DEFAULT_CATEGORIES.expense;
+      }
+      catSelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
 
     this.updateTxModalBudgetHint();
   }
