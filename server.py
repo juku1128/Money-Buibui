@@ -30,7 +30,6 @@ def generate_ai_scripts(api_key, data):
     name = ctx.get('name', '朋友')
     amount = ctx.get('amount', 800)
     days = ctx.get('days', 14)
-    relationship = ctx.get('relationship', '朋友')
     reason = ctx.get('reason', '日常開銷代墊')
     situation = ctx.get('situation', '正常聯繫')
     borrow_date = ctx.get('borrowDate', '')
@@ -42,7 +41,6 @@ def generate_ai_scripts(api_key, data):
 - 對象稱呼：{name}
 - 欠款金額：NT$ {amount:,} 元
 - 借款時間：已借了約 {days} 天（借款日：{borrow_date}，約定到期日：{due_date or '未特別約定'}）
-- 與借款人的關係：{relationship}
 - 借款原因/事由：{reason}
 - 目前遇到的拖欠狀況：{situation}
 - 要求的催款風格：{style_guide}

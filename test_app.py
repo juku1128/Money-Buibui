@@ -390,6 +390,245 @@ class TestMoneyBuddyCore(unittest.TestCase):
         self.assertIn("generate_ai_scripts", code)
         self.assertIn("urllib.request", code)
 
+    def test_21_twenty_variations_per_style(self):
+        """驗證 9 大風格在 STYLE_VARIATIONS 中均擁有至少 20 種不同的回應方式 (共至少 180 種)"""
+        import subprocess
+        jsc_bin = '/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc'
+        if not os.path.isfile(jsc_bin):
+            self.skipTest("JSC binary not available on this environment")
+
+        js_code = """
+        load('js/scripts_data.js');
+        var styles = ['gentle', 'cute', 'humorous', 'formal', 'firm_polite', 'strong_polite', 'trash_talk', 'hell_furious', 'hell_legal'];
+        var passedStyles = 0;
+        styles.forEach(function(s) {
+            if (STYLE_VARIATIONS[s] && STYLE_VARIATIONS[s].length >= 20) {
+                passedStyles++;
+            }
+        });
+        print('PASSED_STYLES_COUNT:' + passedStyles);
+        """
+        proc = subprocess.run([jsc_bin, '-e', js_code], cwd=BASE_DIR, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, f"JSC execution error: {proc.stderr}")
+        self.assertIn("PASSED_STYLES_COUNT:9", proc.stdout)
+
+    def test_22_relationship_field_removed_from_ui_and_logic(self):
+        """驗證「與對象的關係」欄位已從 index.html、js/app.js 與 server.py 徹底移除"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        self.assertNotIn('script-param-relationship', html_content)
+        self.assertNotIn('與對象的關係', html_content)
+
+        app_file = os.path.join(BASE_DIR, 'js', 'app.js')
+        with open(app_file, 'r', encoding='utf-8') as f:
+            app_content = f.read()
+        self.assertNotIn('script-param-relationship', app_content)
+
+        server_file = os.path.join(BASE_DIR, 'server.py')
+        with open(server_file, 'r', encoding='utf-8') as f:
+            server_content = f.read()
+        self.assertNotIn('與借款人的關係', server_content)
+
+    def test_23_clean_cute_design_tokens(self):
+        """驗證 CSS 與 HTML 100% 無殘留任何迷因類別與標籤，純粹可愛日系文創手帳 Tokens 齊備"""
+        css_file = os.path.join(BASE_DIR, 'css', 'style.css')
+        with open(css_file, 'r', encoding='utf-8') as f:
+            css = f.read()
+        self.assertNotIn('[data-theme="meme"]', css)
+        self.assertNotIn('.stamp-meme', css)
+        self.assertNotIn('.caution-tape', css)
+        self.assertNotIn('.neo-btn', css)
+        self.assertNotIn('.absurdity-bar', css)
+        self.assertIn('.journal-card', css)
+        self.assertIn('.tape-tag', css)
+
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+        self.assertNotIn('stamp-meme', html)
+        self.assertNotIn('caution-tape', html)
+        self.assertNotIn('meme-sticker', html)
+        self.assertNotIn('js/meme_engine.js', html)
+
+    def test_24_clean_cute_mascot_no_memes(self):
+        """驗證吉祥物管家柴柴為純粹可愛日系表情，無迷因狗頭像與模式參數"""
+        mascot_file = os.path.join(BASE_DIR, 'js', 'mascot.js')
+        with open(mascot_file, 'r', encoding='utf-8') as f:
+            mascot_code = f.read()
+        self.assertNotIn('meme_doge', mascot_code)
+        self.assertNotIn('meme_sunglasses', mascot_code)
+        self.assertNotIn('meme_dead_eyes', mascot_code)
+        self.assertNotIn('meme_crying', mascot_code)
+        self.assertNotIn('isMemeMode', mascot_code)
+        self.assertIn('happy:', mascot_code)
+        self.assertIn('calm:', mascot_code)
+
+    def test_25_server_pure_accounting_endpoints(self):
+        """驗證 server.py 僅保留理財記帳與催款相關 API，無任何迷因後端路由"""
+        server_file = os.path.join(BASE_DIR, 'server.py')
+        with open(server_file, 'r', encoding='utf-8') as f:
+            server_code = f.read()
+        self.assertIn('/api/ai-status', server_code)
+        self.assertIn('/api/generate-scripts', server_code)
+        self.assertNotIn('/api/meme-trends', server_code)
+        self.assertNotIn('/api/generate-memes', server_code)
+        self.assertNotIn('get_legal_meme_trends', server_code)
+
+    def test_26_clean_dashboard_and_no_meme_cards(self):
+        """驗證首頁與彈窗無任何每日迷因彩蛋卡、嘴砲診斷報告或迷因彈窗"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+        self.assertNotIn('dash-daily-meme-card', html)
+        self.assertNotIn('dash-financial-roast-card', html)
+        self.assertNotIn('modal-tx-reaction', html)
+        self.assertNotIn('modal-diploma', html)
+        self.assertNotIn('view-settings', html)
+
+    def test_27_hero_handbook_banner_elements(self):
+        """驗證頂部 Hero 橫幅完整具備 Money Buddy 標題、副標題、圍巾柴柴頭像容器與對話泡泡"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+        self.assertIn('hero-handbook-banner', html)
+        self.assertIn('大學生的可愛理財管家', html)
+        self.assertIn('shiba-avatar-container', html)
+        self.assertIn('shiba-message', html)
+
+    def test_28_three_bento_cards_with_washi_tapes(self):
+        """驗證三欄式手帳 Bento 卡片具備抹茶綠、櫻花粉、珊瑚橘三色手繪紙膠帶與專屬元件"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+        self.assertIn('tape-matcha', html)
+        self.assertIn('tape-sakura', html)
+        self.assertIn('tape-coral', html)
+        self.assertIn('本月收支概覽', html)
+        self.assertIn('學生預算分類', html)
+        self.assertTrue('每日預算提醒' in html or '每日理財提醒' in html)
+        self.assertIn('dashTrendMiniChart', html)
+        self.assertIn('budget-pct-food', html)
+        self.assertNotIn('handbook-bottom-nav', html)
+
+    def test_29_scarf_shiba_avatar(self):
+        """驗證吉祥物模組定義了穿戴杏色圍巾的可愛柴柴向量圖形 (scarf)"""
+        mascot_file = os.path.join(BASE_DIR, 'js', 'mascot.js')
+        with open(mascot_file, 'r', encoding='utf-8') as f:
+            mascot_code = f.read()
+        self.assertIn('scarf:', mascot_code)
+        self.assertIn('scarf-group', mascot_code)
+
+    def test_30_daily_budget_meter_elements(self):
+        """驗證 Card 3 每日預算提醒具備今日預算上限、已花費、剩餘額度儀表與理財錦囊"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+        self.assertIn('daily-budget-meter-box', html)
+        self.assertIn('daily-budget-limit', html)
+        self.assertIn('daily-budget-spent', html)
+        self.assertIn('daily-budget-remaining', html)
+        self.assertIn('daily-budget-tip-text', html)
+
+    def test_31_transactions_daily_feed_and_chips(self):
+        """驗證記帳頁整合互動式分類預算膠囊與每日記帳項目流水帳"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+        self.assertIn('tx-category-chips-bar', html)
+        self.assertIn('tx-table-container', html)
+        self.assertIn('每日記帳項目', html)
+
+        css_file = os.path.join(BASE_DIR, 'css', 'style.css')
+        with open(css_file, 'r', encoding='utf-8') as f:
+            css = f.read()
+        self.assertIn('.category-chip', css)
+        self.assertIn('.daily-group-card', css)
+        self.assertIn('.daily-group-header', css)
+
+    def test_32_navigation_order_and_deleted_comparison(self):
+        """驗證頂部導航順序已交換為：首頁 -> 理財規劃 -> 記帳 -> 消費分析 -> 借貸與話術，且理財架構分配差異對比已刪除"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+        self.assertNotIn('理財架構分配差異對比', html)
+        self.assertNotIn('handbook-bottom-nav', html)
+
+        idx_dash = html.find('id="nav-btn-dashboard"')
+        idx_plan = html.find('id="nav-btn-planning"')
+        idx_tx = html.find('id="nav-btn-transactions"')
+        idx_analysis = html.find('id="nav-btn-analysis"')
+        idx_debts = html.find('id="nav-btn-debts"')
+
+        self.assertTrue(idx_dash != -1 and idx_plan != -1 and idx_tx != -1 and idx_analysis != -1 and idx_debts != -1)
+        self.assertTrue(idx_dash < idx_plan < idx_tx < idx_analysis < idx_debts)
+
+    def test_33_daily_items_on_top_and_monthly_below(self):
+        """驗證「每日記帳項目」置於最上方，「每月收支」置於下方，且【每日收支】明確標註"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+
+        idx_daily_section = html.find('檢視每日記帳項目')
+        idx_monthly_section = html.find('檢視每月收支')
+        self.assertTrue(idx_daily_section != -1 and idx_monthly_section != -1)
+        self.assertTrue(idx_daily_section < idx_monthly_section)
+
+        app_file = os.path.join(BASE_DIR, 'js', 'app.js')
+        with open(app_file, 'r', encoding='utf-8') as f:
+            app_code = f.read()
+        self.assertIn('【每日收支】', app_code)
+
+    def test_34_hell_mode_visuals_and_gemini_badge_removal(self):
+        """驗證地獄催款模式完整視覺元件 (烈焰、惡魔、領域展開) 與 Gemini AI 徽章徹底移除"""
+        html_file = os.path.join(BASE_DIR, 'index.html')
+        with open(html_file, 'r', encoding='utf-8') as f:
+            html = f.read()
+
+        # 1. 驗證已移除 Gemini AI 連線徽章與 AI 設定按鈕
+        self.assertNotIn('ai-engine-badge', html)
+        self.assertNotIn('Google Gemini AI (已連線)', html)
+        self.assertNotIn('AI 設定', html)
+
+        # 2. 驗證具備地獄催款視覺元件 (領域橫幅、底部火焰、惡魔柴柴)
+        self.assertIn('hell-domain-banner', html)
+        self.assertIn('hell-flames-overlay', html)
+        self.assertIn('hell-demon-mascot', html)
+        self.assertIn('撲滅地獄之火', html)
+
+        # 3. 驗證 CSS 包含極限地獄模式相關樣式與動畫 keyframes
+        css_file = os.path.join(BASE_DIR, 'css', 'style.css')
+        with open(css_file, 'r', encoding='utf-8') as f:
+            css = f.read()
+        self.assertIn('body.hell-mode-active', css)
+        self.assertIn('hellScreenShake', css)
+        self.assertIn('flameLick', css)
+        self.assertIn('emberRise', css)
+        self.assertIn('demonEmerge', css)
+        self.assertIn('demonBob', css)
+        self.assertIn('wingFlap', css)
+
+        # 4. 驗證 mascot.js 具備 devil 惡魔柴柴造型
+        mascot_file = os.path.join(BASE_DIR, 'js', 'mascot.js')
+        with open(mascot_file, 'r', encoding='utf-8') as f:
+            mascot_code = f.read()
+        self.assertIn('devil:', mascot_code)
+        self.assertIn('devil-wings', mascot_code)
+        self.assertIn('devil-trident', mascot_code)
+
+        # 5. 驗證 app.js 具備地獄視覺控制與退場方法
+        app_file = os.path.join(BASE_DIR, 'js', 'app.js')
+        with open(app_file, 'r', encoding='utf-8') as f:
+            app_code = f.read()
+        self.assertIn('enableHellModeVisuals', app_code)
+        self.assertIn('renderHellFlames', app_code)
+        self.assertIn('renderHellDemonMascot', app_code)
+        self.assertIn('exitHellMode', app_code)
+        self.assertNotIn('Google Gemini AI (已連線)', app_code)
+
 if __name__ == '__main__':
     unittest.main()
+
+
+
 

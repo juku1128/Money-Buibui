@@ -1,47 +1,187 @@
 /*
- * Money Buddy — 文創可愛手帳主題樣式
- * 柔和奶油、奶茶與抹茶綠調色盤，搭配圓角卡片與微動畫
+ * Money Buddy — 簡約清晰 日系文創手帳視覺主題
+ * 柔和奶油米白底色、暖棕文字、三色手繪紙膠帶、大圓角卡片與粉彩細節
  */
 
 :root {
-  --bg-cream: #FAF6F0;
+  --bg-canvas: #F8F4EC;
+  --bg-cream: #FAF6EE;
+  --card-white: #FFFFFF;
   --card-cream: #FFFDF9;
+  --border-subtle: #EFE8DC;
   --border-cream: #EDE4D8;
-  --text-main: #3D3A37;
-  --text-muted: #7D756D;
-  --accent-tea: #D4A373;
-  --accent-coral: #E76F51;
-  --accent-matcha: #588157;
-  --accent-matcha-light: #E9F1E8;
-  --accent-pink: #FFCAD4;
-  --accent-gold: #E9C46A;
+  --text-title: #3D312A;
+  --text-main: #4A3E3D;
+  --text-muted: #8A7E75;
+
+  /* 日系手帳粉彩調色盤 */
+  --matcha-tape: #A2B997;
+  --matcha-dark: #3B5233;
+  --sakura-tape: #E8ADA4;
+  --sakura-dark: #5C322C;
+  --coral-tape: #E68A75;
+  --latte-tape: #D9C3A5;
+  --latte-dark: #574635;
+  --star-yellow: #F6D884;
 }
 
 body {
-  background-color: var(--bg-cream);
+  background-color: var(--bg-canvas);
   color: var(--text-main);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Hiragino Sans GB", "Microsoft JhengHei", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* 網頁手帳質感微背景點點 */
+/* 網頁手帳質感微背景點點 (Dot Matrix) */
 .journal-bg {
-  background-color: #FAF6F0;
-  background-image: radial-gradient(#E8DFC8 0.75px, transparent 0.75px);
-  background-size: 20px 20px;
+  background-color: #F8F4EC;
+  background-image: radial-gradient(#D6CBBB 1.1px, transparent 1.1px);
+  background-size: 18px 18px;
 }
 
-/* 圓角手帳卡片 */
+/* 圓角手帳卡片 (保留相容性) */
 .journal-card {
-  background: var(--card-cream);
-  border: 1.5px solid var(--border-cream);
-  border-radius: 1.25rem;
-  box-shadow: 0 4px 14px 0 rgba(140, 115, 85, 0.06);
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 18px rgba(74, 52, 37, 0.04);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .journal-card:hover {
-  box-shadow: 0 6px 20px 0 rgba(140, 115, 85, 0.1);
+  box-shadow: 0 6px 24px rgba(74, 52, 37, 0.08);
+}
+
+/* 簡約清晰大圓角 Bento 手帳卡片 */
+.bento-card {
+  background: #FFFFFF;
+  border: 1.5px solid #EFE8DC;
+  border-radius: 1.75rem;
+  box-shadow: 0 4px 20px rgba(61, 49, 42, 0.035);
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(61, 49, 42, 0.065);
+}
+
+/* 頂部 Hero 橫幅大卡片 */
+.hero-handbook-banner {
+  background: #FFFFFF;
+  border: 1.5px solid #EFE8DC;
+  border-radius: 1.75rem;
+  box-shadow: 0 4px 22px rgba(61, 49, 42, 0.04);
+}
+
+/* ========================================================
+ * 🏷️ 日系手繪紙膠帶標籤 (Washi Tape Labels)
+ * ======================================================== */
+.washi-tape {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  position: relative;
+  user-select: none;
+}
+
+/* 抹茶綠紙膠帶 (本月收支概覽) */
+.tape-matcha {
+  background-color: var(--matcha-tape);
+  color: var(--matcha-dark);
+  transform: rotate(-1.5deg);
+}
+
+/* 櫻花粉紙膠帶 (學生預算分類) */
+.tape-sakura {
+  background-color: var(--sakura-tape);
+  color: var(--sakura-dark);
+  transform: rotate(1.2deg);
+}
+
+/* 溫暖珊瑚橘紙膠帶 (每日理財提醒) */
+.tape-coral {
+  background-color: var(--coral-tape);
+  color: #FFFFFF;
+  transform: rotate(-1deg);
+}
+
+/* 柔和粉彩雙色進度膠囊條 */
+.pill-track {
+  height: 10px;
+  border-radius: 9999px;
+  background-color: #F1ECE2;
+  overflow: hidden;
+  position: relative;
+}
+
+.pill-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s ease;
+}
+
+.pill-fill-matcha { background-color: var(--matcha-tape); }
+.pill-fill-sakura { background-color: var(--sakura-tape); }
+.pill-fill-latte { background-color: var(--latte-tape); }
+.pill-fill-coral { background-color: var(--coral-tape); }
+
+/* 簡約底部導航欄 */
+.handbook-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  border-top: 1.5px solid #EFE8DC;
+  z-index: 40;
+  padding: 0.4rem 1rem env(safe-area-inset-bottom, 0.4rem) 1rem;
+}
+
+.handbook-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 16px;
+  border-radius: 14px;
+  color: #7D6E66;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.handbook-nav-btn:hover {
+  color: #3D312A;
+  background: rgba(162, 185, 151, 0.12);
+}
+
+.handbook-nav-btn.active {
+  color: #38512F;
+  background: rgba(162, 185, 151, 0.22);
+  font-weight: 700;
+}
+
+/* 浮動小星星貼紙動畫 */
+.sticker-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  animation: floatStar 3s ease-in-out infinite;
+}
+
+@keyframes floatStar {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-3px) rotate(4deg); }
 }
 
 /* 手帳標籤紙效果 */
@@ -134,6 +274,285 @@ body {
   box-shadow: 0 6px 20px rgba(67, 97, 238, 0.55);
 }
 
+/* ================= 🔥 極限地獄催款模式 (Very Hellish Mode) ================= */
+
+/* 1. 啟動瞬間螢幕震撼與衝擊波 */
+@keyframes hellScreenShake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-6px, -4px) rotate(-1deg); }
+  20% { transform: translate(6px, 5px) rotate(1deg); }
+  30% { transform: translate(-5px, 3px) rotate(-0.5deg); }
+  40% { transform: translate(5px, -4px) rotate(0.8deg); }
+  50% { transform: translate(-3px, 2px) rotate(-0.3deg); }
+  60% { transform: translate(3px, -2px) rotate(0.4deg); }
+  70% { transform: translate(-2px, 1px) rotate(-0.2deg); }
+  80% { transform: translate(2px, -1px) rotate(0.1deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.hell-screen-shake {
+  animation: hellScreenShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* 2. 全站地獄暗黑熔岩氛圍 */
+body.hell-mode-active {
+  background: radial-gradient(circle at 50% 20%, #300305 0%, #170002 45%, #0a0001 100%) !important;
+  color: #FFF5EB !important;
+  transition: background 0.6s ease, color 0.3s ease;
+}
+
+body.hell-mode-active header {
+  background-color: rgba(25, 2, 4, 0.92) !important;
+  border-bottom-color: rgba(220, 38, 38, 0.5) !important;
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.25) !important;
+}
+
+body.hell-mode-active #hero-handbook-banner {
+  background: linear-gradient(135deg, #3d0508 0%, #1f0103 60%, #120002 100%) !important;
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.35) !important;
+}
+
+body.hell-mode-active #hero-handbook-banner h1,
+body.hell-mode-active #hero-handbook-banner p {
+  color: #FFE4E6 !important;
+}
+
+body.hell-mode-active #script-generator-card {
+  background: linear-gradient(145deg, #240204 0%, #160002 50%, #0d0001 100%) !important;
+  border: 2px solid #EF4444 !important;
+  box-shadow: 0 0 40px rgba(239, 68, 68, 0.5), inset 0 0 25px rgba(255, 30, 0, 0.2) !important;
+  transition: all 0.4s ease;
+}
+
+body.hell-mode-active #script-generator-card h3,
+body.hell-mode-active #script-generator-card h4,
+body.hell-mode-active #script-generator-card label {
+  color: #FEE2E2 !important;
+}
+
+body.hell-mode-active #script-generator-card p {
+  color: #FCA5A5 !important;
+}
+
+body.hell-mode-active #script-generator-card .bg-white\/80 {
+  background-color: rgba(36, 4, 6, 0.85) !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+}
+
+body.hell-mode-active #script-generator-card input,
+body.hell-mode-active #script-generator-card select {
+  background-color: #1a0103 !important;
+  border-color: #7f1d1d !important;
+  color: #fff1f2 !important;
+}
+
+/* 3. 底部動態噴湧火舌與火星粒子 (Hell Flames Overlay) */
+#hell-flames-overlay {
+  height: 140px;
+  background: linear-gradient(to top, rgba(120, 0, 0, 0.85) 0%, rgba(220, 38, 38, 0.4) 40%, transparent 100%);
+}
+
+.flame-svg-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.flame-tongue {
+  flex: 1;
+  height: 100%;
+  transform-origin: bottom center;
+  animation: flameLick 1.2s ease-in-out infinite alternate;
+}
+
+.flame-tongue:nth-child(2n) {
+  animation-duration: 0.9s;
+  animation-delay: 0.2s;
+}
+
+.flame-tongue:nth-child(3n) {
+  animation-duration: 1.4s;
+  animation-delay: 0.4s;
+}
+
+.flame-tongue:nth-child(5n) {
+  animation-duration: 1.1s;
+  animation-delay: 0.1s;
+}
+
+@keyframes flameLick {
+  0% {
+    transform: scaleY(0.75) skewX(-2deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scaleY(1.08) skewX(3deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0.88) skewX(-3deg);
+    opacity: 0.9;
+  }
+}
+
+/* 浮動火星餘燼 */
+.hell-ember {
+  position: absolute;
+  bottom: 10px;
+  border-radius: 50%;
+  background: #FFAA00;
+  box-shadow: 0 0 8px #FF4400, 0 0 16px #FFDD00;
+  pointer-events: none;
+  animation: emberRise 2.5s ease-out infinite;
+}
+
+@keyframes emberRise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-160px) translateX(var(--ember-drift, 20px)) scale(0.2);
+    opacity: 0;
+  }
+}
+
+/* 4. 冒出來的惡魔柴柴與發話泡泡 (Demon Mascot Popup) */
+#hell-demon-mascot {
+  animation: demonEmerge 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+@keyframes demonEmerge {
+  0% {
+    transform: translateY(120%) scale(0.5);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(-8px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.demon-character-box {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  cursor: pointer;
+  filter: drop-shadow(0 0 20px rgba(255, 30, 0, 0.7));
+  animation: demonBob 2.8s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.demon-character-box:hover {
+  transform: scale(1.1) rotate(-3deg);
+  filter: drop-shadow(0 0 30px rgba(255, 60, 0, 0.9));
+}
+
+@keyframes demonBob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 惡魔翅膀拍打動畫 */
+.devil-wings {
+  transform-origin: center;
+  animation: wingFlap 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes wingFlap {
+  0% {
+    transform: scaleX(0.9) rotate(-3deg);
+  }
+  100% {
+    transform: scaleX(1.12) rotate(4deg);
+  }
+}
+
+/* 惡魔發話泡泡 */
+.demon-bubble {
+  position: absolute;
+  bottom: 115px;
+  right: 0;
+  width: 210px;
+  padding: 0.65rem 0.85rem;
+  background: linear-gradient(135deg, #450305 0%, #200102 100%);
+  border: 2px solid #EF4444;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.45);
+  color: #FFF1F2;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: left;
+  z-index: 55;
+  pointer-events: auto;
+  animation: bubblePop 0.4s ease-out;
+}
+
+.demon-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  right: 35px;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #EF4444;
+}
+
+@keyframes bubblePop {
+  0% {
+    transform: scale(0.7) translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 5. 飄動小惡魔靈魂群 (Floating Imps) */
+.hell-floating-imp {
+  position: absolute;
+  bottom: 10px;
+  font-size: 1.5rem;
+  pointer-events: none;
+  animation: impFloatUp 3.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+@keyframes impFloatUp {
+  0% {
+    transform: translateY(0) scale(0.6) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-180px) scale(1.15) rotate(var(--imp-rot, 15deg));
+    opacity: 0;
+  }
+}
+
 /* 浮動 Toast 提示 */
 #toast-container {
   position: fixed;
@@ -216,4 +635,94 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #BFAEA0;
+}
+
+/* ================= 互動式分類預算膠囊 (Category Budget Chips) ================= */
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-main);
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-cream);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(61, 49, 42, 0.04);
+}
+
+.category-chip:hover {
+  border-color: #A2B997;
+  transform: translateY(-1px);
+}
+
+.category-chip.active {
+  background-color: #38512F;
+  color: #FFFFFF;
+  border-color: #38512F;
+  box-shadow: 0 2px 6px rgba(56, 81, 47, 0.25);
+}
+
+.category-chip.active .chip-badge {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+.category-chip.chip-warn {
+  border-color: #E8ADA4;
+  background-color: #FFF9F8;
+}
+
+.category-chip.chip-danger {
+  border-color: #E68A75;
+  background-color: #FFF5F2;
+}
+
+.chip-badge {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 9999px;
+  background-color: #F2ECE1;
+  color: #7D6E66;
+  font-family: ui-monospace, monospace;
+}
+
+/* ================= 每日記帳時間軸分組卡片 (Daily Timeline Groups) ================= */
+.daily-group-card {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-cream);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(61, 49, 42, 0.04);
+  transition: transform 0.2s ease;
+}
+
+.daily-group-header {
+  background-color: #FAF6EF;
+  border-bottom: 1.5px solid var(--border-cream);
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.daily-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #F5EFE6;
+  transition: background-color 0.15s ease;
+}
+
+.daily-item-row:last-child {
+  border-bottom: none;
+}
+
+.daily-item-row:hover {
+  background-color: #FCFAF6;
 }

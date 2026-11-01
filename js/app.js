@@ -127,13 +127,13 @@ class MoneyBuddyApp {
         }
       }
 
-      // 手機版分頁標籤樣式
+      // 底部導航分頁樣式
       const mobBtn = document.getElementById(`mob-nav-${v}`);
       if (mobBtn) {
         if (v === viewName) {
-          mobBtn.className = 'flex flex-col items-center gap-1 text-coral-500 font-bold';
+          mobBtn.className = 'handbook-nav-btn active';
         } else {
-          mobBtn.className = 'flex flex-col items-center gap-1 text-stone-500';
+          mobBtn.className = 'handbook-nav-btn';
         }
       }
     });
@@ -144,6 +144,11 @@ class MoneyBuddyApp {
     else if (viewName === 'planning') this.renderPlanningView();
     else if (viewName === 'analysis') this.renderAnalysisView();
     else if (viewName === 'debts') this.renderDebtsView();
+
+    // 若切換至其他頁面，安全熄滅地獄之火視覺效果
+    if (viewName !== 'debts' && document.body.classList.contains('hell-mode-active')) {
+      this.enableHellModeVisuals(false);
+    }
 
     this.initLucideIcons();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -233,28 +238,67 @@ class MoneyBuddyApp {
     const monthEl = document.getElementById('dashboard-current-month');
     if (monthEl) monthEl.textContent = targetMonth;
 
-    // 數字卡片更新
-    document.getElementById('dash-income').textContent = `NT$ ${summary.totalIncome.toLocaleString()}`;
-    document.getElementById('dash-expense').textContent = `NT$ ${summary.totalExpense.toLocaleString()}`;
-    document.getElementById('dash-balance').textContent = `NT$ ${summary.balance.toLocaleString()}`;
-    document.getElementById('dash-savings-rate').textContent = `${summary.savingsRate}%`;
-    document.getElementById('dash-savings-bar').style.width = `${Math.min(100, summary.savingsRate)}%`;
+    // 數字卡片與膠囊條更新
+    const incEl = document.getElementById('dash-income');
+    const expEl = document.getElementById('dash-expense');
+    const balEl = document.getElementById('dash-balance');
+    const savRateEl = document.getElementById('dash-savings-rate');
+    const savBarEl = document.getElementById('dash-savings-bar');
 
-    // 柴柴小助手互動回饋
+    if (incEl) incEl.textContent = `NT$ ${summary.totalIncome.toLocaleString()}`;
+    if (expEl) expEl.textContent = `NT$ ${summary.totalExpense.toLocaleString()}`;
+    if (balEl) balEl.textContent = `NT$ ${summary.balance.toLocaleString()}`;
+    if (savRateEl) savRateEl.textContent = `${summary.savingsRate}%`;
+    if (savBarEl) savBarEl.style.width = `${Math.min(100, summary.savingsRate)}%`;
+
+    // 雙色膠囊進度條更新
+    const maxFlow = Math.max(summary.totalIncome, summary.totalExpense, 1000);
+    const incBar = document.getElementById('dash-income-bar');
+    const expBar = document.getElementById('dash-expense-bar');
+    if (incBar) {
+      const incPct = summary.totalIncome > 0 ? Math.min(100, Math.max(15, Math.round((summary.totalIncome / maxFlow) * 100))) : 0;
+      incBar.style.width = `${incPct}%`;
+    }
+    if (expBar) {
+      const expPct = summary.totalExpense > 0 ? Math.min(100, Math.max(15, Math.round((summary.totalExpense / maxFlow) * 100))) : 0;
+      expBar.style.width = `${expPct}%`;
+    }
+
+    // 柴柴小助手互動回饋 (使用專屬溫暖圍巾萌柴柴頭像)
     const insight = this.mascot.generateInsight(targetMonth);
-    document.getElementById('shiba-avatar-container').innerHTML = this.mascot.getAvatar(insight.mood);
-    document.getElementById('shiba-tag').textContent = isCurrent ? insight.tag : `📅 ${formattedMonth} 紀錄分析`;
-    document.getElementById('shiba-message').textContent = insight.text;
+    const avatarEl = document.getElementById('shiba-avatar-container');
+    if (avatarEl) {
+      avatarEl.innerHTML = this.mascot.getAvatar('scarf');
+    }
+    const tagEl = document.getElementById('shiba-tag');
+    if (tagEl) tagEl.textContent = isCurrent ? insight.tag : `📅 ${formattedMonth} 紀錄分析`;
+    const msgEl = document.getElementById('shiba-message');
+    if (msgEl) {
+      msgEl.textContent = insight.text || '哈囉！快來記錄今天的生活開銷吧！！🌸';
+    }
+
+    // 渲染卡片一：迷你月度趨勢柱狀圖 (還原參考圖的 1~6 月粉彩長條圖)
+    this.renderDashboardMiniTrendChart(targetMonth);
+
+    // 渲染卡片二：學生主要生活分類預算列表
+    this.renderStudentBudgetList(targetMonth);
+
+    // 渲染卡片三：每日預算提醒動態儀表與錦囊
+    this.renderDailyBudgetReminder(targetMonth);
 
     // 借貸警告橫幅
     const debtStats = mbStorage.getDebtStats();
     const alertBanner = document.getElementById('dash-debt-alert-banner');
-    if (debtStats.totalUncollected > 0) {
-      alertBanner.classList.remove('hidden');
-      document.getElementById('dash-debt-alert-text').textContent =
-        `目前共有 NT$ ${debtStats.totalUncollected.toLocaleString()} 尚未收回，其中 ${debtStats.overdueCount} 筆已逾期！`;
-    } else {
-      alertBanner.classList.add('hidden');
+    if (alertBanner) {
+      if (debtStats.totalUncollected > 0) {
+        alertBanner.classList.remove('hidden');
+        const alertText = document.getElementById('dash-debt-alert-text');
+        if (alertText) {
+          alertText.textContent = `目前共有 NT$ ${debtStats.totalUncollected.toLocaleString()} 尚未收回，其中 ${debtStats.overdueCount} 筆已逾期！`;
+        }
+      } else {
+        alertBanner.classList.add('hidden');
+      }
     }
 
     // 本月消費分類甜甜圈圖
@@ -339,6 +383,223 @@ class MoneyBuddyApp {
     });
   }
 
+  renderDashboardMiniTrendChart(targetMonth) {
+    const canvas = document.getElementById('dashTrendMiniChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const [y, m] = targetMonth.split('-').map(Number);
+    const months = [];
+    const labels = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(y, m - 1 - i, 1);
+      const ymStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      months.push(ymStr);
+      labels.push(`${d.getMonth() + 1}月`);
+    }
+
+    const dataPoints = months.map(ym => {
+      const s = mbStorage.getMonthlySummary(ym);
+      return s.totalExpense > 0 ? Math.round(s.totalExpense / 100) : 0;
+    });
+
+    const hasData = dataPoints.some(v => v > 0);
+    const displayData = hasData ? dataPoints : [110, 220, 260, 140, 180, 255];
+
+    if (this.charts.miniTrend) {
+      this.charts.miniTrend.destroy();
+    }
+
+    const pastelColors = [
+      '#94A886', // 1月 抹茶
+      '#94A886', // 2月 抹茶
+      '#D9C3A5', // 3月 奶茶
+      '#E8ADA4', // 4月 櫻花
+      '#E8ADA4', // 5月 櫻花
+      '#E68A75'  // 6月 珊瑚
+    ];
+
+    this.charts.miniTrend = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: displayData,
+          backgroundColor: pastelColors,
+          borderRadius: 4,
+          borderSkipped: false,
+          barPercentage: 0.65
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: c => ` 支出約 NT$ ${(c.raw * 100).toLocaleString()}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { size: 10, family: '-apple-system, sans-serif' },
+              color: '#8A7E75'
+            }
+          },
+          y: {
+            min: 0,
+            max: Math.max(300, ...displayData) + 20,
+            grid: { color: '#F1ECE2' },
+            ticks: {
+              stepSize: 100,
+              font: { size: 9, family: '-apple-system, sans-serif' },
+              color: '#8A7E75'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  renderStudentBudgetList(targetMonth) {
+    const summary = mbStorage.getMonthlySummary(targetMonth);
+    const exp = summary.categoryExpenses || {};
+    const totalExp = summary.totalExpense || 0;
+
+    const foodSpent = exp['飲食'] || exp['拉麵'] || exp['餐費'] || 0;
+    const drinkSpent = exp['飲料'] || exp['珍奶'] || exp['手搖'] || 0;
+    const bookSpent = exp['書籍'] || exp['課本'] || exp['學習'] || exp['教育'] || 0;
+    const transitSpent = exp['交通'] || exp['捷運'] || exp['公車'] || 0;
+
+    const calcPct = (spent, defPct) => {
+      if (totalExp > 0) return Math.min(100, Math.round((spent / totalExp) * 100));
+      return defPct;
+    };
+
+    const foodPct = calcPct(foodSpent, 40);
+    const drinkPct = calcPct(drinkSpent, 20);
+    const bookPct = calcPct(bookSpent, 20);
+    const transitPct = calcPct(transitSpent, 20);
+
+    const setBar = (pctId, barId, pct) => {
+      const pEl = document.getElementById(pctId);
+      const bEl = document.getElementById(barId);
+      if (pEl) pEl.textContent = `${pct}%`;
+      if (bEl) bEl.style.width = `${Math.max(5, pct)}%`;
+    };
+
+    setBar('budget-pct-food', 'budget-bar-food', foodPct);
+    setBar('budget-pct-drink', 'budget-bar-drink', drinkPct);
+    setBar('budget-pct-books', 'budget-bar-books', bookPct);
+    setBar('budget-pct-transit', 'budget-bar-transit', transitPct);
+  }
+
+  renderDailyBudgetReminder(targetMonth) {
+    const todayStr = getLocalDateString();
+    const now = new Date();
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const todayDateNum = now.getDate();
+    const daysRemaining = Math.max(1, daysInMonth - todayDateNum + 1);
+
+    const summary = mbStorage.getMonthlySummary(targetMonth);
+    const tracking = mbStorage.getMonthlyBudgetTracking(targetMonth);
+
+    // Determine monthly budget baseline
+    let monthlyBudget = 15000;
+    if (tracking && tracking.hasConfirmedBudget && tracking.totalBudget > 0) {
+      monthlyBudget = tracking.totalBudget;
+    } else if (summary.totalIncome > 0) {
+      monthlyBudget = summary.totalIncome;
+    }
+
+    // Today's total expenses
+    const todayTxs = mbStorage.getTransactions().filter(t => t.date === todayStr && t.type === 'expense');
+    const todaySpent = todayTxs.reduce((sum, t) => sum + t.amount, 0);
+
+    // Calculate suggested daily budget
+    const remainingMonthBudget = Math.max(0, monthlyBudget - summary.totalExpense);
+    const dailyLimit = Math.max(150, Math.round(remainingMonthBudget / daysRemaining));
+    const todayRemaining = dailyLimit - todaySpent;
+    const dailyPercent = Math.min(100, Math.round((todaySpent / dailyLimit) * 100));
+
+    // Update Card 3 DOM
+    const dateEl = document.getElementById('daily-budget-today-date');
+    if (dateEl) dateEl.textContent = `${now.getMonth() + 1}月${todayDateNum}日 (今天)`;
+
+    const limitEl = document.getElementById('daily-budget-limit');
+    if (limitEl) limitEl.textContent = dailyLimit.toLocaleString();
+
+    const spentEl = document.getElementById('daily-budget-spent');
+    if (spentEl) spentEl.textContent = todaySpent.toLocaleString();
+
+    const barEl = document.getElementById('daily-budget-bar');
+    if (barEl) {
+      barEl.style.width = `${Math.max(5, dailyPercent)}%`;
+      if (todaySpent > dailyLimit) {
+        barEl.className = 'pill-fill pill-fill-coral';
+      } else {
+        barEl.className = 'pill-fill pill-fill-matcha';
+      }
+    }
+
+    const remTextEl = document.getElementById('daily-budget-remaining-text');
+    if (remTextEl) {
+      if (todaySpent > dailyLimit) {
+        remTextEl.innerHTML = `超額 NT$ <strong id="daily-budget-remaining" class="font-mono text-[#E68A75]">${(todaySpent - dailyLimit).toLocaleString()}</strong>`;
+      } else {
+        remTextEl.innerHTML = `剩餘 NT$ <strong id="daily-budget-remaining" class="font-mono text-[#588157]">${todayRemaining.toLocaleString()}</strong>`;
+      }
+    }
+
+    const statusTag = document.getElementById('daily-budget-status-tag');
+    if (statusTag) {
+      if (todaySpent === 0) {
+        statusTag.className = 'text-[10px] text-[#38512F] bg-[#E9F1E8] px-2 py-0.5 rounded-full inline-block font-semibold';
+        statusTag.textContent = '🌱 今日尚未記帳，花了錢隨手記錄一下吧！';
+      } else if (todaySpent > dailyLimit) {
+        statusTag.className = 'text-[10px] text-[#C1121F] bg-[#FFEAE8] px-2 py-0.5 rounded-full inline-block font-semibold';
+        statusTag.textContent = `⚠️ 今日已超額 NT$ ${(todaySpent - dailyLimit).toLocaleString()}，晚餐稍微克制一下荷包～💪`;
+      } else {
+        statusTag.className = 'text-[10px] text-[#38512F] bg-[#E9F1E8] px-2 py-0.5 rounded-full inline-block font-semibold';
+        statusTag.textContent = '🌟 支出在安全範圍內，控制得很好喔！';
+      }
+    }
+
+    // Friendly college student tips
+    const tips = [
+      '每天睡前花 30 秒隨手記帳，把固定開銷與生活費分開，月底荷包就不會莫名哭泣囉！🌸',
+      '外食點手搖飲或加點甜點前停三秒，分辨是「想要」還是「需要」，一週輕鬆多存 300 元！🧋',
+      '全聯採買生活用品前先列清單，避免在零食區被衝動誘惑，省錢超有感～🛒',
+      '悠遊卡定期票省下通勤費，小錢累積成大確幸，期末還能吃頓大餐慶祝！🚇',
+      '月初先把儲蓄金或必要房租扣除，剩下的才是可以安心自由運用的生活費喔！✨'
+    ];
+    const tipEl = document.getElementById('daily-budget-tip-text');
+    if (tipEl) {
+      tipEl.textContent = tips[todayDateNum % tips.length];
+    }
+  }
+
+  triggerShibaWiggle() {
+    const container = document.getElementById('shiba-avatar-container');
+    if (!container) return;
+    container.classList.add('animate-bounce');
+    setTimeout(() => container.classList.remove('animate-bounce'), 1000);
+    const cuteSounds = [
+      '汪汪！今天也有好好記錄每一筆生活開銷嗎？🌸',
+      '摸摸頭～柴柴會幫你守護好錢包的！🐾',
+      '生活不容易，但今天吃碗熱拉麵還是很值得的～🍜',
+      '省下一杯珍奶，離夢想基金又近了一小步！✨',
+      '今天也很棒喔！柴柴永遠是你的理財神隊友！🐕'
+    ];
+    const rand = cuteSounds[Math.floor(Math.random() * cuteSounds.length)];
+    const msg = document.getElementById('shiba-message');
+    if (msg) msg.textContent = rand;
+  }
+
   // ================= 2. 記帳列表 (Transactions) =================
 
   toggleAllMonthsFilter(forceAll = null) {
@@ -371,6 +632,63 @@ class MoneyBuddyApp {
     this.renderTransactionsView();
   }
 
+  selectCategoryFilter(cat) {
+    const select = document.getElementById('tx-filter-category');
+    if (select) {
+      select.value = cat;
+    }
+    this.renderTransactionsView();
+  }
+
+  renderCategoryChips(month, currentCat) {
+    const chipsContainer = document.getElementById('tx-category-chips-bar');
+    if (!chipsContainer) return;
+
+    const tracking = mbStorage.getMonthlyBudgetTracking(month);
+    const trackingMap = {};
+    if (tracking && tracking.categories) {
+      tracking.categories.forEach(c => {
+        trackingMap[c.category] = c;
+      });
+    }
+
+    const cats = mbStorage.getCategories();
+    const allExpenseCats = cats.expense || [];
+
+    // Chip for "全部"
+    const isAllActive = !currentCat || currentCat === 'all';
+    let html = `
+      <button type="button" onclick="app.selectCategoryFilter('all')" class="category-chip ${isAllActive ? 'active' : ''}">
+        <span>✨ 全部收支</span>
+      </button>
+    `;
+
+    allExpenseCats.forEach(cat => {
+      const isActive = currentCat === cat;
+      const c = trackingMap[cat];
+      const icon = CATEGORY_ICONS[cat] || '🏷️';
+      let badgeHtml = '';
+      let chipClass = '';
+
+      if (c && c.hasBudget) {
+        if (c.colorLevel === 'red') chipClass = 'chip-danger';
+        else if (c.colorLevel === 'orange') chipClass = 'chip-warn';
+        badgeHtml = `<span class="chip-badge">${c.percent}% · NT$ ${c.spent.toLocaleString()}</span>`;
+      } else if (c && c.spent > 0) {
+        badgeHtml = `<span class="chip-badge">NT$ ${c.spent.toLocaleString()}</span>`;
+      }
+
+      html += `
+        <button type="button" onclick="app.selectCategoryFilter('${cat}')" class="category-chip ${isActive ? 'active' : ''} ${chipClass}">
+          <span>${icon} ${cat}</span>
+          ${badgeHtml}
+        </button>
+      `;
+    });
+
+    chipsContainer.innerHTML = html;
+  }
+
   renderTransactionsView() {
     const monthInput = document.getElementById('tx-filter-month');
     const month = this.isAllMonths ? 'all' : ((monthInput && monthInput.value) ? monthInput.value : this.currentMonth);
@@ -381,8 +699,9 @@ class MoneyBuddyApp {
     const trackingMonth = this.isAllMonths ? this.currentMonth : month;
     this.renderMonthlyBudgetTracking(trackingMonth);
 
-    // 更新分類選單
+    // 更新分類選單與上方互動式分類預算膠囊
     this.populateCategoryFilter();
+    this.renderCategoryChips(trackingMonth, category);
 
     const txs = mbStorage.getTransactions({ month, type, category });
     const tableContainer = document.getElementById('tx-table-container');
@@ -428,46 +747,110 @@ class MoneyBuddyApp {
 
     if (txs.length === 0) {
       tableContainer.innerHTML = `
-        <div class="py-12 text-center text-stone-400 text-xs">
+        <div class="py-12 text-center text-stone-400 text-xs bg-[#FBF9F5] rounded-2xl border border-dashed border-cream-200">
           <p class="text-3xl mb-2">🍃</p>
-          此篩選條件下沒有找到任何記帳紀錄
+          <p class="font-bold text-stone-600">此篩選條件下沒有找到任何記帳紀錄</p>
+          <p class="text-[11px] text-stone-400 mt-1">點擊上方「記支出」或「記收入」開始記錄今天的生活花費吧！</p>
         </div>
       `;
       this.initLucideIcons();
       return;
     }
 
-    tableContainer.innerHTML = txs.map(t => {
-      const isInc = t.type === 'income';
-      const sign = isInc ? '+' : '-';
-      const color = isInc ? 'text-matcha-600' : 'text-coral-500';
-      const badgeColor = isInc ? 'bg-matcha-100 text-matcha-600' : 'bg-coral-500/10 text-coral-500';
+    // 按日期分組 (Daily Grouping Timeline)
+    const dateGroups = {};
+    txs.forEach(t => {
+      const d = t.date || '未分類日期';
+      if (!dateGroups[d]) dateGroups[d] = [];
+      dateGroups[d].push(t);
+    });
+
+    const sortedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
+    const todayStr = getLocalDateString();
+    const yesterdayDate = new Date();
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayStr = getLocalDateString(yesterdayDate);
+    const weekDays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+
+    tableContainer.innerHTML = sortedDates.map(dateKey => {
+      const items = dateGroups[dateKey];
+      let dayExp = 0, dayInc = 0;
+      items.forEach(item => {
+        if (item.type === 'income') dayInc += item.amount;
+        else dayExp += item.amount;
+      });
+
+      // 格式化日期標籤
+      let dateBadge = dateKey;
+      let isToday = false;
+      try {
+        const dObj = new Date(dateKey + 'T00:00:00');
+        const dayName = weekDays[dObj.getDay()] || '';
+        const mm = dObj.getMonth() + 1;
+        const dd = dObj.getDate();
+        if (dateKey === todayStr) {
+          dateBadge = `📅 今天 · ${mm}月${dd}日 (${dayName})`;
+          isToday = true;
+        } else if (dateKey === yesterdayStr) {
+          dateBadge = `📅 昨天 · ${mm}月${dd}日 (${dayName})`;
+        } else {
+          dateBadge = `📅 ${dateKey} (${dayName})`;
+        }
+      } catch (e) {
+        dateBadge = `📅 ${dateKey}`;
+      }
 
       return `
-        <div class="py-3 flex items-center justify-between hover:bg-cream-100/60 px-2 rounded-xl transition text-xs">
-          <div class="flex items-center space-x-3">
-            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${badgeColor}">
-              ${t.category}
+        <div class="daily-group-card ${isToday ? 'ring-2 ring-[#94A886]/40' : ''}">
+          <div class="daily-group-header flex-wrap sm:flex-nowrap gap-2">
+            <span class="text-xs font-bold text-[#3D312A] flex items-center gap-1.5">
+              ${dateBadge}
+              ${isToday ? '<span class="text-[9px] bg-[#94A886] text-white px-1.5 py-0.5 rounded-full font-bold">TODAY</span>' : ''}
             </span>
-            <div>
-              <p class="font-bold text-stone-800 text-sm">
-                ${t.note || t.category}
-              </p>
-              <p class="text-[10px] text-stone-400">${t.date}</p>
+            <div class="flex items-center gap-1.5 text-[11px] font-mono bg-white/95 px-2.5 py-1 rounded-xl border border-cream-200 shadow-2xs">
+              <span class="text-[10px] font-bold text-[#7D6E66] font-sans">【每日收支】</span>
+              ${dayExp > 0 ? `<span class="text-[#E68A75] font-bold">支出 NT$ ${dayExp.toLocaleString()}</span>` : '<span class="text-stone-400">支出 NT$ 0</span>'}
+              <span class="text-stone-300">│</span>
+              ${dayInc > 0 ? `<span class="text-[#588157] font-bold">收入 +NT$ ${dayInc.toLocaleString()}</span>` : '<span class="text-stone-400">收入 NT$ 0</span>'}
             </div>
           </div>
-          <div class="flex items-center space-x-3">
-            <span class="font-mono font-bold text-sm sm:text-base ${color}">
-              ${sign}NT$ ${t.amount.toLocaleString()}
-            </span>
-            <div class="flex items-center space-x-1">
-              <button onclick="app.editTransaction('${t.id}')" class="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-cream-200 rounded-lg transition" title="編輯">
-                <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
-              </button>
-              <button onclick="app.deleteTransaction('${t.id}')" class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition" title="刪除">
-                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              </button>
-            </div>
+          <div>
+            ${items.map(t => {
+              const isInc = t.type === 'income';
+              const sign = isInc ? '+' : '-';
+              const color = isInc ? 'text-matcha-600' : 'text-coral-500';
+              const badgeColor = isInc ? 'bg-matcha-100 text-matcha-700' : 'bg-coral-500/10 text-coral-600';
+              const icon = CATEGORY_ICONS[t.category] || (isInc ? '💰' : '🏷️');
+
+              return `
+                <div class="daily-item-row text-xs">
+                  <div class="flex items-center space-x-2.5">
+                    <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${badgeColor} flex items-center gap-1 shrink-0">
+                      <span>${icon}</span>
+                      <span>${t.category}</span>
+                    </span>
+                    <div>
+                      <p class="font-bold text-[#3D312A] text-xs sm:text-sm">
+                        ${t.note || t.category}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-3 shrink-0">
+                    <span class="font-mono font-bold text-xs sm:text-sm ${color}">
+                      ${sign}NT$ ${t.amount.toLocaleString()}
+                    </span>
+                    <div class="flex items-center space-x-1">
+                      <button onclick="app.editTransaction('${t.id}')" class="p-1 text-stone-400 hover:text-stone-700 hover:bg-cream-200 rounded-lg transition" title="編輯">
+                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                      </button>
+                      <button onclick="app.deleteTransaction('${t.id}')" class="p-1 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition" title="刪除">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
           </div>
         </div>
       `;
@@ -962,18 +1345,23 @@ class MoneyBuddyApp {
     // 渲染圓餅圖
     this.renderPlanAllocationChart(allocations);
 
-    // 更新架構對比試算表
-    const alloc50 = mbStorage.calculatePlanAllocations('50_30_20', income);
-    const alloc6 = mbStorage.calculatePlanAllocations('6_jars', income);
-
-    document.getElementById('compare-50-needs').textContent = `NT$ ${alloc50[0].amount.toLocaleString()}`;
-    document.getElementById('compare-50-wants').textContent = `NT$ ${alloc50[1].amount.toLocaleString()}`;
-    document.getElementById('compare-50-savings').textContent = `NT$ ${alloc50[2].amount.toLocaleString()}`;
-
-    // 六個罐子：生活必需、娛樂享受、投資+長期儲蓄加總
-    document.getElementById('compare-6-needs').textContent = `NT$ ${alloc6[0].amount.toLocaleString()}`;
-    document.getElementById('compare-6-wants').textContent = `NT$ ${alloc6[4].amount.toLocaleString()}`;
-    document.getElementById('compare-6-savings').textContent = `NT$ ${(alloc6[1].amount + alloc6[2].amount).toLocaleString()}`;
+    // 更新架構對比試算表 (若存在)
+    const comp50 = document.getElementById('compare-50-needs');
+    if (comp50) {
+      const alloc50 = mbStorage.calculatePlanAllocations('50_30_20', income);
+      const alloc6 = mbStorage.calculatePlanAllocations('6_jars', income);
+      comp50.textContent = `NT$ ${alloc50[0].amount.toLocaleString()}`;
+      const c50w = document.getElementById('compare-50-wants');
+      if (c50w) c50w.textContent = `NT$ ${alloc50[1].amount.toLocaleString()}`;
+      const c50s = document.getElementById('compare-50-savings');
+      if (c50s) c50s.textContent = `NT$ ${alloc50[2].amount.toLocaleString()}`;
+      const c6n = document.getElementById('compare-6-needs');
+      if (c6n) c6n.textContent = `NT$ ${alloc6[0].amount.toLocaleString()}`;
+      const c6w = document.getElementById('compare-6-wants');
+      if (c6w) c6w.textContent = `NT$ ${alloc6[4].amount.toLocaleString()}`;
+      const c6s = document.getElementById('compare-6-savings');
+      if (c6s) c6s.textContent = `NT$ ${(alloc6[1].amount + alloc6[2].amount).toLocaleString()}`;
+    }
   }
 
   renderPlanAllocationChart(allocations) {
@@ -1513,7 +1901,6 @@ class MoneyBuddyApp {
     const borrowDateInput = document.getElementById('script-param-borrow-date');
     const dueDateInput = document.getElementById('script-param-due-date');
     const daysInput = document.getElementById('script-param-days');
-    const relInput = document.getElementById('script-param-relationship');
     const reasonInput = document.getElementById('script-param-reason');
     const situationInput = document.getElementById('script-param-situation');
 
@@ -1525,7 +1912,6 @@ class MoneyBuddyApp {
     // 計算借款至今幾天
     const diffDays = Math.max(1, Math.floor((Date.now() - new Date(debt.borrowDate).getTime()) / (1000 * 3600 * 24)));
     if (daysInput) daysInput.value = diffDays;
-    if (relInput) relInput.value = debt.relationship || '朋友';
     if (reasonInput) reasonInput.value = debt.note || '聚餐代墊款項';
     if (situationInput) situationInput.value = '想把帳目結清';
 
@@ -1593,6 +1979,13 @@ class MoneyBuddyApp {
       }
     }
 
+    // 啟動或解除極限地獄模式視覺系統 (烈焰、惡魔與黑曜石熔岩氛圍)
+    if (styleKey === 'hell_furious' || styleKey === 'hell_legal') {
+      this.enableHellModeVisuals(true);
+    } else {
+      this.enableHellModeVisuals(false);
+    }
+
     this.generateScripts();
   }
 
@@ -1611,8 +2004,158 @@ class MoneyBuddyApp {
       const chosen = this.pendingHellStyle;
       this.closeHellModal();
       this.selectScriptStyle(chosen);
-      this.showToast('🔥 地獄催款模式已啟動！友情小船搖晃中～');
+      this.showToast('🔥 地獄催款模式已啟動！惡魔柴柴降臨，友情小船搖晃中～');
     }
+  }
+
+  enableHellModeVisuals(enabled) {
+    const isHell = Boolean(enabled);
+    const body = document.body;
+    const banner = document.getElementById('hell-domain-banner');
+    const flamesOverlay = document.getElementById('hell-flames-overlay');
+    const demonMascot = document.getElementById('hell-demon-mascot');
+
+    if (isHell) {
+      body.classList.add('hell-mode-active');
+
+      // 觸發全螢幕震撼微震衝擊
+      body.classList.remove('hell-screen-shake');
+      void body.offsetWidth; // 強制重繪
+      body.classList.add('hell-screen-shake');
+      setTimeout(() => body.classList.remove('hell-screen-shake'), 600);
+
+      // 展開頂部地獄領域橫幅
+      if (banner) banner.classList.remove('hidden');
+
+      // 展開底部噴湧動態烈焰與浮動火星
+      if (flamesOverlay) {
+        flamesOverlay.classList.remove('hidden');
+        this.renderHellFlames(flamesOverlay);
+      }
+
+      // 右下角冒出惡魔柴柴與發話泡泡
+      if (demonMascot) {
+        demonMascot.classList.remove('hidden');
+        this.renderHellDemonMascot(demonMascot);
+      }
+    } else {
+      body.classList.remove('hell-mode-active');
+      body.classList.remove('hell-screen-shake');
+      if (banner) banner.classList.add('hidden');
+      if (flamesOverlay) flamesOverlay.classList.add('hidden');
+      if (demonMascot) demonMascot.classList.add('hidden');
+    }
+  }
+
+  renderHellFlames(container) {
+    // 渲染多組火焰火舌 SVG
+    let flameTongues = '';
+    const colors = ['#C1121F', '#E63946', '#FF4D00', '#FF7900', '#FFB703', '#FFE600'];
+    for (let i = 0; i < 28; i++) {
+      const c1 = colors[i % colors.length];
+      const c2 = colors[(i + 1) % colors.length];
+      const heightPct = 60 + ((i * 17) % 40);
+      flameTongues += `
+        <div class="flame-tongue" style="height: ${heightPct}%;">
+          <svg viewBox="0 0 40 100" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="flameGrad${i}" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="${c1}" stop-opacity="0.95"/>
+                <stop offset="60%" stop-color="${c2}" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#FFF3B0" stop-opacity="0.4"/>
+              </linearGradient>
+            </defs>
+            <path d="M 0 100 Q 15 ${50 - (i % 5) * 6} 20 0 Q 25 ${50 - (i % 5) * 6} 40 100 Z" fill="url(#flameGrad${i})" />
+          </svg>
+        </div>
+      `;
+    }
+
+    // 渲染浮動火星粒子
+    let embers = '';
+    for (let j = 0; j < 16; j++) {
+      const left = (j * 6.2 + 2).toFixed(1);
+      const delay = ((j * 0.3) % 2).toFixed(2);
+      const duration = (2.2 + (j % 4) * 0.4).toFixed(2);
+      const size = 3 + (j % 4) * 2;
+      const drift = -30 + (j % 5) * 15;
+      embers += `<div class="hell-ember" style="left: ${left}%; width: ${size}px; height: ${size}px; animation-delay: ${delay}s; animation-duration: ${duration}s; --ember-drift: ${drift}px;"></div>`;
+    }
+
+    // 飄動小惡魔靈魂群 (😈, 👹, 👿, 💀, 🔥, 🔱)
+    const demonIcons = ['😈', '👹', '👿', '💀', '🔥', '🔱', '😈', '🔥'];
+    let imps = '';
+    for (let k = 0; k < demonIcons.length; k++) {
+      const left = 5 + k * 12 + ((k * 7) % 6);
+      const delay = (0.2 + k * 0.4).toFixed(2);
+      const rot = (k % 2 === 0 ? 1 : -1) * (10 + (k * 5) % 15);
+      imps += `<div class="hell-floating-imp" style="left: ${left}%; animation-delay: ${delay}s; --imp-rot: ${rot}deg;">${demonIcons[k]}</div>`;
+    }
+
+    container.innerHTML = `
+      <div class="flame-svg-container">
+        ${flameTongues}
+      </div>
+      ${embers}
+      ${imps}
+    `;
+  }
+
+  renderHellDemonMascot(container) {
+    const devilAvatar = (typeof SHIBA_AVATARS !== 'undefined' && SHIBA_AVATARS.devil) ? SHIBA_AVATARS.devil : (this.mascot ? this.mascot.getAvatar('devil') : '😈');
+    const quotes = [
+      '欠債還錢，天經地義！不還錢抓下地獄油炸！😈',
+      '快點還錢！本惡魔已經在磨三叉戟了！🔱',
+      '警告：地獄之火已鎖定債務人！🔥',
+      '利息已經算到下輩子囉！💀',
+      '再拖延，惡魔就要去你家按電鈴囉！👹',
+      '不還錢？那你的靈魂就歸地獄管轄了！😈'
+    ];
+    const initialQuote = quotes[0];
+
+    container.innerHTML = `
+      <div class="relative">
+        <div id="demon-speech-bubble" class="demon-bubble">
+          ${initialQuote}
+        </div>
+        <div class="demon-character-box" onclick="app.pokeDemonMascot()" title="點我聽惡魔咆哮！">
+          ${devilAvatar}
+        </div>
+      </div>
+    `;
+  }
+
+  pokeDemonMascot() {
+    const bubble = document.getElementById('demon-speech-bubble');
+    const quotes = [
+      '欠債還錢，天經地義！不還錢抓下地獄油炸！😈',
+      '快點還錢！本惡魔已經在磨三叉戟了！🔱',
+      '警告：地獄之火已鎖定債務人！🔥',
+      '利息已經算到下輩子囉！💀',
+      '再拖延，惡魔就要去你家按電鈴囉！👹',
+      '不還錢？那你的靈魂就歸地獄管轄了！😈',
+      '嗷嗚～～～地獄熔岩正在沸騰！🔥🔱'
+    ];
+    if (bubble) {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      bubble.innerText = randomQuote;
+      bubble.style.animation = 'none';
+      void bubble.offsetWidth;
+      bubble.style.animation = 'bubblePop 0.35s ease-out';
+    }
+    const mascot = document.getElementById('hell-demon-mascot');
+    if (mascot) {
+      mascot.classList.remove('hell-screen-shake');
+      void mascot.offsetWidth;
+      mascot.classList.add('hell-screen-shake');
+      setTimeout(() => mascot.classList.remove('hell-screen-shake'), 500);
+    }
+  }
+
+  exitHellMode() {
+    this.enableHellModeVisuals(false);
+    this.selectScriptStyle('gentle');
+    this.showToast('🕊️ 地獄之火已撲滅，回歸溫柔手帳模式～');
   }
 
   getScriptContext() {
@@ -1620,7 +2163,6 @@ class MoneyBuddyApp {
     const amount = Number(document.getElementById('script-param-amount')?.value || 800);
     const borrowDate = document.getElementById('script-param-borrow-date')?.value || '';
     const days = Number(document.getElementById('script-param-days')?.value || 14);
-    const relationship = document.getElementById('script-param-relationship')?.value || '朋友';
     const dueDate = document.getElementById('script-param-due-date')?.value || '';
     const reason = (document.getElementById('script-param-reason')?.value || '').trim() || '日常代墊';
     const situation = (document.getElementById('script-param-situation')?.value || '').trim() || '月底手頭吃緊';
@@ -1630,7 +2172,6 @@ class MoneyBuddyApp {
       amount,
       borrowDate,
       days,
-      relationship,
       dueDate,
       reason,
       situation,
@@ -1654,7 +2195,7 @@ class MoneyBuddyApp {
           <i data-lucide="loader-2" class="w-6 h-6"></i>
         </div>
         <h4 class="text-sm font-bold text-stone-800 mb-1">正在根據情境為您調製 3 種催款說法...</h4>
-        <p class="text-xs text-stone-500">正在分析「${context.relationship}」關係、拖欠 ${context.days} 天與「${context.situation}」情境</p>
+        <p class="text-xs text-stone-500">正在分析拖欠 ${context.days} 天、事由「${context.reason}」與「${context.situation}」情境</p>
       </div>
     `;
     this.initLucideIcons();
@@ -1706,10 +2247,16 @@ class MoneyBuddyApp {
     const context = this.getScriptContext();
     const styleKey = this.activeStyle || 'gentle';
 
-    const newVersion = contextualEngine.generateSingleVersion(context, styleKey, versionIndex);
+    // 收集目前其他卡片正在使用的 variationIndex，避免重抽到重複的說法
+    const currentIndices = (this.currentGeneratedScripts || [])
+      .map(s => s.variationIndex)
+      .filter(idx => typeof idx === 'number');
+
+    const newVersion = contextualEngine.generateSingleVersion(context, styleKey, versionIndex + 1, currentIndices);
     this.currentGeneratedScripts[versionIndex] = newVersion;
     this.renderScriptResults();
-    this.showToast(`已重新生成第 ${versionIndex + 1} 種催款說法！`);
+    const varNum = typeof newVersion.variationIndex === 'number' ? `（第 ${newVersion.variationIndex + 1} 款/共 20 款）` : '';
+    this.showToast(`已換一種說法${varNum}！`);
   }
 
   renderScriptResults() {
@@ -1720,11 +2267,6 @@ class MoneyBuddyApp {
     const styleData = REMINDER_SCRIPTS[styleKey] || REMINDER_SCRIPTS.gentle;
     const isHell = Boolean(styleData.isHell);
     const isTrash = styleKey === 'trash_talk';
-
-    const isGeminiAi = this.scriptGenerationSource === 'gemini_ai';
-    const sourceBadge = isGeminiAi
-      ? `<span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 border border-purple-200 flex items-center gap-1 shadow-xs"><i data-lucide="sparkles" class="w-3 h-3"></i> ✨ Google Gemini AI 智能生成</span>`
-      : `<span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-cream-200 text-stone-700 border border-cream-300 flex items-center gap-1"><i data-lucide="cpu" class="w-3 h-3"></i> 🧠 本機智慧情境核心演算法</span>`;
 
     const tagBg = isHell
       ? 'bg-red-700 text-white font-black'
@@ -1749,7 +2291,6 @@ class MoneyBuddyApp {
           <span class="text-xs text-stone-500">${styleData.description}</span>
         </div>
         <div class="flex items-center space-x-2">
-          ${sourceBadge}
           <button onclick="app.generateScripts()" class="text-xs px-3 py-1 rounded-xl bg-cream-100 hover:bg-cream-200 text-stone-700 font-bold flex items-center gap-1 transition">
             <i data-lucide="refresh-cw" class="w-3 h-3"></i> 全部換一批
           </button>
@@ -1832,10 +2373,10 @@ ${g.text}
     }
 
     if (serverConfigured) {
-      badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-green-500"></span> ✨ Google Gemini AI (伺服器端)`;
+      badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-green-500"></span> 雲端智能引擎 (已連線)`;
       badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 flex items-center gap-1.5 shadow-xs';
     } else if (localKey) {
-      badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-purple-500"></span> ✨ Google Gemini AI (已連線)`;
+      badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-purple-500"></span> 智能引擎 (已連線)`;
       badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 flex items-center gap-1.5 shadow-xs';
     } else {
       badge.innerHTML = `🧠 本機智慧情境核心`;
