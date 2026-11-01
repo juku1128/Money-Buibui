@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Money Buddy — 大學生的可愛理財管家</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- 自訂文創手帳主題樣式 -->
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: {
+              50: '#FFFDF9',
+              100: '#FAF6F0',
+              200: '#EDE4D8',
+              300: '#D8CEBE',
+            },
+            milk: {
+              tea: '#D4A373',
+              dark: '#936639',
+            },
+            coral: {
+              500: '#E76F51',
+              400: '#F4A261',
+            },
+            matcha: {
+              100: '#E9F1E8',
+              500: '#588157',
+              600: '#3A5A40',
+            },
+            sakura: {
+              100: '#FFE5EC',
+              200: '#FFCAD4',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="journal-bg min-h-screen text-stone-800 pb-24 md:pb-12">
+
+  <!-- ================= 頂部導航列 ================= -->
+  <header class="sticky top-0 z-40 bg-cream-50/90 backdrop-blur-md border-b border-cream-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- LOGO -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="app.switchView('dashboard')">
+        <div class="w-10 h-10 rounded-2xl bg-coral-400/20 flex items-center justify-center text-xl shadow-inner border border-coral-400/30">
+          🐾
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-stone-800 flex items-center gap-1.5 leading-tight">
+            Money Buddy
+            <span class="text-xs bg-sakura-200 text-stone-700 px-2 py-0.5 rounded-full font-medium">學生手帳</span>
+          </h1>
+          <p class="text-xs text-stone-500">大學生的可愛理財管家</p>
+        </div>
+      </div>
+
+      <!-- 電腦版主要導航分頁 -->
+      <nav class="hidden md:flex items-center space-x-1 bg-cream-100 p-1.5 rounded-2xl border border-cream-200 text-sm font-medium">
+        <button onclick="app.switchView('dashboard')" id="nav-btn-dashboard" class="nav-tab px-4 py-2 rounded-xl text-stone-700 transition-all flex items-center gap-1.5">
+          <i data-lucide="home" class="w-4 h-4"></i> 首頁
+        </button>
+        <button onclick="app.switchView('transactions')" id="nav-btn-transactions" class="nav-tab px-4 py-2 rounded-xl text-stone-700 transition-all flex items-center gap-1.5">
+          <i data-lucide="file-text" class="w-4 h-4"></i> 記帳
+        </button>
+        <button onclick="app.switchView('planning')" id="nav-btn-planning" class="nav-tab px-4 py-2 rounded-xl text-stone-700 transition-all flex items-center gap-1.5">
+          <i data-lucide="pie-chart" class="w-4 h-4"></i> 理財規劃
+        </button>
+        <button onclick="app.switchView('analysis')" id="nav-btn-analysis" class="nav-tab px-4 py-2 rounded-xl text-stone-700 transition-all flex items-center gap-1.5">
+          <i data-lucide="bar-chart-2" class="w-4 h-4"></i> 消費分析
+        </button>
+        <button onclick="app.switchView('debts')" id="nav-btn-debts" class="nav-tab px-4 py-2 rounded-xl text-stone-700 transition-all flex items-center gap-1.5">
+          <i data-lucide="message-square" class="w-4 h-4"></i> 借貸與話術
+        </button>
+      </nav>
+
+      <!-- 右側：當前手帳身份與快捷操作 -->
+      <div class="flex items-center space-x-2">
+        <button onclick="app.openProfileModal()" class="flex items-center space-x-2 bg-cream-100 hover:bg-cream-200 px-3 py-1.5 rounded-xl border border-cream-200 text-xs font-medium text-stone-700 transition-colors" title="切換或管理手帳身份">
+          <span class="w-2 h-2 rounded-full bg-matcha-500"></span>
+          <span id="current-profile-name">我的手帳</span>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-stone-400"></i>
+        </button>
+
+        <button onclick="app.openBackupModal()" class="p-2 rounded-xl bg-cream-100 hover:bg-cream-200 border border-cream-200 text-stone-600 transition" title="備份與匯出">
+          <i data-lucide="download" class="w-4 h-4"></i>
+        </button>
+
+        <button onclick="app.openTransactionModal('expense')" class="hidden sm:flex items-center gap-1.5 bg-coral-500 hover:bg-coral-600 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-sm transition transform active:scale-95">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i> 快速記帳
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= 主要內容區 ================= -->
+  <main class="max-w-6xl mx-auto px-4 pt-6">
+
+    <!-- 1. 首頁 (Dashboard) -->
+    <section id="view-dashboard" class="space-y-6">
+      
+      <!-- 柴柴管家問候卡片 (動態金句與頭像) -->
+      <div class="journal-card p-5 sm:p-6 bg-gradient-to-r from-cream-50 to-sakura-100/30">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div id="shiba-avatar-container" class="w-16 h-16 sm:w-20 sm:h-20 shrink-0">
+            <!-- 動態插入柴犬 SVG -->
+          </div>
+          <div class="speech-bubble flex-1 p-4 shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+              <span id="shiba-tag" class="text-xs font-bold text-coral-500 bg-coral-500/10 px-2 py-0.5 rounded-full">
+                🐾 柴柴理財小助手
+              </span>
+              <span id="dashboard-current-month" class="text-xs text-stone-400 font-mono"></span>
+            </div>
+            <p id="shiba-message" class="text-sm text-stone-700 leading-relaxed font-medium">
+              載入中...柴柴正在幫您翻開手帳～
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 📅 首頁月份快速切換控制列 (左右箭頭切換前後月) -->
+      <div class="journal-card px-4 py-3 flex items-center justify-between gap-2 bg-white shadow-sm border border-cream-200">
+        <button type="button" onclick="app.prevDashboardMonth()" class="px-2.5 sm:px-3 py-1.5 rounded-xl border border-cream-200 text-stone-600 hover:text-stone-900 bg-cream-50 hover:bg-cream-100 transition flex items-center gap-1 text-xs font-bold active:scale-95 shrink-0" title="切換至上一個月">
+          <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">上個月</span>
+        </button>
+
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <label class="flex items-center gap-1.5 cursor-pointer hover:bg-cream-100/80 px-2.5 py-1 rounded-xl transition" title="點擊直接選擇特定月份">
+            <i data-lucide="calendar" class="w-4 h-4 text-coral-500"></i>
+            <span id="dashboard-month-display" class="font-bold text-stone-800 text-xs sm:text-base font-mono tracking-wide">2026 年 11 月</span>
+            <input type="month" id="dashboard-month-picker" onchange="app.onDashboardMonthPickerChange(this.value)" class="sr-only">
+          </label>
+          <span id="dashboard-is-current-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-matcha-100 text-matcha-700">
+            本月
+          </span>
+          <button type="button" id="dash-back-today-btn" onclick="app.resetDashboardToCurrentMonth()" class="hidden text-[11px] px-2.5 py-1 rounded-xl bg-coral-500 text-white font-bold transition flex items-center gap-1 shadow-sm active:scale-95" title="快速跳回當前本月">
+            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> 回到本月
+          </button>
+        </div>
+
+        <button type="button" onclick="app.nextDashboardMonth()" class="px-2.5 sm:px-3 py-1.5 rounded-xl border border-cream-200 text-stone-600 hover:text-stone-900 bg-cream-50 hover:bg-cream-100 transition flex items-center gap-1 text-xs font-bold active:scale-95 shrink-0" title="切換至下一個月">
+          <span class="hidden sm:inline">下個月</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- 本月關鍵收支 4 大卡片 -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- 總收入 -->
+        <div class="journal-card p-4 sm:p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-stone-500 mb-1">
+            <span>本月總收入</span>
+            <span class="p-1 rounded-lg bg-matcha-100 text-matcha-600"><i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i></span>
+          </div>
+          <div class="text-lg sm:text-2xl font-bold text-matcha-600 font-mono" id="dash-income">NT$ 0</div>
+          <div class="text-[11px] text-stone-400 mt-1">生活費、兼職與兼職</div>
+        </div>
+
+        <!-- 總支出 -->
+        <div class="journal-card p-4 sm:p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-stone-500 mb-1">
+            <span>本月總支出</span>
+            <span class="p-1 rounded-lg bg-coral-500/10 text-coral-500"><i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i></span>
+          </div>
+          <div class="text-lg sm:text-2xl font-bold text-coral-500 font-mono" id="dash-expense">NT$ 0</div>
+          <div class="text-[11px] text-stone-400 mt-1">日常餐飲與娛樂開銷</div>
+        </div>
+
+        <!-- 本月結餘 -->
+        <div class="journal-card p-4 sm:p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-stone-500 mb-1">
+            <span>本月淨餘額</span>
+            <span class="p-1 rounded-lg bg-amber-100 text-amber-700"><i data-lucide="wallet" class="w-3.5 h-3.5"></i></span>
+          </div>
+          <div class="text-lg sm:text-2xl font-bold text-stone-800 font-mono" id="dash-balance">NT$ 0</div>
+          <div class="text-[11px] text-stone-400 mt-1">收入扣除支出後剩餘</div>
+        </div>
+
+        <!-- 儲蓄達成率 -->
+        <div class="journal-card p-4 sm:p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-stone-500 mb-1">
+            <span>儲蓄率 / 進度</span>
+            <span class="p-1 rounded-lg bg-purple-100 text-purple-600"><i data-lucide="piggy-bank" class="w-3.5 h-3.5"></i></span>
+          </div>
+          <div class="text-lg sm:text-2xl font-bold text-purple-600 font-mono" id="dash-savings-rate">0%</div>
+          <div class="w-full bg-cream-200 h-1.5 rounded-full mt-2 overflow-hidden">
+            <div id="dash-savings-bar" class="bg-purple-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 借貸提醒橫幅 (若有未收回欠款) -->
+      <div id="dash-debt-alert-banner" class="hidden journal-card p-4 bg-amber-50/70 border-amber-200 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 rounded-xl bg-amber-200 text-amber-800">
+            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-stone-800">有待收回的朋友借款！</h4>
+            <p class="text-xs text-stone-600" id="dash-debt-alert-text">目前尚有未收回款項</p>
+          </div>
+        </div>
+        <button onclick="app.switchView('debts')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl shadow-sm transition">
+          前往催款 👉
+        </button>
+      </div>
+
+      <!-- 兩欄圖表與最近記帳 -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        
+        <!-- 左側：本月消費分類甜甜圈圖 (佔 2 欄) -->
+        <div class="journal-card p-5 lg:col-span-2 flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-stone-800 text-sm flex items-center gap-1.5">
+              <i data-lucide="pie-chart" class="w-4 h-4 text-coral-500"></i> 本月支出分類
+            </h3>
+            <button onclick="app.goToAnalysisForDashboardMonth()" class="text-xs text-milk-tea hover:underline">查看詳情</button>
+          </div>
+          <div class="relative flex-1 flex items-center justify-center min-h-[220px]">
+            <canvas id="dashCategoryChart"></canvas>
+            <div id="dashCategoryEmpty" class="hidden absolute inset-0 flex flex-col items-center justify-center text-xs text-stone-400">
+              <p>本月尚未有支出紀錄</p>
+              <button onclick="app.openTransactionModal('expense')" class="mt-2 text-coral-500 underline font-medium">立刻記一筆</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側：最近記帳流水帳 (佔 3 欄) -->
+        <div class="journal-card p-5 lg:col-span-3 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-stone-800 text-sm flex items-center gap-1.5">
+              <i data-lucide="clock" class="w-4 h-4 text-matcha-500"></i> 最近記帳
+            </h3>
+            <button onclick="app.goToTransactionsForDashboardMonth()" class="text-xs text-milk-tea hover:underline">查看全部</button>
+          </div>
+
+          <div id="dash-recent-list" class="divide-y divide-cream-200 overflow-y-auto max-h-[260px] text-xs">
+            <!-- 動態填入最近記帳 -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- 2. 記帳列表與管理 (Transactions) -->
+    <section id="view-transactions" class="hidden space-y-6">
+      
+      <!-- 篩選列與新增按鈕 -->
+      <div class="journal-card p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- 月份選擇 -->
+          <div class="flex items-center space-x-1.5 bg-cream-100 px-3 py-1.5 rounded-xl border border-cream-200">
+            <i data-lucide="calendar" class="w-4 h-4 text-stone-400"></i>
+            <input type="month" id="tx-filter-month" onchange="app.onTxMonthInputChange()" class="bg-transparent text-xs font-semibold text-stone-700 outline-none">
+          </div>
+          <button type="button" id="tx-filter-all-btn" onclick="app.toggleAllMonthsFilter()" class="px-2.5 py-1.5 rounded-xl border border-cream-200 text-xs font-medium text-stone-600 hover:text-stone-900 bg-cream-100 transition" title="切換顯示所有月份的記帳紀錄">
+            全部月份
+          </button>
+
+          <!-- 類型篩選 (全部/收入/支出) -->
+          <select id="tx-filter-type" onchange="app.renderTransactionsView()" class="bg-cream-100 px-3 py-1.5 rounded-xl border border-cream-200 text-xs font-medium text-stone-700 outline-none">
+            <option value="all">全部收支</option>
+            <option value="expense">只看支出</option>
+            <option value="income">只看收入</option>
+          </select>
+
+          <!-- 分類篩選 -->
+          <select id="tx-filter-category" onchange="app.renderTransactionsView()" class="bg-cream-100 px-3 py-1.5 rounded-xl border border-cream-200 text-xs font-medium text-stone-700 outline-none">
+            <option value="all">所有分類</option>
+            <!-- 動態填入分類 -->
+          </select>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <button onclick="app.openTransactionModal('income')" class="px-3 py-1.5 bg-matcha-100 text-matcha-600 hover:bg-matcha-200 rounded-xl text-xs font-semibold transition flex items-center gap-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> 記收入
+          </button>
+          <button onclick="app.openTransactionModal('expense')" class="px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 text-white rounded-xl text-xs font-semibold shadow-sm transition flex items-center gap-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> 記支出
+          </button>
+        </div>
+      </div>
+
+      <!-- 統計小條 -->
+      <div class="grid grid-cols-3 gap-3 text-center text-xs">
+        <div class="journal-card py-3 px-2">
+          <span class="text-stone-400">篩選收入</span>
+          <p id="tx-stat-income" class="font-bold text-matcha-600 font-mono mt-0.5 text-sm sm:text-base">NT$ 0</p>
+        </div>
+        <div class="journal-card py-3 px-2">
+          <span class="text-stone-400">篩選支出</span>
+          <p id="tx-stat-expense" class="font-bold text-coral-500 font-mono mt-0.5 text-sm sm:text-base">NT$ 0</p>
+        </div>
+        <div class="journal-card py-3 px-2">
+          <span class="text-stone-400">淨收支</span>
+          <p id="tx-stat-net" class="font-bold text-stone-800 font-mono mt-0.5 text-sm sm:text-base">NT$ 0</p>
+        </div>
+      </div>
+
+      <!-- 🎯 本月預計規劃與實際花費額度配比追蹤面板 -->
+      <div class="journal-card p-5" id="tx-budget-tracker-panel">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div class="flex items-center space-x-2">
+            <span class="p-1.5 rounded-xl bg-coral-500/10 text-coral-500 font-bold text-xs">
+              <i data-lucide="gauge" class="w-4 h-4"></i>
+            </span>
+            <div>
+              <h3 class="font-bold text-stone-800 text-sm">本月預計規劃與實際花費額度</h3>
+              <p class="text-[11px] text-stone-400">每記一筆帳自動從規劃額度扣抵，超額即時轉為紅色警示</p>
+            </div>
+          </div>
+          <button onclick="app.switchView('planning')" class="text-xs text-milk-tea hover:underline flex items-center gap-1 self-start sm:self-auto">
+            <span>⚙️ 調整理財規劃</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- 各分類額度卡片網格 -->
+        <div id="tx-budget-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- 動態載入各分類預算額度扣抵卡片 -->
+        </div>
+      </div>
+
+      <!-- 記帳明細列表 -->
+      <div class="journal-card p-5">
+        <h3 class="font-bold text-stone-800 text-sm mb-4 flex items-center justify-between">
+          <span>記帳流水帳明細</span>
+          <span id="tx-total-count" class="text-xs font-normal text-stone-400">共 0 筆</span>
+        </h3>
+        <!-- 跨月份未顯示紀錄提示橫幅 -->
+        <div id="tx-month-notice-banner" class="hidden mb-3"></div>
+        <div id="tx-table-container" class="divide-y divide-cream-200">
+          <!-- 動態載入記帳明細 -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 3. 理財規劃與收入分配 (Planning) -->
+    <section id="view-planning" class="hidden space-y-6">
+      
+      <!-- 頂部：月收入輸入與架構切換 -->
+      <div class="journal-card p-5 sm:p-6 bg-gradient-to-br from-cream-50 to-amber-50/40">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-bold text-coral-500 bg-coral-500/10 px-2.5 py-0.5 rounded-full">
+                💡 核心理財功能
+              </span>
+              <div class="flex items-center space-x-1 bg-white px-2.5 py-1 rounded-xl border border-cream-200">
+                <span class="text-[11px] font-semibold text-stone-500">規劃月份：</span>
+                <input type="month" id="plan-target-month" onchange="app.onPlanningMonthChange()" class="text-xs font-bold text-stone-700 bg-transparent outline-none">
+              </div>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold text-stone-800 mt-1">財務規劃與即時分配試算</h2>
+            <p class="text-xs text-stone-500">計算分配金額並確認為該月份正式預算，即時與記帳扣款連動！</p>
+          </div>
+
+          <!-- 每月收入輸入框 -->
+          <div class="flex items-center space-x-2 bg-white px-4 py-2.5 rounded-2xl border-2 border-cream-200 shadow-sm">
+            <span class="text-xs font-bold text-stone-500">每月總收入 NT$</span>
+            <input type="number" id="plan-monthly-income" min="0" step="500" class="w-32 font-mono font-bold text-stone-800 text-base outline-none text-right" placeholder="18000" oninput="app.updatePlanningAllocations()">
+          </div>
+        </div>
+
+        <!-- 當月確認狀態橫幅 -->
+        <div id="plan-confirm-status-card" class="mt-4 p-3.5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <!-- 動態載入狀態：已確認 / 尚未確認 -->
+        </div>
+
+        <!-- 理財架構切換按鈕組 -->
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button onclick="app.selectPlanFramework('50_30_20')" id="plan-tab-50_30_20" class="plan-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border border-cream-200">
+            A. 50/30/20 法則
+          </button>
+          <button onclick="app.selectPlanFramework('6_jars')" id="plan-tab-6_jars" class="plan-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border border-cream-200">
+            B. 六個罐子理財法
+          </button>
+          <button onclick="app.selectPlanFramework('custom')" id="plan-tab-custom" class="plan-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition border border-cream-200">
+            C. 自訂比例
+          </button>
+        </div>
+      </div>
+
+      <!-- 圓餅圖與分配項目卡片 -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        
+        <!-- 左側：分配圓餅圖 (佔 2 欄) -->
+        <div class="journal-card p-5 lg:col-span-2 flex flex-col items-center justify-center">
+          <h4 class="text-xs font-bold text-stone-600 mb-2 w-full text-left" id="plan-chart-title">分配比例圓餅圖</h4>
+          <div class="w-full max-w-[260px] aspect-square relative flex items-center justify-center">
+            <canvas id="planAllocationChart"></canvas>
+          </div>
+          <div id="plan-low-income-warning" class="hidden mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-800 text-xs text-left leading-relaxed">
+            💛 <strong>柴柴貼心提醒</strong>：若目前生活費較吃緊，請優先滿足必要生活支出（飲食、房租交通），不必強求儲蓄或投資喔！
+          </div>
+        </div>
+
+        <!-- 右側：項目金額明細與細項調整 (佔 3 欄) -->
+        <div class="journal-card p-5 lg:col-span-3">
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-sm font-bold text-stone-800" id="plan-detail-title">項目分配金額試算</h4>
+            <span class="text-xs text-stone-400">可自由微調各項預算</span>
+          </div>
+
+          <!-- 自訂比例專區 (切換到 custom 時顯示) -->
+          <div id="plan-custom-controls" class="hidden mb-4 p-3 bg-cream-100 rounded-xl border border-cream-200 text-xs space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-stone-700">自訂比例編輯器 (總和必須為 100%)</span>
+              <span id="custom-percent-sum" class="font-bold text-coral-500 font-mono">目前總計: 100%</span>
+            </div>
+            <div id="custom-items-editor" class="space-y-2">
+              <!-- 動態滑桿與新增項目 -->
+            </div>
+            <button onclick="app.addCustomPlanItem()" class="w-full py-1.5 border border-dashed border-stone-300 hover:border-stone-400 rounded-lg text-stone-600 text-xs font-medium transition">
+              + 新增自訂分配項目
+            </button>
+          </div>
+
+          <!-- 各項目建議分配卡片清單 -->
+          <div id="plan-allocations-list" class="space-y-3">
+            <!-- 動態載入分配金額卡片 -->
+          </div>
+
+          <!-- 各支出分類預算細項微調 (可自訂個別分類金額) -->
+          <div class="mt-5 pt-4 border-t border-cream-200">
+            <div class="flex items-center justify-between mb-2">
+              <h5 class="text-xs font-bold text-stone-800 flex items-center gap-1">
+                <span>📝 本月各分類預算額度細項</span>
+                <span class="text-[10px] text-stone-400 font-normal">(系統已自動依架構分配，可依個人習慣微調)</span>
+              </h5>
+              <button type="button" onclick="app.resetPlanCategoryBudgetsToDefaults()" class="text-[11px] text-milk-tea hover:underline">
+                重置為建議值
+              </button>
+            </div>
+            <div id="plan-category-inputs-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <!-- 動態載入分類預算輸入框 -->
+            </div>
+          </div>
+
+          <!-- 確認本月規劃按鈕區塊 -->
+          <div class="mt-5 pt-4 border-t border-cream-200 flex flex-col sm:flex-row items-center justify-between gap-3 bg-cream-50 p-3.5 rounded-2xl">
+            <div>
+              <h5 class="text-xs font-bold text-stone-800" id="plan-confirm-cta-title">確認這份規劃為本月預算？</h5>
+              <p class="text-[11px] text-stone-500">按下確認後，記帳時每筆支出將自動扣除該分類額度！</p>
+            </div>
+            <button onclick="app.confirmMonthlyPlan()" id="plan-confirm-btn" class="w-full sm:w-auto px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5 shrink-0">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span id="plan-confirm-btn-text">確認本月規劃</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 架構差異比較卡片 -->
+      <div class="journal-card p-5">
+        <h3 class="font-bold text-stone-800 text-sm mb-2 flex items-center gap-1.5">
+          <i data-lucide="scale" class="w-4 h-4 text-milk-tea"></i> 理財架構分配差異對比
+        </h3>
+        <p class="text-xs text-stone-500 mb-4">看看同一筆收入，在不同理財模型下對生活與儲蓄的重心差異：</p>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-cream-200 text-stone-400 font-medium">
+                <th class="py-2.5 px-3">理財架構</th>
+                <th class="py-2.5 px-3">核心特色</th>
+                <th class="py-2.5 px-3">生活必需</th>
+                <th class="py-2.5 px-3">享受娛樂</th>
+                <th class="py-2.5 px-3">儲蓄投資</th>
+                <th class="py-2.5 px-3">適合族群</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-cream-100 text-stone-700">
+              <tr>
+                <td class="py-3 px-3 font-bold text-stone-800">50/30/20 法則</td>
+                <td class="py-3 px-3">規則簡單直覺，好上手</td>
+                <td class="py-3 px-3 font-mono font-semibold" id="compare-50-needs">NT$ 0</td>
+                <td class="py-3 px-3 font-mono font-semibold" id="compare-50-wants">NT$ 0</td>
+                <td class="py-3 px-3 font-mono font-semibold" id="compare-50-savings">NT$ 0</td>
+                <td class="py-3 px-3 text-stone-500">理財新手、打工收入固定者</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-3 font-bold text-stone-800">六個罐子理財法</td>
+                <td class="py-3 px-3">專款專用、重視學習與分享</td>
+                <td class="py-3 px-3 font-mono font-semibold" id="compare-6-needs">NT$ 0</td>
+                <td class="py-3 px-3 font-mono font-semibold" id="compare-6-wants">NT$ 0</td>
+                <td class="py-3 px-3 font-mono font-semibold" id="compare-6-savings">NT$ 0</td>
+                <td class="py-3 px-3 text-stone-500">想多角化兼顧學習與財務自由者</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 4. 消費分析與預算 (Analysis) -->
+    <section id="view-analysis" class="hidden space-y-6">
+      
+      <!-- 月份選擇與總結 -->
+      <div class="journal-card p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-bold text-stone-600">分析月份：</span>
+          <input type="month" id="analysis-month" onchange="app.renderAnalysisView()" class="bg-cream-100 px-3 py-1.5 rounded-xl border border-cream-200 text-xs font-semibold text-stone-700 outline-none">
+        </div>
+        <div class="text-xs text-stone-500">
+          圖表皆根據實際記帳動態生成
+        </div>
+      </div>
+
+      <!-- 圖表區塊 (收支長條圖 + 趨勢折線圖) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 收支對比柱狀圖 -->
+        <div class="journal-card p-5 flex flex-col">
+          <h3 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-1.5">
+            <i data-lucide="bar-chart" class="w-4 h-4 text-matcha-500"></i> 本月收入與支出比較
+          </h3>
+          <div class="relative flex-1 min-h-[240px]">
+            <canvas id="analysisBarChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 歷史趨勢折線圖 -->
+        <div class="journal-card p-5 flex flex-col">
+          <h3 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-1.5">
+            <i data-lucide="trending-up" class="w-4 h-4 text-coral-500"></i> 歷史消費趨勢 (近半年)
+          </h3>
+          <div class="relative flex-1 min-h-[240px]">
+            <canvas id="analysisTrendChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分類預算管理 (80% 溫柔提醒、100% 警戒) -->
+      <div class="journal-card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-stone-800 text-sm flex items-center gap-1.5">
+              <i data-lucide="target" class="w-4 h-4 text-purple-600"></i> 每月分類預算管理與警示
+            </h3>
+            <p class="text-xs text-stone-500 mt-0.5">達到 80% 溫柔提醒，超支時明顯但不焦慮通知</p>
+          </div>
+          <button onclick="app.openBudgetSettingsModal()" class="text-xs bg-cream-100 hover:bg-cream-200 px-3 py-1.5 rounded-xl border border-cream-200 font-medium text-stone-700 transition">
+            ⚙️ 設定各類預算
+          </button>
+        </div>
+
+        <div id="analysis-budget-list" class="space-y-3">
+          <!-- 動態載入各類預算進度條 -->
+        </div>
+      </div>
+
+      <!-- 個人化財務洞察卡片 (規則式真實分析) -->
+      <div class="journal-card p-5 bg-gradient-to-r from-cream-50 to-matcha-100/30">
+        <h3 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-4 h-4 text-coral-500"></i> 柴柴個人化財務診斷
+        </h3>
+        <div id="analysis-insights-container" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <!-- 動態產生三大診斷卡片：最大支出項目、預算健康度、節流與儲蓄建議 -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 5. 借貸管理與還錢話術產生器 (Debts & Scripts) -->
+    <section id="view-debts" class="hidden space-y-6">
+      
+      <!-- 統計與快捷操作 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- 待收回借款總額 -->
+        <div class="journal-card p-4 sm:p-5 flex items-center justify-between">
+          <div>
+            <span class="text-xs text-stone-500">尚未收回借款總額</span>
+            <div class="text-xl sm:text-2xl font-bold text-coral-500 font-mono mt-0.5" id="debt-stat-uncollected">NT$ 0</div>
+          </div>
+          <div class="w-10 h-10 rounded-2xl bg-coral-500/10 flex items-center justify-center text-coral-500">
+            <i data-lucide="hand-coins" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <!-- 逾期借款筆數 -->
+        <div class="journal-card p-4 sm:p-5 flex items-center justify-between">
+          <div>
+            <span class="text-xs text-stone-500">已逾期未還筆數</span>
+            <div class="text-xl sm:text-2xl font-bold text-amber-600 font-mono mt-0.5" id="debt-stat-overdue">0 筆</div>
+          </div>
+          <div class="w-10 h-10 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-700">
+            <i data-lucide="hourglass" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <!-- 新增借款按鈕卡片 -->
+        <div class="journal-card p-4 sm:p-5 flex items-center justify-between bg-cream-100">
+          <div>
+            <span class="text-xs text-stone-500">朋友臨時借錢或幫墊款？</span>
+            <div class="text-xs font-semibold text-stone-800 mt-1">隨手記下一筆，不怕忘記</div>
+          </div>
+          <button onclick="app.openDebtModal()" class="px-3.5 py-2 bg-stone-800 hover:bg-stone-900 text-white rounded-xl text-xs font-semibold shadow-sm transition">
+            + 新增借款
+          </button>
+        </div>
+      </div>
+
+      <!-- 借貸紀錄列表 -->
+      <div class="journal-card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-stone-800 text-sm flex items-center gap-1.5">
+            <i data-lucide="users" class="w-4 h-4 text-milk-tea"></i> 借貸清單與還款紀錄
+          </h3>
+          <span class="text-xs text-stone-400">點擊「產生催款話術」可直接帶入對象資訊</span>
+        </div>
+
+        <div id="debts-list-container" class="space-y-3">
+          <!-- 動態載入借貸卡片 -->
+        </div>
+      </div>
+
+      <!-- ================= 還錢話術產生器 (核心特色功能) ================= -->
+      <div class="journal-card p-5 sm:p-6 bg-gradient-to-br from-cream-50 via-cream-100 to-sakura-100/40">
+        
+        <div class="flex items-center space-x-2 mb-2">
+          <span class="text-xs font-bold text-coral-500 bg-coral-500/10 px-2.5 py-0.5 rounded-full">
+            🎪 催款神器
+          </span>
+          <h3 class="font-bold text-stone-800 text-base">還錢話術產生器</h3>
+        </div>
+        <p class="text-xs text-stone-500 mb-6">
+          遇到欠錢不還好尷尬？選擇借款對象或情境，一秒生成不同風格催款簡訊，複製即送！
+        </p>
+
+        <!-- 話術產生條件輸入 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+          <!-- 借款對象 -->
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">借款對象 (稱呼/暱稱)</label>
+            <input type="text" id="script-param-name" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none" placeholder="阿豪、小明、室友" oninput="app.generateScripts()">
+          </div>
+
+          <!-- 欠款金額 -->
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">欠款金額 (NT$)</label>
+            <input type="number" id="script-param-amount" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 font-mono outline-none" placeholder="800" oninput="app.generateScripts()">
+          </div>
+
+          <!-- 欠款天數 -->
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">借款/逾期天數</label>
+            <input type="number" id="script-param-days" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 font-mono outline-none" placeholder="14" oninput="app.generateScripts()">
+          </div>
+
+          <!-- 與自己的關係 -->
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">與對象的關係</label>
+            <select id="script-param-relationship" class="w-full bg-white px-3 py-2 rounded-xl border border-cream-200 text-xs text-stone-800 outline-none" onchange="app.generateScripts()">
+              <option value="朋友">朋友 / 死黨</option>
+              <option value="同學">分組同學 / 班代</option>
+              <option value="室友">大學室友</option>
+              <option value="學弟妹">學弟 / 學妹</option>
+              <option value="不熟的人">不熟的朋友 / 其他</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 8 大風格選擇按鈕 -->
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-stone-700 mb-2">選擇話術風格：</label>
+          
+          <!-- 一般 6 大風格 -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-3">
+            <button onclick="app.selectScriptStyle('gentle')" id="btn-style-gentle" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+              🌱 溫柔提醒
+            </button>
+            <button onclick="app.selectScriptStyle('cute')" id="btn-style-cute" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+              🐾 可愛撒嬌
+            </button>
+            <button onclick="app.selectScriptStyle('humorous')" id="btn-style-humorous" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+              🎪 幽默搞笑
+            </button>
+            <button onclick="app.selectScriptStyle('formal')" id="btn-style-formal" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+              👔 正式禮貌
+            </button>
+            <button onclick="app.selectScriptStyle('firm_polite')" id="btn-style-firm_polite" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+              🎯 委婉堅定
+            </button>
+            <button onclick="app.selectScriptStyle('strong_polite')" id="btn-style-strong_polite" class="script-style-btn py-2 px-3 rounded-xl text-xs font-medium border border-cream-200 bg-white text-stone-700 transition">
+              ⚡ 強硬禮貌
+            </button>
+          </div>
+
+          <!-- 🔥 地獄催款模式專區 (高對比震撼按鈕) -->
+          <div class="p-3 rounded-2xl bg-gradient-to-r from-red-950 via-red-900 to-orange-950 border-2 border-red-500/40 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl animate-bounce">🔥</span>
+              <div>
+                <h4 class="text-xs sm:text-sm font-bold text-red-100 flex items-center gap-1.5">
+                  地獄催款模式
+                  <span class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded-full font-mono uppercase tracking-wider">High Risk</span>
+                </h4>
+                <p class="text-[11px] text-red-200">友情小船可能翻覆！特殊娛樂風格，請謹慎啟動</p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <button onclick="app.requestHellMode('hell_furious')" class="hell-fire-btn text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
+                🤬 粗口暴躁型
+              </button>
+              <button onclick="app.requestHellMode('hell_legal')" class="hell-legal-btn text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
+                ⚖️ 法律威嚇型
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 話術產生結果展示 (至少 2 個版本 + 一鍵複製) -->
+        <div id="script-results-container" class="space-y-3 mt-6">
+          <!-- 動態載入話術卡片 -->
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= 手機版底部導航欄 ================= -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-cream-50/95 backdrop-blur-md border-t border-cream-200 py-2 px-3 flex justify-around text-[10px] font-medium text-stone-600 shadow-lg">
+    <button onclick="app.switchView('dashboard')" id="mob-nav-dashboard" class="flex flex-col items-center gap-1 text-coral-500">
+      <i data-lucide="home" class="w-5 h-5"></i> 首頁
+    </button>
+    <button onclick="app.switchView('transactions')" id="mob-nav-transactions" class="flex flex-col items-center gap-1">
+      <i data-lucide="file-text" class="w-5 h-5"></i> 記帳
+    </button>
+    <button onclick="app.openTransactionModal('expense')" class="flex flex-col items-center -mt-5">
+      <div class="w-12 h-12 rounded-full bg-coral-500 text-white flex items-center justify-center shadow-md active:scale-90 transition">
+        <i data-lucide="plus" class="w-6 h-6"></i>
+      </div>
+      <span class="mt-0.5 text-stone-800 font-bold">快速記</span>
+    </button>
+    <button onclick="app.switchView('planning')" id="mob-nav-planning" class="flex flex-col items-center gap-1">
+      <i data-lucide="pie-chart" class="w-5 h-5"></i> 規劃
+    </button>
+    <button onclick="app.switchView('debts')" id="mob-nav-debts" class="flex flex-col items-center gap-1">
+      <i data-lucide="message-square" class="w-5 h-5"></i> 催款
+    </button>
+  </nav>
+
+  <!-- ================= 頁尾隱私承諾 ================= -->
+  <footer class="max-w-6xl mx-auto px-4 mt-12 text-center text-xs text-stone-400 space-y-2">
+    <div class="inline-flex items-center gap-1.5 bg-cream-100 px-3 py-1 rounded-full border border-cream-200 text-stone-600">
+      <span>🛡️</span>
+      <span><strong>零個資承諾</strong>：本系統為學術專題，所有手帳資料均 100% 留存在您的本地裝置中，請安心使用。</span>
+    </div>
+    <p>Money Buddy — 大學生的可愛理財管家 © 2026</p>
+  </footer>
+
+  <!-- ================= 浮動 Toast 提示容器 ================= -->
+  <div id="toast-container"></div>
+
+  <!-- ================= 各種互動彈窗 (Modals) ================= -->
+
+  <!-- 1. 手帳身分 / 登入管理 Modal -->
+  <div id="modal-profile" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+    <div class="journal-card max-w-md w-full p-6 bg-white relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="app.closeProfileModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center mb-5">
+        <div class="text-3xl mb-1">📖</div>
+        <h3 class="text-lg font-bold text-stone-800">翻開我的理財手帳</h3>
+        <p class="text-xs text-stone-500 mt-1">無需註冊真實信箱，自訂一個可愛暱稱即可開始</p>
+      </div>
+
+      <!-- 現有手帳清單 -->
+      <div class="mb-5">
+        <label class="block text-xs font-bold text-stone-700 mb-2">切換現有手帳：</label>
+        <div id="profile-list-container" class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+          <!-- 動態載入手帳清單 -->
+        </div>
+      </div>
+
+      <!-- 新增手帳表單 -->
+      <div class="border-t border-cream-200 pt-4 space-y-3">
+        <label class="block text-xs font-bold text-stone-700">建立新手帳：</label>
+        <div>
+          <input type="text" id="new-profile-nickname" placeholder="手帳暱稱 (例：省錢小柴、大二小明)" class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="app.createNewProfile()" class="flex-1 py-2 bg-coral-500 hover:bg-coral-600 text-white font-semibold text-xs rounded-xl shadow-sm transition">
+            ✨ 建立並開啟
+          </button>
+          <button onclick="app.loadDemoProfile()" class="py-2 px-3 bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold text-xs rounded-xl border border-amber-200 transition" title="載入包含生活費、記帳與借款的示範手帳">
+            🎲 一鍵載入示範手帳
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 快速記帳 Modal (收入 / 支出) -->
+  <div id="modal-transaction" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+    <div class="journal-card max-w-md w-full p-6 bg-white relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="app.closeTransactionModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-stone-800 mb-4 flex items-center gap-1.5" id="tx-modal-title">
+        <i data-lucide="edit-3" class="w-4 h-4 text-coral-500"></i> 新增記帳紀錄
+      </h3>
+
+      <form id="tx-form" onsubmit="app.handleTransactionSubmit(event)" class="space-y-4">
+        <input type="hidden" id="tx-edit-id" value="">
+
+        <!-- 收支類型切換 -->
+        <div class="grid grid-cols-2 gap-2 bg-cream-100 p-1 rounded-xl">
+          <button type="button" onclick="app.setTxModalType('expense')" id="tx-type-btn-expense" class="py-1.5 rounded-lg text-xs font-bold transition">
+            支出
+          </button>
+          <button type="button" onclick="app.setTxModalType('income')" id="tx-type-btn-income" class="py-1.5 rounded-lg text-xs font-bold transition">
+            收入
+          </button>
+        </div>
+
+        <!-- 金額 -->
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">金額 (NT$)*</label>
+          <input type="number" id="tx-input-amount" min="1" step="1" required class="w-full text-base font-mono font-bold px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none" placeholder="100" oninput="app.updateTxModalBudgetHint()">
+        </div>
+
+        <!-- 即時預算額度扣抵提示條 -->
+        <div id="tx-modal-budget-hint" class="hidden p-2.5 rounded-xl text-xs transition-all border"></div>
+
+        <!-- 分類 -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-semibold text-stone-600">分類*</label>
+            <button type="button" onclick="app.promptAddCategory()" class="text-[11px] text-milk-tea hover:underline">+ 自訂分類</button>
+          </div>
+          <select id="tx-input-category" required class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none" onchange="app.updateTxModalBudgetHint()">
+            <!-- 動態填入分類 -->
+          </select>
+        </div>
+
+        <!-- 日期 -->
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">日期*</label>
+          <input type="date" id="tx-input-date" required class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+        </div>
+
+        <!-- 備註 -->
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">備註說明 (選填)</label>
+          <input type="text" id="tx-input-note" placeholder="例如：跟室友吃火鍋、手搖飲微糖微冰" class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-coral-500 hover:bg-coral-600 text-white font-bold text-xs rounded-xl shadow-sm transition">
+          保存這筆紀錄
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. 新增 / 編輯借款 Modal -->
+  <div id="modal-debt" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+    <div class="journal-card max-w-md w-full p-6 bg-white relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="app.closeDebtModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-stone-800 mb-4 flex items-center gap-1.5" id="debt-modal-title">
+        <i data-lucide="user-plus" class="w-4 h-4 text-milk-tea"></i> 新增借貸紀錄
+      </h3>
+
+      <form id="debt-form" onsubmit="app.handleDebtSubmit(event)" class="space-y-3">
+        <input type="hidden" id="debt-edit-id" value="">
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">借款對象姓名 / 暱稱*</label>
+          <input type="text" id="debt-input-name" required placeholder="阿豪、小明、室友" class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">關係 (例：分組同學、大學室友)</label>
+          <input type="text" id="debt-input-relationship" placeholder="大學同學" class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">借款金額 (NT$)*</label>
+          <input type="number" id="debt-input-amount" min="1" step="1" required class="w-full text-sm font-mono font-bold px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none" placeholder="500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">借出日期*</label>
+            <input type="date" id="debt-input-borrow-date" required class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">預計還款日期</label>
+            <input type="date" id="debt-input-due-date" class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">原因或備註</label>
+          <input type="text" id="debt-input-note" placeholder="例如：幫墊教科書、半夜吃宵夜借現" class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-stone-800 hover:bg-stone-900 text-white font-bold text-xs rounded-xl shadow-sm transition">
+          保存借款紀錄
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. 紀錄還款 Modal -->
+  <div id="modal-repay" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+    <div class="journal-card max-w-sm w-full p-6 bg-white relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="app.closeRepayModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-stone-800 mb-2 flex items-center gap-1.5">
+        <i data-lucide="check-circle" class="w-4 h-4 text-matcha-500"></i> 紀錄還款
+      </h3>
+      <p class="text-xs text-stone-500 mb-4" id="repay-modal-info">對象：阿豪 | 尚欠 NT$ 800</p>
+
+      <form id="repay-form" onsubmit="app.handleRepaySubmit(event)" class="space-y-3">
+        <input type="hidden" id="repay-debt-id" value="">
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">本次還款金額 (NT$)*</label>
+          <input type="number" id="repay-input-amount" min="1" step="1" required class="w-full text-base font-mono font-bold px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none" placeholder="400">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">還款備註 (選填)</label>
+          <input type="text" id="repay-input-note" placeholder="例如：LINE Pay轉帳、現金結清" class="w-full text-xs px-3 py-2 bg-cream-100 rounded-xl border border-cream-200 outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-2 bg-matcha-500 hover:bg-matcha-600 text-white font-bold text-xs rounded-xl shadow-sm transition">
+          確認紀錄還款
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. 🔥 地獄催款模式確認視窗 (Hell Mode Confirmation Modal) -->
+  <div id="modal-hell-confirm" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
+    <div class="journal-card max-w-md w-full p-6 hell-mode-card relative animate-in fade-in zoom-in-95 duration-200 text-center">
+      
+      <div class="text-4xl mb-2 animate-bounce">🔥 💀 🔥</div>
+      
+      <h3 class="text-lg font-black text-red-500 tracking-wider">
+        確定要啟動地獄催款模式嗎？
+      </h3>
+      
+      <p class="text-xs text-stone-300 mt-2 leading-relaxed">
+        友情的小船可能即將翻覆，請謹慎使用。<br>
+        此模式語氣強烈且極度暴躁，僅供特殊娛樂或最後通牒情境使用！
+      </p>
+
+      <div class="flex items-center space-x-3 mt-6">
+        <button onclick="app.closeHellModal()" class="flex-1 py-2.5 bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-bold rounded-xl transition border border-stone-600">
+          我再想想 (取消)
+        </button>
+        <button onclick="app.confirmHellMode()" class="flex-1 py-2.5 hell-fire-btn text-white text-xs font-black rounded-xl transition">
+          確定啟動 🔥
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. 預算設定 Modal -->
+  <div id="modal-budget-settings" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+    <div class="journal-card max-w-md w-full p-6 bg-white relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="app.closeBudgetModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-stone-800 mb-2 flex items-center gap-1.5">
+        <i data-lucide="sliders" class="w-4 h-4 text-purple-600"></i> 設定每月各類預算
+      </h3>
+      <p class="text-xs text-stone-500 mb-4">輸入 0 代表不設定預算</p>
+
+      <div id="budget-settings-inputs" class="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+        <!-- 動態填入各支出分類的預算 input -->
+      </div>
+
+      <button onclick="app.saveBudgetsFromModal()" class="w-full mt-4 py-2 bg-coral-500 hover:bg-coral-600 text-white font-bold text-xs rounded-xl shadow-sm transition">
+        儲存預算設定
+      </button>
+    </div>
+  </div>
+
+  <!-- 7. 備份與匯出 Modal -->
+  <div id="modal-backup" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+    <div class="journal-card max-w-md w-full p-6 bg-white relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="app.closeBackupModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <h3 class="text-base font-bold text-stone-800 mb-2 flex items-center gap-1.5">
+        <i data-lucide="database" class="w-4 h-4 text-milk-tea"></i> 手帳資料備份與匯出
+      </h3>
+      <p class="text-xs text-stone-500 mb-5">零個資設計：隨時可將手帳備份下載保存至電腦，或轉移至其他手機裝置</p>
+
+      <div class="space-y-3">
+        <button onclick="app.exportFullJSON()" class="w-full py-2.5 px-4 bg-cream-100 hover:bg-cream-200 border border-cream-200 text-stone-700 text-xs font-semibold rounded-xl flex items-center justify-between transition">
+          <span>📦 匯出完整手帳備份檔 (.json)</span>
+          <i data-lucide="download" class="w-4 h-4 text-stone-400"></i>
+        </button>
+
+        <button onclick="app.exportCSV()" class="w-full py-2.5 px-4 bg-cream-100 hover:bg-cream-200 border border-cream-200 text-stone-700 text-xs font-semibold rounded-xl flex items-center justify-between transition">
+          <span>📊 匯出記帳明細試算表 (.csv)</span>
+          <i data-lucide="file-spreadsheet" class="w-4 h-4 text-stone-400"></i>
+        </button>
+
+        <div class="border-t border-cream-200 pt-3">
+          <label class="block text-xs font-bold text-stone-700 mb-1">還原 / 匯入手帳備份：</label>
+          <input type="file" id="backup-file-input" accept=".json" onchange="app.importFromJSON(event)" class="text-xs text-stone-500 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cream-200 file:text-stone-700 hover:file:bg-cream-300 cursor-pointer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入模組腳本 -->
+  <script src="js/scripts_data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/mascot.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
