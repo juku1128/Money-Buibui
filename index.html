@@ -400,7 +400,7 @@
     <!-- 2. 記帳列表與管理 (Transactions) -->
     <section id="view-transactions" class="hidden space-y-6">
       
-      <!-- ================= 區塊一：【每日記帳項目】與【每日收支】(最上方置頂) ================= -->
+      <!-- ================= 區塊一：【每日記帳項目】(最上方置頂：僅顯示當日收支與流水帳) ================= -->
       <div class="journal-card p-5 sm:p-6 bg-white shadow-sm space-y-4">
         
         <!-- 區塊標題與快速記帳按鈕 -->
@@ -410,41 +410,71 @@
               <span class="washi-tape tape-matcha text-xs">
                 檢視每日記帳項目
               </span>
-              <span class="text-xs font-bold text-[#3D312A]">逐日流水帳明細</span>
+              <span class="text-xs font-bold text-[#3D312A]">當日即時收支明細</span>
             </div>
             <p class="text-[11px] text-[#7D6E66]">
-              清楚檢視每一筆消費與收入細項，可即時編輯或刪除紀錄
+              專注檢視當日每一筆消費與收入，即時掌握今日錢包花費
             </p>
           </div>
 
-          <!-- 快速記帳按鈕 -->
+          <!-- 快速記帳按鈕 (點擊自動帶入當前所選日期) -->
           <div class="flex items-center space-x-2 shrink-0">
-            <button onclick="app.openTransactionModal('income')" class="px-3.5 py-2 bg-matcha-100 text-matcha-700 hover:bg-matcha-200 rounded-xl text-xs font-bold transition flex items-center gap-1 active:scale-95 shadow-2xs">
+            <button onclick="app.openTransactionModal('income', app.selectedDailyDate)" class="px-3.5 py-2 bg-matcha-100 text-matcha-700 hover:bg-matcha-200 rounded-xl text-xs font-bold transition flex items-center gap-1 active:scale-95 shadow-2xs">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i> 記收入
             </button>
-            <button onclick="app.openTransactionModal('expense')" class="px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-1 active:scale-95">
+            <button onclick="app.openTransactionModal('expense', app.selectedDailyDate)" class="px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-1 active:scale-95">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i> 記支出
             </button>
           </div>
         </div>
 
-        <!-- 筆數統計與跨月份提示 -->
-        <div class="flex items-center justify-between text-xs text-stone-500">
-          <span class="text-[11px] text-stone-400">依日期分組清晰記錄（最新在上）</span>
-          <span id="tx-total-count" class="text-xs font-mono font-bold text-stone-600 bg-cream-100 px-2.5 py-1 rounded-full">共 0 筆</span>
+        <!-- 日期切換導覽列與今日統計橫條 -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-[#FBF9F5] p-3 sm:p-3.5 rounded-2xl border border-[#EFE8DC]">
+          <!-- 左側：日期切換器 (前一天、選擇日期、後一天、回到今天) -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="app.changeDailyDate(-1)" class="px-2.5 py-1.5 bg-white hover:bg-cream-100 rounded-xl border border-cream-200 text-xs font-bold text-stone-700 transition active:scale-95 shadow-2xs" title="查看前一天">
+              ◀ 前一天
+            </button>
+            <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-cream-200 shadow-2xs">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-stone-400"></i>
+              <input type="date" id="tx-daily-date-picker" onchange="app.onDailyDatePickerChange(this.value)" class="bg-transparent text-xs font-bold text-stone-800 outline-none cursor-pointer">
+            </div>
+            <button onclick="app.changeDailyDate(1)" class="px-2.5 py-1.5 bg-white hover:bg-cream-100 rounded-xl border border-cream-200 text-xs font-bold text-stone-700 transition active:scale-95 shadow-2xs" title="查看後一天">
+              後一天 ▶
+            </button>
+            <button onclick="app.resetDailyDateToToday()" id="tx-daily-today-btn" class="px-2.5 py-1.5 bg-sakura-100 hover:bg-sakura-200 text-stone-800 rounded-xl border border-sakura-200 text-xs font-bold transition shadow-2xs">
+              回到今天 (11/02)
+            </button>
+            <span id="tx-daily-date-badge" class="text-xs font-bold text-stone-600 bg-white/80 px-2.5 py-1 rounded-lg border border-cream-200 font-mono"></span>
+          </div>
+
+          <!-- 右側：當日收支即時小計 -->
+          <div class="flex items-center gap-3 text-xs self-end lg:self-auto pt-1 lg:pt-0">
+            <div class="text-right">
+              <span class="text-[10px] text-stone-400 block font-medium">當日支出</span>
+              <span id="tx-daily-stat-expense" class="font-bold text-coral-500 font-mono text-sm sm:text-base">NT$ 0</span>
+            </div>
+            <div class="h-6 w-px bg-cream-200"></div>
+            <div class="text-right">
+              <span class="text-[10px] text-stone-400 block font-medium">當日收入</span>
+              <span id="tx-daily-stat-income" class="font-bold text-matcha-600 font-mono text-sm sm:text-base">NT$ 0</span>
+            </div>
+            <div class="h-6 w-px bg-cream-200"></div>
+            <div class="text-right">
+              <span class="text-[10px] text-stone-400 block font-medium">當日結餘</span>
+              <span id="tx-daily-stat-net" class="font-bold text-stone-800 font-mono text-sm sm:text-base">NT$ 0</span>
+            </div>
+          </div>
         </div>
 
-        <!-- 跨月份未顯示紀錄提示橫幅 -->
-        <div id="tx-month-notice-banner" class="hidden"></div>
-
-        <!-- 每日分組時間軸容器 (最上方即時查看每一天的「每日收支」與「每日記帳項目」) -->
-        <div id="tx-table-container" class="space-y-4">
-          <!-- 動態載入每日分組卡片與項目 -->
+        <!-- 當日專屬流水帳清單容器 (僅呈現選定當日的紀錄) -->
+        <div id="tx-daily-feed-container" class="space-y-3">
+          <!-- 動態載入當日的每一筆明細卡片 -->
         </div>
 
       </div>
 
-      <!-- ================= 區塊二：【每月收支檢視】(放在下面) ================= -->
+      <!-- ================= 區塊二：【每月收支檢視】(放在下面：含月份總結、分類預算與月度流水帳) ================= -->
       <div class="journal-card p-5 sm:p-6 bg-white shadow-sm space-y-5">
         
         <!-- 區塊標題與月份切換控制 -->
@@ -454,25 +484,25 @@
               <span class="washi-tape tape-coral text-xs">
                 檢視每月收支
               </span>
-              <span class="text-xs font-bold text-[#3D312A]">依月份總結與分類預算</span>
+              <span class="text-xs font-bold text-[#3D312A]">依月份總結、分類預算與歷史流水帳</span>
             </div>
             <p class="text-[11px] text-[#7D6E66]">
-              快速切換月份，檢視當月收支總結、淨結餘與各分類預算執行進度
+              快速切換月份，檢視當月收支總結、淨結餘、分類預算與整月明細清單
             </p>
           </div>
 
-          <!-- 月份切換工具列 -->
+          <!-- 月份切換與篩選工具列 -->
           <div class="flex flex-wrap items-center gap-2 shrink-0">
-            <div class="flex items-center space-x-1.5 bg-cream-100 px-3 py-1.5 rounded-xl border border-cream-200">
+            <div class="flex items-center space-x-1.5 bg-cream-100 px-3 py-1.5 rounded-xl border border-cream-200 shadow-2xs">
               <i data-lucide="calendar" class="w-4 h-4 text-stone-400"></i>
               <input type="month" id="tx-filter-month" onchange="app.onTxMonthInputChange()" class="bg-transparent text-xs font-semibold text-stone-700 outline-none">
             </div>
-            <button type="button" id="tx-filter-all-btn" onclick="app.toggleAllMonthsFilter()" class="px-2.5 py-1.5 rounded-xl border border-cream-200 text-xs font-medium text-stone-600 hover:text-stone-900 bg-cream-100 transition" title="切換顯示所有月份的記帳紀錄">
+            <button type="button" id="tx-filter-all-btn" onclick="app.toggleAllMonthsFilter()" class="px-2.5 py-1.5 rounded-xl border border-cream-200 text-xs font-medium text-stone-600 hover:text-stone-900 bg-cream-100 transition shadow-2xs" title="切換顯示所有月份的記帳紀錄">
               全部月份
             </button>
 
             <!-- 類型篩選 (全部/收入/支出) -->
-            <select id="tx-filter-type" onchange="app.renderTransactionsView()" class="bg-cream-100 px-3 py-1.5 rounded-xl border border-cream-200 text-xs font-medium text-stone-700 outline-none">
+            <select id="tx-filter-type" onchange="app.renderTransactionsView()" class="bg-cream-100 px-3 py-1.5 rounded-xl border border-cream-200 text-xs font-medium text-stone-700 outline-none shadow-2xs">
               <option value="all">全部收支</option>
               <option value="expense">只看支出</option>
               <option value="income">只看收入</option>
@@ -512,7 +542,7 @@
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-[#3D312A] flex items-center gap-1.5">
               <span>🏷️</span> <span>本月分類預算執行率</span>
-              <span class="text-[10px] text-stone-400 font-normal">（點擊分類可快速過濾上方每日明細）</span>
+              <span class="text-[10px] text-stone-400 font-normal">（點擊分類可快速過濾下方整月明細）</span>
             </span>
             <button onclick="app.switchView('planning')" class="text-[11px] text-milk-tea hover:underline flex items-center gap-1">
               <span>⚙️ 調整理財預算</span>
@@ -544,6 +574,29 @@
             </div>
           </details>
         </div>
+
+        <!-- 📅 以月為單位的完整流水帳明細列表 (可按月份、收支類型、分類即時篩選) -->
+        <div class="pt-4 border-t border-[#F2ECE1] space-y-3">
+          <div class="flex items-center justify-between text-xs text-stone-500">
+            <div class="flex items-center gap-2">
+              <span class="washi-tape tape-sakura text-xs">
+                月度明細清單
+              </span>
+              <span id="tx-monthly-list-title" class="text-xs font-bold text-[#3D312A]">2026 年 11 月 記帳歷史</span>
+            </div>
+            <span id="tx-total-count" class="text-xs font-mono font-bold text-stone-600 bg-cream-100 px-2.5 py-1 rounded-full">共 0 筆</span>
+          </div>
+
+          <!-- 跨月份未顯示紀錄提示橫幅 -->
+          <div id="tx-month-notice-banner" class="hidden"></div>
+
+          <!-- 月度流水帳時間軸容器 (tx-table-container) -->
+          <div id="tx-table-container" class="space-y-4">
+            <!-- 動態載入該月份的所有分組明細 -->
+          </div>
+        </div>
+
+      </div>
 
       </div>
 

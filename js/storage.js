@@ -810,19 +810,25 @@ class MoneyBuddyStorage {
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
     const thisMonth = `${yyyy}-${mm}`;
+    const todayDateStr = `${yyyy}-${mm}-${dd}`;
 
     // 上個月
     const lastMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
     const lastMonthStr = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}`;
 
     const demoTransactions = [
+      // 今日 (11/02) 當日生活消費 (供「檢視每日記帳項目」即時查看當日明細)
+      { id: 'demo_today_1', type: 'expense', category: '飲食', amount: 110, date: todayDateStr, note: '學餐排骨便當午餐' },
+      { id: 'demo_today_2', type: 'expense', category: '娛樂', amount: 65, date: todayDateStr, note: '午後手搖珍珠奶茶 (微糖微冰)' },
+
       // 本月收入
       { id: 'demo_1', type: 'income', category: '生活費', amount: 10000, date: `${thisMonth}-01`, note: '爸媽給的生活費轉帳' },
       { id: 'demo_2', type: 'income', category: '打工收入', amount: 8500, date: `${thisMonth}-05`, note: '校園咖啡廳兼職薪資' },
       { id: 'demo_3', type: 'income', category: '獎學金', amount: 3000, date: `${thisMonth}-10`, note: '系上學期書卷獎學金' },
 
-      // 本月支出
+      // 本月其他支出
       { id: 'demo_4', type: 'expense', category: '住宿', amount: 5500, date: `${thisMonth}-01`, note: '學生宿舍與水電分攤' },
       { id: 'demo_5', type: 'expense', category: '飲食', amount: 4800, date: `${thisMonth}-12`, note: '半個月校內學餐與日常外食' },
       { id: 'demo_6', type: 'expense', category: '交通', amount: 1200, date: `${thisMonth}-03`, note: '悠遊卡基北北桃 1200 定期票' },

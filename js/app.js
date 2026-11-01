@@ -16,12 +16,13 @@ class MoneyBuddyApp {
     this.scriptGenerationSource = 'local_engine';
     this.isAiGenerating = false;
 
-    // 取得當前月份 (YYYY-MM)
+    // 取得當前月份 (YYYY-MM) 與當前日期 (YYYY-MM-DD)
     const now = new Date();
     this.currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     this.dashboardMonth = this.currentMonth;
     this.planningTargetMonth = this.currentMonth;
     this.isAllMonths = false;
+    this.selectedDailyDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   }
 
   init() {
@@ -697,11 +698,174 @@ class MoneyBuddyApp {
     chipsContainer.innerHTML = html;
   }
 
+  // --- 每日記帳項目 (當日即時收支) 專屬控制 ---
+
+  changeDailyDate(delta) {
+    const parts = this.selectedDailyDate.split('-').map(Number);
+    const d = new Date(parts[0], parts[1] - 1, parts[2]);
+    d.setDate(d.getDate() + delta);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    this.selectedDailyDate = `${yyyy}-${mm}-${dd}`;
+    this.renderDailyTransactionsView();
+  }
+
+  onDailyDatePickerChange(newDate) {
+    if (newDate) {
+      this.selectedDailyDate = newDate;
+      this.renderDailyTransactionsView();
+    }
+  }
+
+  resetDailyDateToToday() {
+    const now = new Date();
+    this.selectedDailyDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    this.renderDailyTransactionsView();
+  }
+
+  renderDailyTransactionsView() {
+    const dateInput = document.getElementById('tx-daily-date-picker');
+    if (dateInput) dateInput.value = this.selectedDailyDate;
+
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const yesterdayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    const yesterdayStr = `${yesterdayDate.getFullYear()}-${String(yesterdayDate.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDate.getDate()).padStart(2, '0')}`;
+
+    const parts = this.selectedDailyDate.split('-').map(Number);
+    const targetDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+    const weekDays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+    const weekDayStr = weekDays[targetDateObj.getDay()] || '';
+
+    let tagText = weekDayStr;
+    if (this.selectedDailyDate === todayStr) tagText = `${weekDayStr}（今天 🐾）`;
+    else if (this.selectedDailyDate === yesterdayStr) tagText = `${weekDayStr}（昨天）`;
+
+    const badgeEl = document.getElementById('tx-daily-date-badge');
+    if (badgeEl) badgeEl.textContent = tagText;
+
+    const todayBtn = document.getElementById('tx-daily-today-btn');
+    if (todayBtn) {
+      if (this.selectedDailyDate === todayStr) {
+        todayBtn.className = 'px-2.5 py-1.5 bg-sakura-300 text-stone-900 rounded-xl border border-sakura-300 text-xs font-black transition shadow-xs';
+      } else {
+        todayBtn.className = 'px-2.5 py-1.5 bg-sakura-100 hover:bg-sakura-200 text-stone-800 rounded-xl border border-sakura-200 text-xs font-bold transition shadow-2xs';
+      }
+    }
+
+    // 取得當日的所有記帳紀錄（嚴格僅限所選當日！）
+    const allTxs = mbStorage.getTransactions();
+    const dailyTxs = allTxs.filter(t => t.date === this.selectedDailyDate);
+
+    // 計算當日小計
+    let dayExp = 0, dayInc = 0;
+    dailyTxs.forEach(t => {
+      if (t.type === 'income') dayInc += t.amount;
+      else dayExp += t.amount;
+    });
+
+    const statExpEl = document.getElementById('tx-daily-stat-expense');
+    const statIncEl = document.getElementById('tx-daily-stat-income');
+    const statNetEl = document.getElementById('tx-daily-stat-net');
+    if (statExpEl) statExpEl.textContent = `NT$ ${dayExp.toLocaleString()}`;
+    if (statIncEl) statIncEl.textContent = `NT$ ${dayInc.toLocaleString()}`;
+    if (statNetEl) {
+      const net = dayInc - dayExp;
+      statNetEl.textContent = `${net >= 0 ? '+' : ''}NT$ ${net.toLocaleString()}`;
+      statNetEl.className = `font-bold font-mono text-sm sm:text-base ${net >= 0 ? 'text-matcha-600' : 'text-stone-800'}`;
+    }
+
+    const container = document.getElementById('tx-daily-feed-container');
+    if (!container) return;
+
+    if (dailyTxs.length === 0) {
+      container.innerHTML = `
+        <div class="py-7 px-4 text-center text-stone-400 text-xs bg-[#FBF9F5] rounded-2xl border border-dashed border-cream-200 space-y-2">
+          <p class="text-3xl">🍃</p>
+          <p class="font-bold text-stone-700">${this.selectedDailyDate} 尚未有任何記帳項目</p>
+          <p class="text-[11px] text-stone-400">喝了手搖？吃了午餐？點擊右上角「記支出」或「記收入」隨手記下一筆吧！</p>
+          <div class="pt-1 flex items-center justify-center gap-2">
+            <button onclick="app.openTransactionModal('expense', '${this.selectedDailyDate}')" class="px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 text-white rounded-xl text-xs font-bold shadow-xs transition inline-flex items-center gap-1 active:scale-95">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> 記這天支出
+            </button>
+            <button onclick="app.openTransactionModal('income', '${this.selectedDailyDate}')" class="px-3.5 py-1.5 bg-matcha-100 text-matcha-700 hover:bg-matcha-200 rounded-xl text-xs font-bold transition inline-flex items-center gap-1 active:scale-95">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> 記這天收入
+            </button>
+          </div>
+        </div>
+      `;
+      this.initLucideIcons();
+      return;
+    }
+
+    const categoryIcons = {
+      '飲食': '🍜', '餐飲': '🍜', '早午餐': '🥪', '拉麵': '🍜', '珍奶': '🧋', '咖啡': '☕',
+      '交通': '🚇', '捷運': '🚇', '公車': '🚌',
+      '住宿': '🏠', '房租': '🏠', '水電': '💡',
+      '娛樂': '🎮', '電影': '🎬', 'KTV': '🎤',
+      '教育': '📚', '書籍': '📖', '影印': '📄',
+      '生活用品': '🧴', '日用品': '🧻',
+      '社交': '🎉', '聚餐': '🍻',
+      '生活費': '💵', '打工收入': '💼', '薪水': '💰', '獎學金': '🏆', '投資': '📈'
+    };
+
+    container.innerHTML = `
+      <div class="space-y-2">
+        ${dailyTxs.map(t => {
+          const isExpense = t.type === 'expense';
+          const icon = categoryIcons[t.category] || (isExpense ? '💸' : '💰');
+          return `
+            <div class="flex items-center justify-between p-3 sm:p-3.5 rounded-2xl bg-[#FFFDF9] hover:bg-white border border-[#EFE8DC] transition shadow-2xs group">
+              <div class="flex items-center space-x-3 min-w-0">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg ${isExpense ? 'bg-coral-100 text-coral-600' : 'bg-matcha-100 text-matcha-600'} shrink-0 shadow-2xs">
+                  ${icon}
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-stone-800 text-xs sm:text-sm truncate">${escapeHtml(t.category)}</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-md font-bold ${isExpense ? 'bg-coral-50 text-coral-600' : 'bg-matcha-50 text-matcha-700'}">
+                      ${isExpense ? '支出' : '收入'}
+                    </span>
+                  </div>
+                  ${t.note ? `<p class="text-[11px] text-stone-500 truncate mt-0.5">${escapeHtml(t.note)}</p>` : ''}
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+                <span class="font-bold font-mono text-sm sm:text-base ${isExpense ? 'text-coral-500' : 'text-matcha-600'}">
+                  ${isExpense ? '-' : '+'}NT$ ${t.amount.toLocaleString()}
+                </span>
+                <div class="flex items-center space-x-1 opacity-80 group-hover:opacity-100 transition">
+                  <button onclick="app.editTransaction('${t.id}')" class="p-1.5 rounded-lg hover:bg-cream-100 text-stone-400 hover:text-stone-700 transition" title="編輯">
+                    <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="app.deleteTransaction('${t.id}')" class="p-1.5 rounded-lg hover:bg-red-50 text-stone-400 hover:text-red-500 transition" title="刪除">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+    this.initLucideIcons();
+  }
+
   renderTransactionsView() {
+    // 1. 優先渲染頂部【每日記帳項目】(專屬當日)
+    this.renderDailyTransactionsView();
+
     const monthInput = document.getElementById('tx-filter-month');
     const month = this.isAllMonths ? 'all' : ((monthInput && monthInput.value) ? monthInput.value : this.currentMonth);
     const type = document.getElementById('tx-filter-type').value;
     const category = document.getElementById('tx-filter-category').value;
+
+    const listTitle = document.getElementById('tx-monthly-list-title');
+    if (listTitle) {
+      listTitle.textContent = this.isAllMonths ? '全部月份 記帳歷史清單' : `${month} 記帳歷史清單`;
+    }
 
     // 即時渲染本月預算追蹤面板 (全部月份模式下以當前月份為準)
     const trackingMonth = this.isAllMonths ? this.currentMonth : month;
