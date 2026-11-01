@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>Money Buddy — 期中專題成果報告書</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 18mm 16mm 18mm 16mm;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: #2D3748;
+      line-height: 1.68;
+      font-size: 13.5px;
+      background-color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+    }
+    .document-header {
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .badge {
+      display: inline-block;
+      background-color: #FFF0EB;
+      color: #E76F51;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      border: 1px solid #F8B5A5;
+      letter-spacing: 0.5px;
+    }
+    .doc-meta {
+      font-size: 11.5px;
+      color: #718096;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1A202C;
+      margin-top: 20px;
+      margin-bottom: 14px;
+      border-bottom: 2.5px solid #E76F51;
+      padding-bottom: 6px;
+      page-break-after: avoid;
+    }
+    h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2D3748;
+      border-left: 4px solid #E76F51;
+      padding-left: 8px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #4A5568;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      page-break-after: avoid;
+    }
+    h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #718096;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    p {
+      margin: 8px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 12px;
+      page-break-inside: avoid;
+    }
+    th, td {
+      border: 1px solid #E2E8F0;
+      padding: 7px 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #F7FAFC;
+      font-weight: 700;
+      color: #2D3748;
+      border-bottom: 2px solid #CBD5E0;
+    }
+    tr:nth-child(even) {
+      background-color: #FAFAFA;
+    }
+    code {
+      background-color: #F7FAFC;
+      color: #C53030;
+      border: 1px solid #EDF2F7;
+      padding: 1.5px 5px;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+    }
+    pre {
+      background-color: #1A202C;
+      color: #E2E8F0;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11.5px;
+      overflow-x: auto;
+      page-break-inside: avoid;
+      line-height: 1.5;
+    }
+    pre code {
+      background-color: transparent;
+      color: inherit;
+      border: none;
+      padding: 0;
+    }
+    blockquote {
+      border-left: 4px solid #F4A261;
+      background-color: #FFFDF9;
+      padding: 8px 14px;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+      color: #4A5568;
+      font-size: 13px;
+    }
+    ul, ol {
+      padding-left: 22px;
+      margin: 6px 0;
+    }
+    li {
+      margin-bottom: 3px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #E2E8F0;
+      margin: 18px 0;
+    }
+    strong {
+      color: #1A202C;
+    }
+    a {
+      color: #E76F51;
+      text-decoration: none;
+    }
+    .footer-note {
+      margin-top: 30px;
+      border-top: 1px dashed #CBD5E0;
+      padding-top: 10px;
+      font-size: 11px;
+      color: #A0AEC0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="document-header">
+    <span class="badge">📄 期中專題報告書</span>
+    <span class="doc-meta">Money Buddy 專題成果報告 │ 2026</span>
+  </div>
+
+  <h1>Money Buddy — 大學生的可愛理財手帳管家</h1>
+<h2>期中專題成果報告書</h2>
+<hr>
+<h3>專案基本資訊</h3>
+<ul>
+<li><strong>專題名稱</strong>：Money Buddy — 大學生的可愛理財手帳管家</li>
+<li><strong>專案代號</strong>：<code>money-buddy</code></li>
+<li><strong>專題類型</strong>：Web 應用程式（前端原生 Local-First 架構）</li>
+<li><strong>技術棧</strong>：HTML5, CSS3 (Tailwind CSS CDN + 自訂手帳動畫 Tokens), 原生 JavaScript (ES6+ 模組化), Python 3 輕量伺服器, Chart.js, Lucide Icons</li>
+</ul>
+<hr>
+<h2>一、做什麼 (What)</h2>
+<h3>1. 核心動機與痛點</h3>
+<p>大學生面臨日常零用錢、打工收入有限的挑戰，市面上的傳統記帳軟體通常存在三大痛點：</p>
+<ol>
+<li><strong>冰冷生硬、說教感重</strong>：介面缺乏溫度，連續記帳幾天便因繁瑣或無趣而放棄。</li>
+<li><strong>個資疑慮與註冊門檻</strong>：強迫綁定手機號碼、Email 甚至連動銀行帳號，對於大學生產生沉重心理負擔。</li>
+<li><strong>借貸尷尬難開口</strong>：大學校園中同學聚餐代墊、借筆記錢是常態，但欠款難追、忘記還錢又礙於友情難以啟齒。</li>
+</ol>
+<h3>2. 解決方案</h3>
+<p><strong>Money Buddy</strong> 是一款專為大學生設計的<strong>「可愛日系手帳風理財管家」</strong>：</p>
+<ul>
+<li><strong>溫暖圍巾萌柴柴助手（Shiba Buddy）</strong>：根據真實收支數據給予情緒反饋與幽默溫馨分析，絕不說教。</li>
+<li><strong>清晰三層級記帳視圖</strong>：最上方置頂「每日記帳項目」流水帳、每日標題清楚呈現「【每日收支】」、下方整合「每月收支」與分類預算膠囊。</li>
+<li><strong>三大經典理財法試算</strong>：內建 50/30/20 法則、六個罐子理財法與自由自訂比例，自動計算合理金額分配。</li>
+<li><strong>情境式催款訊息生成器</strong>：支援 9 大催款風格（含委婉、可愛、幽默、荒謬經濟學垃圾話爆擊，以及極限地獄粗口與法律威嚇），內建 180 款高變化度情境話術，並具備全螢幕震動、烈焰與惡魔現身的地獄模式視覺特效！</li>
+<li><strong>零個資（Zero-PII & Local-First）</strong>：完全免註冊，所有資料 100% 留存在使用者本地瀏覽器，支援多手帳身分隔離與 JSON/CSV 一鍵匯出匯入。</li>
+</ul>
+<hr>
+<h2>二、給誰用 (Target Audience)</h2>
+<ol>
+<li><strong>大學生族群（主要使用者）</strong>：</li>
+</ol>
+<ul>
+<li>預算有限、需要掌控每月生活費與打工薪水的大學生。</li>
+<li>經常和同學聚餐、合資代墊飲料或餐費，常遇到朋友忘記還錢的社交情境。</li>
+</ul>
+<ol>
+<li><strong>新手理財族</strong>：</li>
+</ol>
+<ul>
+<li>過去覺得記帳枯燥、需要視覺儀式感與溫暖回饋以建立持久習慣的使用者。</li>
+</ul>
+<ol>
+<li><strong>重視隱私與無負擔的使用者</strong>：</li>
+</ol>
+<ul>
+<li>不希望將個人收支上傳至雲端、不願透露手機號碼與信箱的使用者。</li>
+</ul>
+<hr>
+<h2>三、怎麼做 (How)</h2>
+<h3>1. 系統架構與設計理念</h3>
+<p>本專案堅持 <strong>Local-First（本地優先）</strong> 與 <strong>Zero-Dependency（零外部重構建依賴）</strong> 原則：</p>
+<ul>
+<li><strong>前端呈現層 (<code>index.html</code>, <code>css/style.css</code>)</strong>：</li>
+</ul>
+<p>採用日系文創手帳視覺設計（抹茶綠、櫻花粉、珊瑚橘手繪紙膠帶、網點與圓角 Bento 卡片排版），並針對地獄模式注入全螢幕震動、黑曜石深淵熔岩背景、SVG 火焰火舌動態與惡魔柴柴互動動畫。</p>
+<ul>
+<li><strong>資料存取層 (<code>js/storage.js</code>)</strong>：</li>
+</ul>
+<p>封裝 LocalStorage 介面，支援多身分（Profile）手帳切換、資料防呆校驗與自動示範資料種子生成，完全零雲端個資風險。</p>
+<ul>
+<li><strong>情境話術引擎 (<code>js/scripts_data.js</code>)</strong>：</li>
+</ul>
+<p>內建 9 大風格、每種風格 20 款、共 180 款完整的情境話術動態演算庫，支援自動帶入欠款人暱稱、金額、拖欠天數、代墊事由與生活情境。</p>
+<ul>
+<li><strong>吉祥物互動核心 (<code>js/mascot.js</code>)</strong>：</li>
+</ul>
+<p>純 SVG 手繪向量角色（圍巾萌柴柴、惡魔三叉戟柴柴、燃燒柴柴、警示驚訝柴柴），依據本月儲蓄率、預算超支情況與借貸逾期狀況，即時提供溫暖理財錦囊。</p>
+<ul>
+<li><strong>主控制器 (<code>js/app.js</code>)</strong>：</li>
+</ul>
+<p>管理 SPA（單頁應用程式）路由跳轉、圖表即時繪製（Chart.js）、預算連動即時扣抵、地獄視覺控制與退場機制。</p>
+<ul>
+<li><strong>本機展示伺服器 (<code>server.py</code>)</strong>：</li>
+</ul>
+<p>基於 Python 3 內建標準庫 <code>http.server</code>，無需安裝 <code>npm</code> 或額外 Python 套件，雙擊或單行指令即可立即啟動。</p>
+<h3>2. 關鍵模組切分</h3>
+<pre><code class="language-">money-buddy/
+├── index.html           # 單頁手帳應用主介面 (導航、Bento 卡片、流水帳、催款器)
+├── css/
+│   └── style.css        # 手帳色彩 Tokens、紙膠帶、地獄烈焰動畫 keyframes
+├── js/
+│   ├── app.js           # 前端主控制器 (分頁切換、CRUD、預算連動、地獄視覺)
+│   ├── storage.js       # LocalStorage 存取引擎、多帳號隔離、Demo 資料生成
+│   ├── mascot.js        # 柴柴小助手 SVG 向量繪圖與數據金句判定演算法
+│   └── scripts_data.js  # 9 大風格催款話術資料庫 (180 款變化度)
+├── server.py            # 零依賴本機預覽 HTTP 伺服器
+└── test_app.py          # 34 項自動化測試套件</code></pre>
+<hr>
+<h2>四、怎麼測 (Verification)</h2>
+<h3>1. 自動化測試體系 (<code>test_app.py</code>)</h3>
+<p>專案建構了完整的自動化測試套件，涵蓋 34 項端到端與單元邏輯驗證，執行時間僅約 0.03 秒：</p>
+<ul>
+<li><strong>核心檔案與架構完整性檢驗（Test 1）</strong>：確保所有 HTML、CSS、JS、伺服器腳本齊備。</li>
+<li><strong>理財規劃演算法試算（Test 2-3）</strong>：</li>
+<li>驗證 50/30/20 分配比例加總為 100% 且 NTD 整數試算無浮點誤差。</li>
+<li>驗證六個罐子理財法（55/10/10/10/10/5）比例與分配邏輯。</li>
+<li><strong>借貸還款狀態機（Test 4）</strong>：</li>
+<li>驗證多次部分還款扣抵與狀態轉移（<code>unpaid</code> ➔ <code>partial</code> ➔ <code>paid</code>）。</li>
+<li><strong>話術資料庫與參數代換（Test 5, 6, 21）</strong>：</li>
+<li>驗證 9 大風格均具備至少 20 種獨立話術（共 180 款）。</li>
+<li>驗證 <code>{name}</code>, <code>{amount}</code>, <code>{days}</code> 參數精準代入無遺漏。</li>
+<li><strong>預算連動扣抵與多層警戒判定（Test 7-13）</strong>：</li>
+<li>支出在 0~79% 呈現綠色安全進度。</li>
+<li>達 80% 觸發溫柔提醒。</li>
+<li>達 100% 或超出時呈現紅色警示並動態計算超額金額。</li>
+<li><strong>月份隔離與篩選（Test 12, 14）</strong>：</li>
+<li>驗證不同月份預算互相獨立，不跨月污染。</li>
+<li><strong>視覺規範與元素結構驗收（Test 23-34）</strong>：</li>
+<li>驗證導航順序：首頁 ➔ 理財規劃 ➔ 記帳 ➔ 消費分析 ➔ 借貸與話術。</li>
+<li>驗證記帳頁「每日記帳項目」置頂、「【每日收支】」清晰標註。</li>
+<li>驗證地獄模式動態火焰（<code>flameLick</code>）、惡魔柴柴（<code>devil</code>）、螢幕微震（<code>hellScreenShake</code>）與滅火機制。</li>
+<li>驗證完全移除任何令人混淆的 API 金鑰連線標籤。</li>
+</ul>
+<h3>2. 測試執行結果</h3>
+<pre><code class="language-text">$ python3 test_app.py
+..................................
+----------------------------------------------------------------------
+Ran 34 tests in 0.029s
+
+OK</code></pre>
+<hr>
+<h2>五、下一步 (Next Steps)</h2>
+<ol>
+<li><strong>PWA（漸進式網頁應用）支援</strong>：</li>
+</ol>
+<ul>
+<li>加入 Service Worker 與 Manifest 配置，支援學生將 Money Buddy 直接「安裝」到手機主畫面，在無網路環境下也能如原生 App 般順暢記帳。</li>
+</ul>
+<ol>
+<li><strong>同儕共享帳本與分帳計算機（Split-wise）</strong>：</li>
+</ol>
+<ul>
+<li>擴充團體出遊分帳演算法，自動計算誰該給誰多少錢，並直接串接個人化催款話術。</li>
+</ul>
+<ol>
+<li><strong>發票載具條碼或 OCR 辨識</strong>：</li>
+</ol>
+<ul>
+<li>支援掃描電子發票 QR Code 自動解析消費明細與分類，降低手動輸入門檻。</li>
+</ul>
+<ol>
+<li><strong>自訂手帳貼圖與主題風格市集</strong>：</li>
+</ol>
+<ul>
+<li>允許使用者解鎖更多柴柴造型、配件（如露營柴柴、學士服柴柴），讓記帳養成習慣如同收集貼紙般充滿樂趣。</li>
+</ul>
+
+  <div class="footer-note">
+    Money Buddy — 大學生的可愛理財手帳管家 │ Local-First 零個資設計
+  </div>
+</body>
+</html>

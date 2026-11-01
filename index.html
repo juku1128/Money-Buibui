@@ -1257,6 +1257,27 @@
           <label class="block text-xs font-bold text-stone-700 mb-1">還原 / 匯入手帳備份：</label>
           <input type="file" id="backup-file-input" accept=".json" onchange="app.importFromJSON(event)" class="text-xs text-stone-500 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cream-200 file:text-stone-700 hover:file:bg-cream-300 cursor-pointer">
         </div>
+
+        <!-- 專題成果報告 PDF 下載專區 -->
+        <div class="border-t border-cream-200 pt-3">
+          <label class="block text-xs font-bold text-stone-700 mb-2 flex items-center gap-1">
+            <span>📄 期中專題成果 PDF 下載：</span>
+          </label>
+          <div class="space-y-1.5">
+            <a href="docs/PROJECT_REPORT.pdf" download="PROJECT_REPORT.pdf" class="w-full py-2 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 text-xs font-semibold rounded-xl flex items-center justify-between transition">
+              <span class="flex items-center gap-1.5"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> 專題報告書 (PROJECT_REPORT.pdf)</span>
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            </a>
+            <a href="docs/AI_COLLABORATION_SUMMARY.pdf" download="AI_COLLABORATION_SUMMARY.pdf" class="w-full py-2 px-3 bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-700 text-xs font-semibold rounded-xl flex items-center justify-between transition">
+              <span class="flex items-center gap-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AI 協作開發歷程摘要 (.pdf)</span>
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            </a>
+            <a href="docs/SLIDES_AND_DEMO_SCRIPT.pdf" download="SLIDES_AND_DEMO_SCRIPT.pdf" class="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-semibold rounded-xl flex items-center justify-between transition">
+              <span class="flex items-center gap-1.5"><i data-lucide="presentation" class="w-3.5 h-3.5"></i> 90秒展示簡報與講稿 (.pdf)</span>
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
