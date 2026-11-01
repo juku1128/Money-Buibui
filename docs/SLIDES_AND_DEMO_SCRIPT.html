@@ -217,22 +217,23 @@
 <blockquote><strong>專題做什麼？</strong> 它是一個整合『日系手帳記帳』、『三大理財規劃試算』以及獨創『情境式催款話術生成器』的輕量級 Web 應用。</blockquote>
 <blockquote><strong>專題給誰用？</strong> 特別適合三種人：第一，每到月底就吃土、不知道錢花去哪裡的大學生；第二，討厭註冊帳號、注重個人隱私的朋友；第三，常常幫同學代墊飲料或吃飯錢，卻超不好意思開口要錢的『好人苦主』！」</blockquote>
 <hr>
-<h3>📌 Slide 03：開發過程（簡易摘要：新手如何與 AI 協同開發）</h3>
+<h3>📌 Slide 03：開發過程（簡易摘要：雙 AI 協同工作流）</h3>
 <ul>
 <li><strong>圖片檔案</strong>：<code>docs/slides/slide_03_process.png</code></li>
-<li><strong>開發心法</strong>：新手不用怕寫 code，懂得「精確提問 ➔ 邏輯拆解 ➔ 嚴格測試驗證」最重要！</li>
+<li><strong>核心架構</strong>：雙 AI 協同：ChatGPT 精煉提示詞 ＋ 實實落地工程</li>
 <li><strong>四階段歷程</strong>：</li>
 </ul>
 <ol>
-<li><strong>需求發想</strong>：從自身校園代墊錢痛點出發，手繪草稿與手帳風格。</li>
-<li><strong>AI 人機對話研發</strong>：與 AI 討論架構，把複雜算式拆成小函式。</li>
-<li><strong>敏捷迭代與踩坑</strong>：解決浮點數計算誤差、手動設計 180 款催款字典與地獄火特效。</li>
-<li><strong>嚴格驗證</strong>：撰寫 34 項自動化單元測試，確保每一次修改都零失誤。</li>
+<li><strong>需求發想</strong>：從自身校園代墊錢痛點出發，決策做純本機 Local-First 離線手帳。</li>
+<li><strong>ChatGPT 提示詞精煉</strong>：與 ChatGPT 深度激盪，將發散構想梳理成結構嚴謹的系統 Prompt，定義驗收標準與 12 大經濟學垃圾話！</li>
+<li><strong>Antigravity (實實) 落地</strong>：將提示詞交由實實實作原生 ES6+ 代碼、手繪 SVG 萌柴柴與惡魔柴柴、180 款情境話術演算法。</li>
+<li><strong>測試驅動安心交付</strong>：撰寫 34 項自動化單元測試，每次修改按下測試立即保證 0 錯誤。</li>
 </ol>
 <p>🗣️ <strong>【對同學說的講稿】（約 25 秒）</strong>：</p>
-<blockquote>「很多人好奇程式新手怎麼做出完整專題？這頁是我的開發歷程摘要。</blockquote>
+<blockquote>「很多人好奇程式新手怎麼做出完整專題？這頁是我的秘密武器——<strong>『雙 AI 協同開發模式』</strong>！</blockquote>
 <blockquote>關鍵不是死背語法，而是<strong>學會跟 AI 溝通與拆解問題</strong>。</blockquote>
-<blockquote>我先定義出痛點與草稿，請 AI 幫忙規劃元件架構；過程中我們遇到很多新手常踩的坑，例如小數點計算誤差、記帳版面動線不順暢。我跟 AI 一步步討論修正，並用 Python 寫了 34 項自動化測試，每次改完程式一秒測完全部功能，確保完全沒有 Bug！」</blockquote>
+<blockquote>我擔任專案的產品導演，先跟 <strong>ChatGPT</strong> 深入激盪，把發散的想法精煉成帶有驗收標準與經濟學梗的專業 Prompt；</blockquote>
+<blockquote>接著把 Prompt 交給 <strong>Antigravity 實實</strong> 進行全端架構與代碼落地；最後我們撰寫了 34 項自動化單元測試，每次改完程式 0.03 秒測完全部功能，確保完全沒有 Bug！」</blockquote>
 <hr>
 <h3>📌 Slide 04：功能介紹（粗略總覽：6 大核心模組）</h3>
 <ul>

@@ -178,16 +178,37 @@
 <h3>一、人機協作基本資訊</h3>
 <ul>
 <li><strong>專案名稱</strong>：Money-Buibui — 大學生的可愛理財手帳管家</li>
-<li><strong>協作 AI 夥伴</strong>：Google DeepMind Antigravity Coding Assistant</li>
+<li><strong>協作模式</strong>：<strong>雙 AI 互補協作矩陣（Dual-AI Collaborative Matrix）</strong></li>
+</ul>
+<ol>
+<li><strong>ChatGPT (OpenAI)</strong>：擔任「創意發想、痛點探索與提示詞工程師（Prompt Engineer & Ideation Partner）」。負責協助使用者將發散的校園理財與催款生活痛點，結構化整理為具備驗收標準、UX動線與特色規格的高品質系統 Prompt。</li>
+</ol>
+<ul>
+<li>完整對話紀錄公開分享：<a href="https://chatgpt.com/share/6ae7734e-e660-83ec-86d0-b16409c61746" target="_blank">https://chatgpt.com/share/6ae7734e-e660-83ec-86d0-b16409c61746</a></li>
+</ul>
+<ol>
+<li><strong>Antigravity Assistant (Google DeepMind / 實實)</strong>：擔任「核心架構師、全端工程師與品質保證測試（Lead Architect, Full-Stack Engineer & QA）」。負責將 Prompt 轉譯為具體的 Local-First 軟體架構、原生 ES6+ 前端、180 款動態話術演算庫、SVG 動畫元件與 34 項自動化測試套件。</li>
+</ol>
+<ul>
 <li><strong>協作角色分工</strong>：</li>
-<li><strong>使用者（產品負責人 / 創意總監 / 最終決策者）</strong>：負責產品願景定義、痛點發掘、視覺風格審美指引、核心驗收與使用者體驗回饋。</li>
-<li><strong>AI（架構工程師 / 前端開發者 / 演算法工程師 / QA 測試工程師）</strong>：負責系統架構設計、模組化拆分、JavaScript 演算法實作、CSS 動畫與向量圖形繪製、34 項單元測試編寫與錯誤排查。</li>
+<li><strong>使用者（產品負責人 / 創意總監 / 最終決策者）</strong>：掌控產品願景定義、痛點發掘、提示詞引導、視覺風格審美指引、核心驗收與使用者體驗回饋。</li>
+<li><strong>ChatGPT</strong>：負責前期功能腦力激盪、角色性格塑造（溫暖手帳 vs 搞笑催款）、需求邏輯收斂與專業提示詞起草。</li>
+<li><strong>Antigravity (實實)</strong>：負責程式碼架構、代碼生成、動態演算法、CSS 動畫、34 項自動化單元測試與 16:9 投影片生成。</li>
 </ul>
 <hr>
 <h2>二、人機協作開發階段與關鍵里程碑</h2>
-<h3>階段一：核心功能架構與 Local-First 零個資基礎建立</h3>
+<h3>階段 0：前期需求激盪與 ChatGPT 提示詞精煉（Prompt Crafting）</h3>
 <ul>
-<li><strong>使用者需求</strong>：希望打造一個專門給大學生使用的理財管家，具備記帳、理財規劃與借貸管理功能，且必須兼具隱私安全。</li>
+<li><strong>發想痛點</strong>：大學生記帳三分鐘熱度、生活費常常透支，以及最尷尬的「同學借錢不敢開口催款」。</li>
+<li><strong>ChatGPT 協作成果</strong>：</li>
+<li>協助使用者將發散的痛點梳理成完整產品架構（首頁、三大理財模型試算、三層記帳視圖、催款話術）。</li>
+<li>共同設計出「極具記憶點的特色亮點」：包含將機會成本、賽局理論、帕累托改善等 12 項經濟學概念轉化為催款垃圾話，並擬定「極限地獄模式（粗口暴躁型、法律威嚇型）」的創意方向。</li>
+<li>將上述構想包裝成結構嚴謹的「系統開發 Prompt」，包含各頁面功能規範、驗收標準（Acceptance Criteria）與防呆原則，作為交由工程端執行的藍圖。</li>
+<li><a href="https://chatgpt.com/share/6ae7734e-e660-83ec-86d0-b16409c61746" target="_blank">點此查看完整 ChatGPT 對話歷程紀錄</a></li>
+</ul>
+<h3>階段一：核心功能架構與 Local-First 零個資基礎建立（Antigravity 落地）</h3>
+<ul>
+<li><strong>使用者需求</strong>：將 ChatGPT 精煉後的 Prompt 交付實作，打造專屬大學生的理財管家，具備記帳、理財規劃與借貸管理功能，且必須兼具隱私安全。</li>
 <li><strong>AI 輔助實作</strong>：</li>
 <li>規劃以純原生技術（HTML5 + Tailwind CSS + 原生 ES6+ JS）打造 SPA，完全免裝 Node.js 或複雜建置工具。</li>
 <li>實作 <code>storage.js</code>，以 LocalStorage 達成 <strong>Local-First 零個資</strong> 架構，支援多帳號隔離與一鍵載入示範資料。</li>

@@ -450,38 +450,38 @@ SLIDES_DATA = [
           </div>
 
           <div class="main-heading">
-            程式新手如何克服卡關？<span>「我定邏輯審美，AI 幫寫代碼驗收」</span>
+            程式新手如何克服卡關？<span>「雙 AI 協同：ChatGPT 精煉提示詞 ＋ 實實落地工程」</span>
           </div>
 
           <div class="process-steps">
             <!-- 步驟 1 -->
             <div class="step-card">
               <div class="step-num">STEP 01</div>
-              <div class="step-title">痛點發想與定義</div>
+              <div class="step-title">痛點發想與核心定義</div>
               <div class="step-desc">
-                不追求天花亂墜的複雜功能，專注解決自己真實遇到的痛點：記帳麻煩、朋友欠錢不知道怎麼討。
+                不追求天花亂墜的複雜功能，專注解決生活痛點：大學生吃土、記帳太累、朋友欠錢超尷尬。
               </div>
-              <div class="step-highlight">💡 決策：不做雲端登入，做純前端 Local-First</div>
+              <div class="step-highlight">💡 決策：不做雲端個資，做 Local-First 離線手帳</div>
             </div>
 
             <!-- 步驟 2 -->
             <div class="step-card">
               <div class="step-num">STEP 02</div>
-              <div class="step-title">零依賴輕量架構</div>
+              <div class="step-title">ChatGPT 提示詞精煉</div>
               <div class="step-desc">
-                初學者常被 npm、Node 環境配置折騰。我們選擇原生 HTML5 + CSS + JS，雙擊就能跑！
+                與 ChatGPT 腦力激盪，將痛點轉化為嚴謹系統 Prompt，收斂驗收標準與 12 大經濟學垃圾話！
               </div>
-              <div class="step-highlight">⚡ 成果：跨平台零依賴，點開即用</div>
+              <div class="step-highlight">🤖 產出：結構化專業提示詞與規格藍圖</div>
             </div>
 
             <!-- 步驟 3 -->
             <div class="step-card">
               <div class="step-num">STEP 03</div>
-              <div class="step-title">人機協同 Pair-Coding</div>
+              <div class="step-title">實實 (Antigravity) 落地</div>
               <div class="step-desc">
-                我給需求與審美修正（如：拿掉迷因回歸日系手帳、新增地獄烈焰），AI 即時重構並補齊邏輯。
+                將提示詞交付實實，編寫原生 ES6+ 前端、手繪 SVG 萌柴柴/惡魔柴柴、180 款情境話術演算法。
               </div>
-              <div class="step-highlight">🤖 角色：我是導演，AI 是得力助教工程師</div>
+              <div class="step-highlight">⚡ 實現：雙風格手帳、地獄烈焰動畫零依賴</div>
             </div>
 
             <!-- 步驟 4 -->
@@ -489,7 +489,7 @@ SLIDES_DATA = [
               <div class="step-num">STEP 04</div>
               <div class="step-title">測試驅動安心交付</div>
               <div class="step-desc">
-                新手最怕改了 A 壞了 B！我們建立了 34 項自動化測試，每次修改按下測試立即保證 0 錯誤。
+                新手最怕改了 A 壞了 B！我們建立了 34 項自動化單元測試，每次修改按下測試立即保證 0 錯誤。
               </div>
               <div class="step-highlight">🧪 信心：34 項單元測試 100% PASS</div>
             </div>
@@ -498,7 +498,7 @@ SLIDES_DATA = [
           <div class="mentor-box">
             <div style="font-size: 36px;">🤝</div>
             <div style="font-size: 16px; color: #4A3E37; font-weight: 600; line-height: 1.4;">
-              <strong>新手的真實體悟</strong>：不用害怕自己是初學者！只要有清楚的問題意識，善用 AI 工具結對編程，並堅持做好單元測試，新手也能獨立完成一個具備商業級完成度的好專題！
+              <strong>新手的雙 AI 協同體悟</strong>：不用害怕自己是初學者！我擔任產品導演，透過 <strong>ChatGPT</strong> 精煉高階提示詞規格，再交由 <strong>Antigravity (實實)</strong> 實體工程落地與單元測試，新手也能高效產出專業級產品！
             </div>
           </div>
 

@@ -60,7 +60,7 @@
 
 ### 2. 關鍵模組切分
 ```
-money-buddy/
+Money-Buibui/
 ├── index.html           # 單頁手帳應用主介面 (導航、Bento 卡片、流水帳、催款器)
 ├── css/
 │   └── style.css        # 手帳色彩 Tokens、紙膠帶、地獄烈焰動畫 keyframes
@@ -72,6 +72,15 @@ money-buddy/
 ├── server.py            # 零依賴本機預覽 HTTP 伺服器
 └── test_app.py          # 34 項自動化測試套件
 ```
+
+### 3. 雙 AI 協同開發工作流（ChatGPT 提示詞精煉 ＋ Antigravity 實體工程）
+本專題展現了進階的「雙 AI 互補人機協作模式」，將 AI 依擅長領域分工：
+1. **前期創意發想與提示詞精煉（ChatGPT）**：
+   - 學生作為產品負責人（Product Owner），先與 ChatGPT 進行深度需求探討、角色性格定義（陪伴型暖柴柴 vs 搞笑催款）、功能邊界收斂，並共同精煉出結構嚴謹的「系統開發提示詞（Prompts）」，包含驗收標準（Acceptance Criteria）、資料模型防呆規範與經濟學垃圾話等特色亮點。
+   - 完整對話歷程公開連結：[ChatGPT 對話紀錄（補完記帳提示詞）](https://chatgpt.com/share/6ae7734e-e660-83ec-86d0-b16409c61746)
+2. **軟體架構落地、實作開發與自動化測試（Antigravity / 實實）**：
+   - 學生將精煉後的系統提示詞交付給 Google DeepMind Antigravity Assistant（實實）執行代碼實體化。
+   - 實作原生 ES6+ 模組、Local-First 零個資存取引擎、SVG 動畫元件、180 款話術字典，並撰寫 `test_app.py` 34 項自動化單元測試，達成 100% 綠燈覆蓋與 16:9 投影片生成。
 
 ---
 
